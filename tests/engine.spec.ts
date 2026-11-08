@@ -23,7 +23,7 @@ import {
 	substitute,
 	timeoutsPerSet
 } from '../src/lib/volley/match.ts';
-import { ROLE_KIND, ROTATIONS, SYSTEM, SYSTEMS, ZONES } from '../src/lib/volley/model.ts';
+import { ROLE_KIND, ROTATIONS, setterOf, SYSTEM, SYSTEMS, ZONES } from '../src/lib/volley/model.ts';
 import { overlapFaults } from '../src/lib/volley/overlap.ts';
 
 const PHASES: Phase[] = ['receive', 'serve', 'base', 'defense', 'attack', 'cover'];
@@ -48,12 +48,22 @@ for (const system of SYSTEMS) {
 	test(`${system} serving team is legal under the pre-2025 rule`, () => {
 		for (const rotation of ROTATIONS) {
 			for (const defense of DEFENSE_SYSTEMS) {
-				const placed = formation(
-					{ ...DEFAULT_OPTIONS, system, rotation, defense, servingOverlap: true, serving: true },
-					'serve'
-				);
-				const at = byZone(placed);
-				expect(overlapFaults(at, [1]), `rotation ${rotation} ${defense}`).toEqual([]);
+				for (const order of ['oh-first', 'mb-first'] as const) {
+					const placed = formation(
+						{
+							...DEFAULT_OPTIONS,
+							system,
+							rotation,
+							defense,
+							order,
+							servingOverlap: true,
+							serving: true
+						},
+						'serve'
+					);
+					const at = byZone(placed);
+					expect(overlapFaults(at, [1]), `rotation ${rotation} ${defense} ${order}`).toEqual([]);
+				}
 			}
 		}
 	});
@@ -324,4 +334,28 @@ test('the cover moment attacks with the hitter the reader chose', () => {
 			if (setTo === 'left') expect(hitter.x).toBeLessThan(3);
 		}
 	}
+});
+
+test('a back-row middle never attacks, and only a back-row setter digs in transition', () => {
+	for (const system of SYSTEMS)
+		for (const rotation of ROTATIONS)
+			for (const liberoZone of [5, 6] as const)
+				for (const libero of [true, false]) {
+					const o = {
+						...DEFAULT_OPTIONS,
+						system,
+						rotation,
+						liberoZone,
+						libero,
+						serving: true,
+						setterDug: true
+					};
+					const placed = formation(o, 'attack');
+					for (const p of placed)
+						if (ROLE_KIND[p.role] === 'middle' && ![2, 3, 4].includes(p.zone))
+							expect(p.task, `${system} ${rotation} ${p.role}`).not.toBe('attack');
+					const setter = placed.find((p) => p.role === setterOf(system, rotation))!;
+					if ([2, 3, 4].includes(setter.zone))
+						expect(setter.setter, `${system} ${rotation}`).toBe(true);
+				}
 });

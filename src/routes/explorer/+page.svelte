@@ -19,6 +19,7 @@
 		DEFENSE_SYSTEMS,
 		INCOMING,
 		setsAvailable,
+		setterInBack,
 		RECEIVE_PHASES,
 		SERVE_PHASES,
 		formation,
@@ -380,7 +381,7 @@
 					{/if}
 				</div>
 			{/if}
-			{#if phase === 'attack' && o.serving && o.system !== '6-6'}
+			{#if phase === 'attack' && o.serving && o.system !== '6-6' && setterInBack(options)}
 				<div class="mt-4" data-pagefind-ignore>
 					<ChipGroup
 						legend={m.label_first_ball()}

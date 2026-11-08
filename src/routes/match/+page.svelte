@@ -233,6 +233,7 @@
 				subs: leagueOf(setupLeague).subsPerSet,
 				timeouts: leagueOf(setupLeague).timeoutsPerSet
 			})}
+			{#if setupLeague === 'ncaa'}{m.match_ncaa_note()}{/if}
 		</p>
 		<label class="block">
 			<span class="eyebrow">{m.match_opponent()}</span>

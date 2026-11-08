@@ -307,6 +307,11 @@ export function explain(
 		if (you.setter && !front) tips.push(m.tip_setter_penetrate());
 		if (you.setter && front) tips.push(m.tip_setter_front());
 		if (you.task === 'hide') tips.push(m.tip_hide());
+		// Where the lineup puts an outside in front of a hiding setter, the opposite passes instead.
+		if (you.task === 'hide' && ROLE_KIND[you.role] === 'outside')
+			tips.push(m.tip_outside_shields());
+		if (you.task === 'pass' && ['opposite', 'setter'].includes(ROLE_KIND[you.role]))
+			tips.push(m.tip_extra_passer());
 	}
 	if (phase === 'serve') {
 		if (you.task === 'serve') {
@@ -339,7 +344,9 @@ export function explain(
 	}
 	if (phase === 'attack') {
 		if (you.task === 'attack' && !front) {
-			tips.push(you.slot === 'BM' ? m.tip_pipe() : m.tip_back_attack());
+			tips.push(
+				you.slot === 'BM' && ROLE_KIND[you.role] === 'outside' ? m.tip_pipe() : m.tip_back_attack()
+			);
 		}
 		if (you.setter && front && !(o.serving && o.setterDug)) tips.push(m.tip_setter_front());
 		if (o.system === '6-6' && you.setter) tips.push(m.tip_66_setter());

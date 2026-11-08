@@ -19,13 +19,13 @@ A teremröplabda szinte mindenhol ugyanaz: hat játékos, állásrend, három é
 
 ## Az eltérések röviden
 
-|                                             | FIVB 2025–2028                                                               | NCAA női, 2026–27                                          | NFHS (amerikai középiskola)        | USA Volleyball 2025–2027           |
-| ------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------- | ---------------------------------- |
-| Állásrendben kell állnia a nyitó csapatnak? | Nem, csak a fogadó csapatnak                                                 | Igen (a nyitó kivételével)                                 | Igen (a nyitó kivételével)         | Igen (a nyitó kivételével)         |
-| Nyithat a liberó?                           | Nem                                                                          | Igen, a nyitási sorrend egy helyén                         | Igen, a nyitási sorrend egy helyén | Igen, a nyitási sorrend egy helyén |
-| Cserék játszmánként                         | 6                                                                            | 15 (Division I), 18 (Division II és III)                   | 18                                 | 15 (a verseny 6-ra csökkentheti)   |
-| Pihenőidők játszmánként                     | 2 × 30 mp                                                                    | 2 × 75 mp (a konferenciák 60 vagy 90 mp-et is előírhatnak) | 2 × 60 mp                          | 2 × 30 mp                          |
-| Visszacserélés                              | A kezdő játékos egyszer mehet le és egyszer jöhet vissza, ugyanarra a helyre | Korlátlan, a csapat cserekeretén belül                     | A cserekereten belül               | A cserekereten belül               |
+|                                             | FIVB 2025–2028                                                               | NCAA női, 2026–27                                          | NFHS (amerikai középiskola)                                   | USA Volleyball 2025–2027                                      |
+| ------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- |
+| Állásrendben kell állnia a nyitó csapatnak? | Nem, csak a fogadó csapatnak                                                 | Igen (a nyitó kivételével)                                 | Igen (a nyitó kivételével)                                    | Igen (a nyitó kivételével)                                    |
+| Nyithat a liberó?                           | Nem                                                                          | Igen, a nyitási sorrend egy helyén                         | Igen, a nyitási sorrend egy helyén                            | Igen, a nyitási sorrend egy helyén                            |
+| Cserék játszmánként                         | 6                                                                            | 15 (Division I), 18 (Division II és III)                   | 18                                                            | 15 (a verseny 6-ra csökkentheti)                              |
+| Pihenőidők játszmánként                     | 2 × 30 mp                                                                    | 2 × 75 mp (a konferenciák 60 vagy 90 mp-et is előírhatnak) | 2 × 60 mp                                                     | 2 × 30 mp                                                     |
+| Visszacserélés                              | A kezdő játékos egyszer mehet le és egyszer jöhet vissza, ugyanarra a helyre | Korlátlan, a csapat cserekeretén belül                     | A cserekereten belül, korlátozásokkal (lásd a szabálykönyvet) | A cserekereten belül, korlátozásokkal (lásd a szabálykönyvet) |
 
 ## A nyitó csapat felállása
 
@@ -35,7 +35,7 @@ A pályán ez azt jelenti, hogy az FIVB-szabályok szerint a saját nyitásotokn
 
 ## A liberó nyitása
 
-Az FIVB-szabályok szerint a liberó nem nyithat ([19.3.1.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)), ezért a centernek, akit a liberó helyettesít, vissza kell jönnie nyitni. Az NCAA ([12.1.2.3](https://ncaaorg.s3.amazonaws.com/championships/sports/volleyball/rules/women/PRWVB_RulesBook.pdf#page=56)), az NFHS és az USA Volleyball ([19.3.1.3b](https://usavolleyball.org/wp-content/uploads/2023/03/2025-2027-USAV-Indoor-Rules-Book_FINAL.pdf#page=61)) szabályai szerint a liberó a nyitási sorrend **egyetlen** helyén nyithat. A legtöbb csapat az egyik center helyén él ezzel, így annak a centernek nem kell csak a nyitás miatt bejönnie. Két liberó esetén is csak ez az egy nyitóhely engedélyezett az NCAA-ban és az NFHS-ben.
+Az FIVB-szabályok szerint a liberó nem nyithat ([19.3.1.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)), ezért a centernek, akit a liberó helyettesít, vissza kell jönnie nyitni. Az NCAA ([12.1.2.3](https://ncaaorg.s3.amazonaws.com/championships/sports/volleyball/rules/women/PRWVB_RulesBook.pdf#page=56)), az NFHS és az USA Volleyball ([19.3.1.3b](https://usavolleyball.org/wp-content/uploads/2023/03/2025-2027-USAV-Indoor-Rules-Book_FINAL.pdf#page=61)) szabályai szerint a liberó a nyitási sorrend **egyetlen** helyén nyithat. A legtöbb csapat az egyik center helyén él ezzel, így annak a centernek nem kell csak a nyitás miatt bejönnie. Két liberó esetén is csak ez az egy nyitóhely engedélyezett az NCAA-ban és 2026–27-től az NFHS-ben ([az NFHS 2026–27-es szabályváltozásai](https://demo.osaa.org/docs/vbl/2026NFHSrulechanges.pdf), angol).
 
 Az eszközökben a csapatbeállításoknál választhatod ki, melyik center helyett nyit a liberó.
 
@@ -47,7 +47,7 @@ Minden szabályrendszer játszmánként két pihenőidőt ad csapatonként. A ho
 
 ## Magyar utánpótlás-versenyek
 
-Az MRSZ U16-os és U18-as bajnokságai a hivatalos szabályok szerint játszanak, így rájuk az FIVB oszlop érvényes. Az U14-es mini (4 a 4 ellen, 14 × 7 m-es pályán) és az U12-es kismini (3 a 3 ellen) bajnokságnak saját szabályai vannak, többek között kötelező forgással egy nyitássorozat után; az oldal hatfős ábrái rájuk nem vonatkoznak. Lásd az [MRSZ versenykiírásait](https://hunvolley.hu/index.php/dokumentumok/).
+Az MRSZ 2026–27-es versenykiírása az U16-os bajnokságra nem ír elő külön játékszabályt ([U16-os versenykiírás](https://hunvolleyhu.b-cdn.net/wp-content/uploads/U16-Orszagos-Bajnoksag-2026-2027-versenykiiras.pdf)), így ott a hivatalos szabályok érvényesek. Az U14-es mini bajnokságot 4 a 4 ellen, kisebb pályán, saját szabályokkal játsszák, többek között kötelező forgással egy nyitássorozat után ([U14-es versenykiírás](https://hunvolleyhu.b-cdn.net/wp-content/uploads/U14-Orszagos-Mini-Bajnoksag-2026-2027-versenykiiras.pdf)), az U12-es kismini bajnokságot pedig 3 a 3 ellen; az oldal hatfős ábrái rájuk nem vonatkoznak. A saját versenyed kiírását az [MRSZ dokumentumai](https://hunvolley.hu/index.php/dokumentumok/) között találod.
 
 ## Források
 

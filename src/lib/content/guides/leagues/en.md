@@ -19,13 +19,13 @@ Most of indoor volleyball is the same everywhere: six players, rotational order,
 
 ## The differences at a glance
 
-|                                   | FIVB 2025–2028                                            | NCAA women's 2026–27                       | NFHS (US high school)                     | USA Volleyball 2025–2027                  |
-| --------------------------------- | --------------------------------------------------------- | ------------------------------------------ | ----------------------------------------- | ----------------------------------------- |
-| Serving team in rotational order? | No, only the receiving team                               | Yes (server excepted)                      | Yes (server excepted)                     | Yes (server excepted)                     |
-| May the libero serve?             | No                                                        | Yes, in one position of the service order  | Yes, in one position of the service order | Yes, in one position of the service order |
-| Substitutions per set             | 6                                                         | 15 (Division I), 18 (Divisions II and III) | 18                                        | 15 (a competition may lower it to 6)      |
-| Time-outs per set                 | 2 × 30 s                                                  | 2 × 75 s (conferences may set 60 or 90 s)  | 2 × 60 s                                  | 2 × 30 s                                  |
-| Re-entry                          | A starter may leave and return once, to the same position | Unlimited entries within the team limit    | Within the team limit                     | Within the team limit                     |
+|                                   | FIVB 2025–2028                                            | NCAA women's 2026–27                       | NFHS (US high school)                                       | USA Volleyball 2025–2027                                    |
+| --------------------------------- | --------------------------------------------------------- | ------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| Serving team in rotational order? | No, only the receiving team                               | Yes (server excepted)                      | Yes (server excepted)                                       | Yes (server excepted)                                       |
+| May the libero serve?             | No                                                        | Yes, in one position of the service order  | Yes, in one position of the service order                   | Yes, in one position of the service order                   |
+| Substitutions per set             | 6                                                         | 15 (Division I), 18 (Divisions II and III) | 18                                                          | 15 (a competition may lower it to 6)                        |
+| Time-outs per set                 | 2 × 30 s                                                  | 2 × 75 s (conferences may set 60 or 90 s)  | 2 × 60 s                                                    | 2 × 30 s                                                    |
+| Re-entry                          | A starter may leave and return once, to the same position | Unlimited entries within the team limit    | Within the team limit, with restrictions (see the rulebook) | Within the team limit, with restrictions (see the rulebook) |
 
 ## The serving team's positions
 
@@ -35,7 +35,7 @@ What this means on court: under FIVB rules your team can wait in its own spots w
 
 ## The libero serving
 
-Under FIVB rules the libero may not serve ([rule 19.3.1.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)), so the middle the libero replaces comes back on to serve. NCAA ([rule 12.1.2.3](https://ncaaorg.s3.amazonaws.com/championships/sports/volleyball/rules/women/PRWVB_RulesBook.pdf#page=56)), NFHS and USA Volleyball ([rule 19.3.1.3b](https://usavolleyball.org/wp-content/uploads/2023/03/2025-2027-USAV-Indoor-Rules-Book_FINAL.pdf#page=61)) let the libero serve in **one** position of the service order. Most teams use it for one of the middles, so that middle never has to come on just to serve. With two liberos, NCAA and NFHS still allow only that one serving position.
+Under FIVB rules the libero may not serve ([rule 19.3.1.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)), so the middle the libero replaces comes back on to serve. NCAA ([rule 12.1.2.3](https://ncaaorg.s3.amazonaws.com/championships/sports/volleyball/rules/women/PRWVB_RulesBook.pdf#page=56)), NFHS and USA Volleyball ([rule 19.3.1.3b](https://usavolleyball.org/wp-content/uploads/2023/03/2025-2027-USAV-Indoor-Rules-Book_FINAL.pdf#page=61)) let the libero serve in **one** position of the service order. Most teams use it for one of the middles, so that middle never has to come on just to serve. With two liberos, NCAA and, from 2026–27, NFHS still allow only that one serving position ([NFHS 2026–27 rule changes](https://demo.osaa.org/docs/vbl/2026NFHSrulechanges.pdf)).
 
 In the tools, choose which middle the libero serves for under the team settings.
 
@@ -47,7 +47,7 @@ Every rule set gives each team two time-outs per set. Their length differs: 30 s
 
 ## Hungarian youth competitions
 
-The Hungarian federation's (MRSZ) U16 and U18 championships play by the official rules, so the FIVB column applies. The U14 mini (4 against 4 on a 14 × 7 m court) and U12 kismini (3 against 3) competitions have their own rules, including a forced rotation after a run of serves; this site's six-player diagrams do not apply to them. See the [MRSZ competition notices](https://hunvolley.hu/index.php/dokumentumok/).
+The Hungarian federation's (MRSZ) 2026–27 notices set no special match rules for the U16 championship ([U16 notice](https://hunvolleyhu.b-cdn.net/wp-content/uploads/U16-Orszagos-Bajnoksag-2026-2027-versenykiiras.pdf)), so the official rules apply. The U14 mini competition is played 4 against 4 on a smaller court with its own rules, including a forced rotation after a run of serves ([U14 notice](https://hunvolleyhu.b-cdn.net/wp-content/uploads/U14-Orszagos-Mini-Bajnoksag-2026-2027-versenykiiras.pdf)), and the U12 kismini 3 against 3; this site's six-player diagrams do not apply to them. Check the notice for your own competition among the [MRSZ documents](https://hunvolley.hu/index.php/dokumentumok/).
 
 ## Sources
 

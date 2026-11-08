@@ -479,7 +479,9 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 		if (rightSideOnLeft(at)) return 'FL';
 		return undefined;
 	};
-	const dug = o.serving && o.setterDug ? backupSetter(court, setter) : undefined;
+	// A front-row setter who only blocked may still set: a block is not a team contact (14.4.1).
+	const setterBack = !isFront(court.find((p) => p.role === setter)!.zone);
+	const dug = o.serving && o.setterDug && setterBack ? backupSetter(court, setter) : undefined;
 	return court.map((p) => {
 		const isSetter = p.role === setter;
 		if (dug) {
@@ -499,9 +501,10 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 		if (ROLE_KIND[p.role] === 'setter' && !isFront(p.zone)) {
 			return { ...p, x: 7, y: 5.4, setter: false, task: 'cover' };
 		}
-		// The libero never attacks, so from middle back they cover rather than run a pipe; a
-		// back-row outside defending in zone 5 covers on the left.
-		if (p.role === 'L' || (o.system !== '6-6' && p.slot === 'BL')) {
+		// The libero never attacks and a back-row middle practically never does, so from middle
+		// back they cover rather than run a pipe; a back-row outside in zone 5 covers on the left.
+		const backMiddle = ROLE_KIND[p.role] === 'middle' && !isFront(p.zone);
+		if (p.role === 'L' || backMiddle || (o.system !== '6-6' && p.slot === 'BL')) {
 			const spot = p.slot === 'BM' ? { x: 4.5, y: 5.4 } : { x: 2.6, y: 4.8 };
 			return { ...p, ...spot, setter: false, task: 'cover' };
 		}
@@ -523,12 +526,12 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 	});
 }
 
-/** Who sets when the setter dug the first ball: the libero, else the right-front player. */
+/** Who sets when the setter dug the first ball: the libero, else a front-row player. */
 function backupSetter(court: OnCourt[], setter: RoleId): OnCourt | undefined {
 	return (
 		court.find((p) => p.role === 'L') ??
 		court.find((p) => p.slot === 'FR' && p.role !== setter) ??
-		court.find((p) => p.slot === 'FM' && p.role !== setter)
+		court.find((p) => isFront(p.zone) && p.role !== setter)
 	);
 }
 
@@ -547,6 +550,13 @@ function hitterFor(attackers: Placed[], setTo: SetTo): Placed | undefined {
 	}
 	return undefined;
 }
+
+/** Whether the setter-dug transition applies: only a back-row setter digs. */
+export const setterInBack = (o: Options) =>
+	!isFront(
+		lineupOnCourt({ ...o, serving: true }).find((p) => p.role === setterOf(o.system, o.rotation))!
+			.zone
+	);
 
 /** The sets a rotation can offer: a hitter must be attacking from that spot. */
 export function setsAvailable(o: Options): SetTo[] {
