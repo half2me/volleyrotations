@@ -39,7 +39,7 @@ In the common **5-1 system** the six starters sit in the rotation so that each p
 
 Also called left side or wing spiker.
 
-- **Attack:** hits from the left side (zone 4) in the front row. In the back row, many teams use the outside hitter for the **pipe**, a back-row attack from the middle, jumping from behind the attack line.
+- **Attack:** hits from the left side (zone 4) in the front row (in Rotation 1 many teams let them hit from the right for the first attack after serve receive). In the back row, many teams use the outside hitter for the **pipe**, a back-row attack from the middle, jumping from behind the attack line.
 - **Block:** left side, against the opponent's opposite.
 - **Serve receive:** the main passers together with the libero. Outside hitters have to pass well, because they receive in every rotation.
 - **Defense:** in the back row, usually middle back (zone 6) in this site's tools, or left back on some teams.

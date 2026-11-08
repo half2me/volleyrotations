@@ -16,7 +16,7 @@ description: The positional fault rule in detail, the 2025 FIVB change that only
 - At the moment of the serve, players must stand in their rotation order. Breaking it is an **overlap**, officially a **positional fault**, and costs the rally.
 - You only compare each player with their **neighbours**: front with back in the same column (4–5, 3–6, 2–1) and left with right within the same row (4–3–2, 5–6–1).
 - Position is judged by **feet on the floor**. Being level, or having part of one foot past, is enough.
-- Under the FIVB rules for 2025–2028, only the **receiving team** has to be in rotation order. The serving team may stand anywhere on its court. Some leagues may still check both teams, so ask yours.
+- Under the FIVB rules for 2025–2028, only the **receiving team** has to be in rotation order. The serving team may stand anywhere on its court. Many leagues, for example NCAA and US high school, still check both teams, so ask yours.
 - Once the serve is hit, everyone may go anywhere.
 
 </Callout>

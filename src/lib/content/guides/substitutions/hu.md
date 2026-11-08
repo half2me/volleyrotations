@@ -33,7 +33,7 @@ Az FIVB korlátai ([15.1 és 15.6](https://www.fivb.com/wp-content/uploads/2025/
 
 A párosítás tehát a játszmára rögzül: ha a B cserejátékos az A kezdőjátékos helyére jön be, A csak B helyére térhet vissza, és A visszatérése után abban a játszmában A nem mehet le újra, B pedig nem jöhet vissza (a kivételes játékoscserét kivéve).
 
-**Kivételes játékoscsere** ([15.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)): ha egy játékos sérülés vagy betegség miatt nem tud tovább játszani, vagy kiállították, illetve kizárták, és szabályosan nem cserélhető le, bárki beállhat, aki abban a pillanatban nincs a pályán (a liberókat és a szokásos helyettesített játékosukat kivéve). Ez nem számít bele a hat cserébe, de a lecserélt játékos azon a mérkőzésen már nem térhet vissza.
+**Kivételes játékoscsere** ([15.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)): ha egy játékos sérülés vagy betegség miatt nem tud tovább játszani, vagy kiállították, illetve kizárták, és szabályosan nem cserélhető le, bárki beállhat, aki abban a pillanatban nincs a pályán (a liberókat és azt a játékost kivéve, akit a liberó helyettesít). Ez nem számít bele a hat cserébe, de a lecserélt játékos azon a mérkőzésen már nem térhet vissza.
 
 Sok amatőr és utánpótlás-bajnokság több cserét vagy szabad cserét enged. Nézd meg a saját bajnokságod szabályait.
 
@@ -75,7 +75,7 @@ A kettőt könnyű összekeverni.
 | Büntetés     | Pont és nyitás az ellenfélnek, a sorrendet kijavítják                                                                                                                     | Pont és nyitás az ellenfélnek (elveszett labdamenet), a helyeket kijavítják                                                |
 | Ezen felül   | A hibázó csapat hibás sorrendben szerzett pontjait törlik, ha a jegyzőkönyvvezető pontosan meg tudja állapítani, mikor kezdődött a hiba. Az ellenfél pontjai megmaradnak. | Nincs                                                                                                                      |
 
-A 2025–2028-as FIVB-szabályok szerint a nyitáskor csak a fogadó csapatnak kell szabályos állásrendben állnia; a nyitó csapat bárhol állhat a saját térfelén. Ha viszont a nyitó csapat egy játékosa (a nyitót kivéve) a pályán kívül áll, az ott is állásrendi hiba. Egyes bajnokságok még a régi szabályt alkalmazhatják mindkét csapatra. Bővebben: [az állásrendi hiba szabálya](/hu/guides/overlap).
+A 2025–2028-as FIVB-szabályok szerint a nyitáskor csak a fogadó csapatnak kell szabályos állásrendben állnia; a nyitó csapat bárhol állhat a saját térfelén. Ha viszont a nyitó csapat egy játékosa (a nyitót kivéve) a pályán kívül áll, az ott is állásrendi hiba. Sok bajnokság még a régi szabályt alkalmazza mindkét csapatra. Bővebben: [az állásrendi hiba szabálya](/hu/guides/overlap).
 
 Ha nyitási hiba és állásrendi hiba egyszerre történik (például a nyitó rálép az alapvonalra), a nyitó hibája számít. Ha a nyitás az ütés után válik hibássá, például a hálóba megy, az állásrendi hiba számít ([7.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)).
 

@@ -29,7 +29,7 @@ Every formation must be legal at the moment of the serve. Under FIVB rules the r
 
 ## 5-player W
 
-Three players stand in a line across the court, roughly 4 to 5 metres from the net, and two more stand deeper, in the gaps between them. Seen from above it looks like a W. The setter is at the net; in a 6-6 or 4-2 the setter is always front row, in a 6-2 always back row, and in a 5-1 back row in Rotations 1–3 and front row in 4–6. When the setter starts in zone 6 or 5 and hides at the net, the front-row player in their column must stay in front of them, so a W has four passers in those rotations. From zone 1 the setter can hide behind the zone 2 passer along the right sideline.
+Three players stand in a line across the court, roughly 4 to 5 metres from the net, and two more stand deeper, in the gaps between them. Seen from above it looks like a W. The setter is at the net; in a 6-6 or 4-2 the setter is always front row, in a 6-2 always back row, and in a 5-1 back row in Rotations 1–3 and front row in 4–6. When the setter starts in zone 6 or 5 and hides at the net, the front-row player in their column must not stand further from the net than them (level is allowed), so that player stays at the net and a W has four passers in those rotations. From zone 1 the setter can hide behind the zone 2 passer along the right sideline.
 
 - **Pros:** easy to learn, covers short serves well, and nobody has to cover a big area.
 - **Cons:** many players means many **seams** (the gaps between passers), and weak passers cannot hide. The front three in the W also have to get ready to attack after passing.

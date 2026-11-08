@@ -39,7 +39,7 @@ A gyakori **5:1-es rendszerben** a hat kezdő úgy áll a forgásban, hogy minde
 
 Szokás egyszerűen fogadónak vagy bal oldali ütőnek is hívni.
 
-- **Támadás:** első sorban a bal oldalról (4-es hely) üt. Hátsó sorban sok csapat a nyitásfogadó ütővel üttet **pipe**-ot: hátsó középről, a támadóvonal mögül elrugaszkodva indított támadást.
+- **Támadás:** első sorban a bal oldalról (4-es hely) üt (az 1. forgásban sok csapatnál a fogadás utáni első támadást jobbról üti). Hátsó sorban sok csapat a nyitásfogadó ütővel üttet **pipe**-ot: hátsó középről, a támadóvonal mögül elrugaszkodva indított támadást.
 - **Sánc:** bal oldalon, az ellenfél feladó átlója ellen.
 - **Fogadás:** a liberóval együtt ők a fő fogadók. Minden forgásban fogadnak, ezért jól kell fogadniuk.
 - **Védekezés:** hátsó sorban az oldal eszközeiben hátsó középen (6-os hely) védekezik, más csapatoknál bal hátul.

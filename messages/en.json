@@ -313,10 +313,10 @@
 	"home_guides": "The rules and systems in plain language, with links to the FIVB rulebook.",
 	"home_start": "New to indoor? Start here",
 	"home_rule_title": "New in 2025: the serving team may stand anywhere on its court",
-	"home_rule_text": "Under the FIVB 2025–2028 rules, only the receiving team must be in rotational order at the serve. The right player must still serve, back-row players are still back-row players, and the serving team may not screen the server or raise hands above their heads during the serve. Some leagues still use the older rule, so the tools let you pick.",
+	"home_rule_text": "Under the FIVB 2025–2028 rules, only the receiving team must be in rotational order at the serve. The right player must still serve, back-row players are still back-row players, and the serving team may not screen the serve or raise their hands above their heads until the ball has crossed the net. Many leagues still use the older rule, so the tools let you pick.",
 	"tip_libero_back": "Libero: you may not serve, block or try to block, and you may never attack a ball that is entirely above the top of the net, from anywhere. If you set with your fingers from in front of the 3 m line, your hitter may not attack that ball while it is entirely above the net.",
 	"legend_setter": "Sets this rotation",
-	"passers_fewer": "In this rotation {n} players pass. The setter hides at the net, and the player directly in front of the setter must stay closer to the net than them at the serve, so that player waits at the net.",
-	"tip_no_switch": "In this rotation many teams don't switch for the first attack after the pass: the outside, who passed on the right, attacks from the right, and the opposite from the left. Switching would send both across the court while the ball is in play. Teams differ; ask your coach. On defense and in transition you switch as usual.",
+	"passers_fewer": "In this rotation {n} players pass. The teammate the setter hides behind, or stacks with at the net, waits at the net with them instead of passing.",
+	"tip_no_switch": "In this rotation many teams don't switch for the first attack after the pass: the outside, who passed on the right, attacks from the right, and the right-side hitter (the opposite, or in a 6-2 the front-row setter) from the left. Switching would send both across the court while the ball is in play. Teams differ; ask your coach. On defense and in transition you switch as usual.",
 	"tip_transition_simplified": "Simplified: this shows the attack once the setter is at the target. If the setter digs the first ball, someone else sets (usually the libero or the right-front player), and blockers first back off the net to start their approach."
 }

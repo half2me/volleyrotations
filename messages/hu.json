@@ -198,7 +198,7 @@
 	"fault_depth": "Hiba: {back} nem állhat közelebb a hálóhoz, mint {front} (az egy vonalban állás szabályos).",
 	"fault_side": "Hiba: {left} nem lehet közelebb a jobb oldalvonalhoz, mint {right} (az egy vonalban állás szabályos).",
 	"overlap_how_title": "Mit ellenőriz a bíró",
-	"overlap_how_1": "Minden hátsó sorköteles játékos álljon egy vonalban vagy mögötte az előtte lévő első sorkötelesnek: az 5-ös a 4-es, a 6-os a 3-as, az 1-es a 2-es mögött.",
+	"overlap_how_1": "Minden hátsó sorköteles játékos egy vonalban vagy hátrébb álljon, mint az előtte lévő első sorköteles: az 5-ös a 4-esnél, a 6-os a 3-asnál, az 1-es a 2-esnél.",
 	"overlap_how_2": "Soronként balról jobbra: elöl 4, 3, 2, hátul 5, 6, 1.",
 	"overlap_how_3": "Csak ezeket a szomszédokat hasonlítják össze. A 4-es és az 1-es helyen álló játékos bárhol állhat egymáshoz képest.",
 	"overlap_how_4": "A talajon lévő lábak döntenek a nyitás pillanatában. Az egy vonalban állás szabályos, utána pedig mindenki szabadon mozoghat.",
@@ -255,7 +255,7 @@
 	"lineup_slip": "Állásrendi lap",
 	"lineup_slip_help": "Ezt írd a bírói állásrendi lapra a kezdő forgáshoz: az I–VI pozíció az 1–6. hely. Ha ti nyittok először, az I-es nyit; ha fogadtok, az első nyitásjog-visszaszerzéskor forogtok, és a II-es nyit. A liberó nem szerepel a lapon.",
 	"lineup_print": "Lapok nyomtatása",
-	"lineup_print_help": "Az alábbi előnézet kerül nyomtatásra. Válaszd ki, mi legyen rajta:",
+	"lineup_print_help": "Pontosan ezt az előnézetet nyomtatod ki. Válaszd ki, mi legyen rajta:",
 	"lineup_cards": "Játékoskártyák",
 	"lineup_print_button": "Nyomtatás",
 	"lineup_sheet_title": "{system} forgások",
@@ -313,10 +313,10 @@
 	"home_guides": "A szabályok és a rendszerek közérthetően, hivatkozással az FIVB-szabálykönyvre.",
 	"home_start": "Új vagy a teremben? Kezdd itt",
 	"home_rule_title": "2025 óta a nyitó csapat bárhol állhat a saját pályáján",
-	"home_rule_text": "Az FIVB 2025–2028-as szabályai szerint nyitáskor csak a fogadó csapatnak kell szabályos állásrendben állnia. A soron következő játékosnak kell nyitnia, a hátsó sorkötelesek továbbra is hátsó sorkötelesek, és a nyitó csapat nem takarhatja a nyitót, illetve nyitás közben nem emelheti a kezét a feje fölé. Egyes bajnokságok még a régi szabályt használják, ezért az eszközökben választhatsz.",
+	"home_rule_text": "Az FIVB 2025–2028-as szabályai szerint nyitáskor csak a fogadó csapatnak kell szabályos állásrendben állnia. A soron következő játékosnak kell nyitnia, a hátsó sorkötelesek továbbra is hátsó sorkötelesek, a nyitó csapat játékosai pedig nem takarhatják el a nyitást, és a nyitás közben nem emelhetik a kezüket a fejük fölé, amíg a labda át nem jut a hálón. Sok bajnokság még a régi szabályt használja, ezért az eszközökben választhatsz.",
 	"legend_setter": "Ebben a forgásban ő ad fel",
-	"passers_fewer": "Ebben a forgásban {n} játékos fogad. A feladó a hálónál rejtőzik, a közvetlenül előtte álló játékosnak pedig a nyitáskor közelebb kell lennie a hálóhoz, mint neki, ezért ő a hálónál vár.",
+	"passers_fewer": "Ebben a forgásban {n} játékos fogad. Az a társ, aki mögött a feladó rejtőzik, vagy akivel a hálónál együtt áll, nem fogad, hanem a hálónál vár vele.",
 	"tip_libero_back": "Liberó: nem nyithatsz, nem sáncolhatsz, sánckísérletben sem vehetsz részt, és sehonnan sem hajthatsz végre befejezett támadóérintést, ha a labda teljes terjedelmével a háló felett van. Ha a támadóvonal előtt kosárérintéssel adsz fel, az ütőd ezt a labdát nem ütheti meg, amíg az teljes terjedelmével a háló felett van.",
-	"tip_no_switch": "Ebben a forgásban sok csapat az első támadásnál nem cserél helyet: a jobb oldalon fogadó nyitásfogadó ütő jobbról, a feladó átló balról támad. A helycsere miatt labdamenet közben mindketten keresztülfutnának a pályán. Csapatonként eltér, kérdezd meg az edződet. Védekezésben és ellentámadásnál a szokásos módon váltotok.",
-	"tip_transition_simplified": "Egyszerűsítve: ez a támadást mutatja, amikor a feladó már a feladóhelyen van. Ha az első labdát a feladó veszi fel, más ad fel (általában a liberó vagy a jobb első), a sáncolók pedig előbb hátralépnek a hálótól a nekifutáshoz."
+	"tip_no_switch": "Ebben a forgásban sok csapat az első támadásnál nem cserél helyet: a jobb oldalon fogadó nyitásfogadó ütő jobbról, a jobb oldali ütő (a feladó átló, 6:2-ben az első sorban álló feladó) balról támad. A helycsere miatt labdamenet közben mindketten keresztülfutnának a pályán. Csapatonként eltér, kérdezd meg az edződet. Védekezésben és ellentámadásnál a szokásos módon váltotok.",
+	"tip_transition_simplified": "Egyszerűsítve: ez a támadást mutatja, amikor a feladó már a feladóhelyen van. Ha az első labdát a feladó veszi fel, más ad fel (általában a liberó vagy a jobb első helyen álló játékos), a sáncolók pedig előbb hátralépnek a hálótól a nekifutáshoz."
 }

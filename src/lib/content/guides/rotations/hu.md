@@ -74,7 +74,7 @@ A számok a játék sorrendjét követik: az 1. forgás után jön a 2., és íg
 
 Az állásrend csak a nyitás pillanatára vonatkozik. Amint a nyitó megüti a labdát, mindenki bárhová mehet a saját térfelén ([7.4.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)). A csapatok ezt arra használják, hogy mindenki oda kerüljön, ahol a legerősebb:
 
-- **Első sor:** a nyitásfogadó ütő balra, a center középre, a feladó vagy a feladó átló jobbra.
+- **Első sor:** a nyitásfogadó ütő balra, a center középre, a feladó vagy a feladó átló jobbra. Az 1. forgásban sok csapat a fogadás utáni első támadásnál nem cserél helyet: a jobb oldalon fogadó nyitásfogadó ütő jobbról, a feladó átló balról támad.
 - **Hátsó sor:** a feladó vagy a feladó átló jobb hátulra (1-es hely), a nyitásfogadó ütő hátsó középre (6-os hely, készen a pipe-ra), a liberó bal hátulra (5-ös hely).
 
 Fogadásnál a játékosok olyan közel állnak a céljukhoz, amennyire az [állásrendi szabály](/hu/guides/overlap) engedi, és a nyitás pillanatában váltanak. Saját nyitásnál az FIVB 2025–2028-as szabályai szerint már a helyeteken várhattok; a régi szabály szerint a nyitás pillanatában váltotok. Az ellenfél nyitásánál a legtöbben előbb fogadnak, és a támadás közben vagy után váltanak.

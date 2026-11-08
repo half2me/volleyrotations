@@ -57,7 +57,10 @@ export function makeLegal(
 	}
 	const live = (z: Zone) => !exempt.includes(z);
 	const push = (lo: Body, hi: Body, axis: 'x' | 'y') => {
-		const deficit = lo.p[axis] + (axis === 'x' ? Math.max(gap, 1) : gap) - hi.p[axis];
+		// Side by side, a full metre only between players standing about level; a stack of
+		// players at different depths needs no more than the usual gap.
+		const level = Math.abs(lo.p.y - hi.p.y) < 1;
+		const deficit = lo.p[axis] + (axis === 'x' && level ? Math.max(gap, 1) : gap) - hi.p[axis];
 		if (deficit <= 0) return false;
 		const total = 1 / lo.weight + 1 / hi.weight;
 		lo.p[axis] -= (deficit * (1 / lo.weight)) / total;

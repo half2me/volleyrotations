@@ -74,7 +74,7 @@ In a [5-1 system](/guides/systems), Rotation 1 typically looks like this: setter
 
 Rotation only governs the moment the serve is hit. As soon as the server's hand touches the ball, every player may go anywhere on their own court ([rule 7.4.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)). Teams use this to put players where they are strongest:
 
-- **Front row:** outside hitter to the left, middle blocker to the middle, setter or opposite to the right.
+- **Front row:** outside hitter to the left, middle blocker to the middle, setter or opposite to the right. In Rotation 1 many teams don't switch for the first attack after serve receive: the outside, who passed on the right, attacks from the right, and the opposite from the left.
 - **Back row:** setter or opposite to right back (zone 1), outside hitter to middle back (zone 6, ready for the pipe), libero to left back (zone 5).
 
 When you receive, players stand as close to their target spot as the [overlap rule](/guides/overlap) allows, then switch the moment the serve is hit. When you serve, the FIVB 2025–2028 rules let you wait in your spot already; under the older rule you switch at the serve hit. On the opponent's serve, most players pass first and switch on the transition.

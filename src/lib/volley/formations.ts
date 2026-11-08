@@ -207,9 +207,11 @@ function passers(
 	// A back-row setter in zone 6 or 5 hides right behind the front-row player in front of them,
 	// at the net, so that player does not pass: if they did, the setter would have to stand
 	// behind them in the middle of the passers. From zone 1 the setter hides along the right
-	// sideline instead, so the zone 2 player can still pass.
+	// sideline instead, so the zone 2 player can still pass. A setter in zone 4 stacks in the
+	// front-left corner with the zone 3 player, who stays with them so the front-row outside
+	// can pass on the left.
 	const setterZone = court.find((p) => p.role === setter)!.zone;
-	const shield = setterZone === 6 ? 3 : setterZone === 5 ? 4 : undefined;
+	const shield = setterZone === 6 ? 3 : setterZone === 5 ? 4 : setterZone === 4 ? 3 : undefined;
 	const others = court.filter((p) => p.role !== setter && p.zone !== shield);
 	if (formation === 5 || system === '6-6') return others;
 	const core = others.filter((p) => {
@@ -293,8 +295,8 @@ function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 			// Front-row passers take the short spots and back-row passers the deep ones, so they
 			// stay in their own row's order and front-row hitters are close to their approach.
 			cost += 0.15 * (isFront(p.zone) ? spots[i].y : 9 - spots[i].y);
-			// A front-row hitter passes on the side they attack from when the rules allow it.
-			const attackX = { FL: 1.5, FM: 4.5, FR: 7.5 }[p.slot as 'FL' | 'FM' | 'FR'];
+			// A front-row wing hitter passes on the side they attack from when the rules allow it.
+			const attackX = { FL: 1.5, FR: 7.5 }[p.slot as 'FL' | 'FR'];
 			if (isFront(p.zone) && attackX !== undefined) cost += 0.6 * Math.abs(spots[i].x - attackX);
 		});
 		if (!best || cost < best.cost - 1e-9) best = { cost, at };
@@ -388,9 +390,9 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 		if (p.role === 'L' || (o.system !== '6-6' && p.slot === 'BL')) {
 			return { ...p, x: 2.6, y: 4.8, setter: false, task: 'cover' };
 		}
-		// A back-row setter's partner on the right, and in 6-6 the whole back row, cover.
 		const side = swapSide(p);
 		const approach = APPROACH[side ?? p.slot];
+		// A back-row setter's partner on the right, and in 6-6 the whole back row, cover.
 		if (!approach || (o.system === '6-6' && !isFront(p.zone))) {
 			const centre = ZONE_CENTRE[p.zone];
 			return { ...p, x: centre.x, y: Math.max(centre.y, 5.2), setter: false, task: 'cover' };

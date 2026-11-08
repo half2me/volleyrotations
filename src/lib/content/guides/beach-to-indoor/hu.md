@@ -33,7 +33,7 @@ A fogadás, a feladás, a leütés, a nyitás és a játékolvasás mind átvihe
 | Térfél mérete          | 8 × 8 m                                                                                                     | 9 × 9 m                                                |
 | Játszma hossza         | 21 pont (a harmadik 15)                                                                                     | 25 pont (az ötödik 15)                                 |
 | Mérkőzés               | két nyert játszmáig                                                                                         | FIVB-ben három nyert játszmáig                         |
-| Térfélcsere            | összesen 7 (a harmadikban 5) pontonként                                                                     | minden játszma után, és az ötödik játszmában 8 pontnál |
+| Térfélcsere            | minden 7. pont után, a két csapat pontjait összeadva (a harmadikban 5 pontonként)                           | minden játszma után, és az ötödik játszmában 8 pontnál |
 | Csere                  | nincs                                                                                                       | 6 játszmánként, plusz korlátlan liberó-helyettesítés   |
 | Pihenőidő              | 1 játszmánként, az 1–2. játszmában technikai pihenőidő is, amikor a két csapat pontjainak összege 21 (FIVB) | 2 játszmánként, egyenként 30 mp                        |
 
