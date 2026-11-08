@@ -1,6 +1,16 @@
 import { Persisted } from '#lib/persisted.svelte.js';
-import type { DefenseSystem } from '#lib/volley/formations.js';
-import type { ReceiveFormation, RoleId, RotationNo, SystemId } from '#lib/volley/model.js';
+import type { DefenseSystem, Options } from '#lib/volley/formations.js';
+import { leagueOf, type LeagueId } from '#lib/volley/leagues.js';
+import type {
+	LiberoZone,
+	LineupOrder,
+	Point,
+	ReceiveFormation,
+	RoleId,
+	RotationNo,
+	SystemId,
+	Zone
+} from '#lib/volley/model.js';
 
 export type Member = { name: string; number: string };
 
@@ -15,7 +25,49 @@ export type Team = {
 	start: RotationNo;
 	players: Partial<Record<RoleId, Member>>;
 	bench: Member[];
+	/** Playbook choices; older saved teams lack them and get the defaults. */
+	league?: LeagueId;
+	order?: LineupOrder;
+	liberoZone?: LiberoZone;
+	keepSides?: boolean;
+	liberoServesFor?: RoleId;
+	formationBy?: Partial<Record<RotationNo, ReceiveFormation>>;
+	custom?: Partial<Record<RotationNo, Partial<Record<Zone, Point>>>>;
 };
+
+/** The playbook settings every choice a team makes, for the formation engine. */
+export type Playbook = Pick<
+	Options,
+	| 'system'
+	| 'libero'
+	| 'formation'
+	| 'defense'
+	| 'order'
+	| 'liberoZone'
+	| 'keepSides'
+	| 'liberoServesFor'
+	| 'formationBy'
+	| 'custom'
+	| 'servingOverlap'
+>;
+
+/** A team's playbook, with the league deciding what the rules allow. */
+export function teamPlaybook(team: Team): Playbook {
+	const league = leagueOf(team.league);
+	return {
+		system: team.system,
+		libero: team.libero,
+		formation: team.formation,
+		defense: team.defense,
+		order: team.order,
+		liberoZone: team.liberoZone,
+		keepSides: team.keepSides,
+		liberoServesFor: league.liberoServes && team.libero ? team.liberoServesFor : undefined,
+		formationBy: team.formationBy,
+		custom: team.custom,
+		servingOverlap: league.servingOverlap
+	};
+}
 
 export const newTeam = (name: string): Team => ({
 	id: Math.random().toString(36).slice(2, 10),
@@ -26,7 +78,8 @@ export const newTeam = (name: string): Team => ({
 	defense: 'perimeter',
 	start: 1,
 	players: {},
-	bench: []
+	bench: [],
+	league: 'fivb'
 });
 
 /** Every team the reader has set up, kept in their browser, and which one is open. */

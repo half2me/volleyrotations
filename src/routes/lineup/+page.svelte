@@ -1,11 +1,23 @@
 <script lang="ts">
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
+	import PlayerCard from '#lib/components/PlayerCard.svelte';
+	import PlaybookEditor from '#lib/components/PlaybookEditor.svelte';
+	import { shareFragment, teamFromFragment } from '#lib/share.js';
+	import { page } from '$app/state';
+	import { replaceState } from '$app/navigation';
 	import Seo from '#lib/components/Seo.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
 	import { m } from '#lib/paraglide/messages.js';
-	import { memberLabel, newTeam, teams, type Member, type Team } from '#lib/teams.svelte.js';
+	import {
+		memberLabel,
+		newTeam,
+		teamPlaybook,
+		teams,
+		type Member,
+		type Team
+	} from '#lib/teams.svelte.js';
 	import {
 		DEFENSE_SYSTEMS,
 		DEFAULT_OPTIONS,
@@ -32,12 +44,32 @@
 		type RoleId,
 		type RotationNo
 	} from '#lib/volley/model.js';
+	import IconLink from '~icons/lucide/link';
 	import IconPlus from '~icons/lucide/plus';
 	import IconPrinter from '~icons/lucide/printer';
 	import IconTrash from '~icons/lucide/trash-2';
 	import IconUserPlus from '~icons/lucide/user-plus';
 
 	$effect(() => teams.load());
+
+	// A shared team arrives in the URL fragment; it is offered, never added without asking.
+	let incoming: Team | undefined = $state();
+	let imported = $state('');
+	$effect(() => {
+		incoming = teamFromFragment(location.hash);
+	});
+
+	function importTeam() {
+		if (!incoming) return;
+		teams.set({ list: [...teams.current.list, incoming], active: incoming.id });
+		imported = incoming.name;
+		dismissImport();
+	}
+
+	function dismissImport() {
+		incoming = undefined;
+		replaceState(location.pathname + location.search, {});
+	}
 
 	// The page works without a saved team: edits to this draft are saved once made.
 	const team: Team = $derived(
@@ -70,14 +102,23 @@
 		teams.set({ list, active: list[0]?.id });
 	}
 
+	let copied: 'yes' | 'failed' | undefined = $state();
+	const shareUrl = $derived(`${site.url}${page.url.pathname}#${shareFragment(team)}`);
+	async function copyShare() {
+		try {
+			await navigator.clipboard.writeText(shareUrl);
+			copied = 'yes';
+		} catch {
+			copied = 'failed';
+		}
+	}
+
 	const roles = $derived(rolesOf(team.system, team.libero));
 	const formations = $derived(formationsFor(team));
 	const options = $derived({
 		...DEFAULT_OPTIONS,
-		system: team.system,
-		libero: team.libero,
-		formation: formations.includes(team.formation) ? team.formation : formations[0],
-		defense: team.defense
+		...teamPlaybook(team),
+		formation: formations.includes(team.formation) ? team.formation : formations[0]
 	});
 
 	/** Rotations in the order the team plays them, from its starting rotation. */
@@ -90,7 +131,7 @@
 	);
 	const label = (r: RoleId) => memberLabel(team.players[r], roleName(r));
 
-	const startZones = $derived(zonesInRotation(team.system, team.start));
+	const startZones = $derived(zonesInRotation(team.system, team.start, team.order));
 	const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 
 	let printDefense = $state(false);
@@ -107,6 +148,19 @@
 <div class="print:hidden">
 	<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.lineup_title()}</h1>
 	<p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.lineup_lead()}</p>
+	<div aria-live="polite" data-pagefind-ignore>
+		{#if incoming}
+			<div class="card mt-6 flex flex-wrap items-center gap-3 border-accent">
+				<p class="mr-auto font-medium">{m.import_found({ name: incoming.name })}</p>
+				<button type="button" class="btn-primary" onclick={importTeam}>{m.import_add()}</button>
+				<button type="button" class="btn-secondary" onclick={dismissImport}
+					>{m.import_dismiss()}</button
+				>
+			</div>
+		{:else if imported}
+			<p class="card mt-6">{m.import_done({ name: imported })}</p>
+		{/if}
+	</div>
 </div>
 
 <div class="mt-8 grid gap-6 lg:grid-cols-[minmax(0,22rem)_1fr] print:hidden" data-pagefind-ignore>
@@ -153,7 +207,7 @@
 		<ChipGroup
 			legend={m.label_system()}
 			options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
-			bind:value={() => team.system, (system) => save({ system })}
+			bind:value={() => team.system, (system) => save({ system, custom: undefined })}
 		/>
 		{#if team.system !== '6-6'}
 			<ChipGroup
@@ -162,7 +216,7 @@
 					{ value: true, label: m.yes() },
 					{ value: false, label: m.no() }
 				]}
-				bind:value={() => team.libero, (libero) => save({ libero })}
+				bind:value={() => team.libero, (libero) => save({ libero, custom: undefined })}
 			/>
 		{/if}
 		{#if formations.length > 1}
@@ -269,6 +323,30 @@
 			</button>
 		</section>
 
+		<PlaybookEditor {team} {save} names={tokens} />
+
+		<section class="card" aria-labelledby="share-heading">
+			<h2 id="share-heading" class="text-xl font-bold">{m.share_title()}</h2>
+			<p class="mt-1 text-sm text-ink-soft">{m.share_help()}</p>
+			<div class="mt-3 flex flex-wrap gap-2">
+				<label class="min-w-0 flex-1">
+					<span class="sr-only">{m.share_title()}</span>
+					<input
+						class="field"
+						readonly
+						value={shareUrl}
+						onfocus={(e) => e.currentTarget.select()}
+					/>
+				</label>
+				<button type="button" class="btn-secondary" onclick={copyShare}>
+					<IconLink class="size-4" aria-hidden="true" />{m.share_copy()}
+				</button>
+			</div>
+			<p class="mt-2 text-sm" aria-live="polite">
+				{copied === 'yes' ? m.share_copied() : copied === 'failed' ? m.share_failed() : ''}
+			</p>
+		</section>
+
 		<section class="card" aria-labelledby="slip-heading">
 			<h2 id="slip-heading" class="text-xl font-bold">{m.lineup_slip()}</h2>
 			<p class="mt-1 text-sm text-ink-soft">{m.lineup_slip_help()}</p>
@@ -360,35 +438,7 @@
 		<h3 class="mt-6 break-before-page font-semibold">{m.lineup_cards()}</h3>
 		<div class="mt-2 grid gap-3 sm:grid-cols-2 print:grid-cols-2">
 			{#each roles as role (role)}
-				<article class="card break-inside-avoid overflow-x-auto">
-					<h4 class="font-bold">{label(role)} · {roleName(role)}</h4>
-					<table class="mt-2 w-full text-left text-sm">
-						<thead>
-							<tr class="text-ink-soft">
-								<th scope="col" class="py-1 pr-2 font-medium">{m.label_rotation()}</th>
-								<th scope="col" class="py-1 pr-2 font-medium">{m.your_zone()}</th>
-								<th scope="col" class="py-1 pr-2 font-medium">{phaseName('receive')}</th>
-								<th scope="col" class="py-1 font-medium">{m.your_spot()}</th>
-							</tr>
-						</thead>
-						<tbody>
-							{#each order as r (r)}
-								{@const receive = formation({ ...options, rotation: r }, 'receive')}
-								{@const me = receive.find((p) => p.role === role)}
-								{@const zone =
-									me?.zone ?? ZONES.find((z) => zonesInRotation(team.system, r)[z] === role)}
-								<tr class="border-t border-line">
-									<td class="py-1 pr-2">{r}</td>
-									<td class="py-1 pr-2">
-										{zone ?? '–'}{zone ? ` (${isFront(zone) ? m.row_front() : m.row_back()})` : ''}
-									</td>
-									<td class="py-1 pr-2">{me ? taskName(me.task) : m.lineup_on_bench()}</td>
-									<td class="py-1">{me ? slotName(me.slot) : '–'}</td>
-								</tr>
-							{/each}
-						</tbody>
-					</table>
-				</article>
+				<PlayerCard {options} {role} title="{label(role)} · {roleName(role)}" rotations={order} />
 			{/each}
 		</div>
 	{/if}

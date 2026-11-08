@@ -25,6 +25,7 @@ const messages: Record<string, Record<string, string>> = Object.fromEntries(
 /** Message keys for each page's title and description. */
 const KEYS: Record<string, [string, string]> = {
 	'/': ['home_heading', 'home_description'],
+	'/learn': ['learn_title', 'learn_description'],
 	'/explorer': ['explorer_title', 'explorer_description'],
 	'/overlap': ['overlap_title', 'overlap_description'],
 	'/quiz': ['quiz_title', 'quiz_description'],
@@ -55,7 +56,11 @@ function textFor(path: string, locale: string) {
 	if (guide) return { ...frontmatter(guide, locale), eyebrow: EYEBROW[locale].guide };
 	const [t, d] = KEYS[path];
 	const eyebrow =
-		path === '/' || path === '/guides' || path === '/search' ? '' : EYEBROW[locale].tool;
+		path === '/' || path === '/guides' || path === '/search'
+			? ''
+			: path === '/learn'
+				? EYEBROW[locale].guide
+				: EYEBROW[locale].tool;
 	return { title: messages[locale][t], description: messages[locale][d], eyebrow };
 }
 

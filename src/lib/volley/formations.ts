@@ -10,11 +10,12 @@ import {
 	type Point,
 	type ReceiveFormation,
 	type RoleId,
+	type RotationNo,
 	type Situation,
 	type Slot,
 	type Zone
 } from './model.js';
-import { makeLegal } from './overlap.js';
+import { makeLegal, overlapFaults } from './overlap.js';
 
 export type DefenseSystem = 'perimeter' | 'rotational' | 'middle-up';
 export const DEFENSE_SYSTEMS: readonly DefenseSystem[] = ['perimeter', 'rotational', 'middle-up'];
@@ -27,12 +28,33 @@ export const ATTACKS_FROM: readonly AttackFrom[] = ['outside', 'middle', 'opposi
  * The moments of a rally the tools show. Receiving: `receive` then `attack`. Serving: `serve`,
  * `base` (after the serve hit, waiting for their attack), `defense`, then `attack` (transition).
  */
-export type Phase = 'receive' | 'serve' | 'base' | 'defense' | 'attack';
-export const RECEIVE_PHASES: readonly Phase[] = ['receive', 'attack'];
-export const SERVE_PHASES: readonly Phase[] = ['serve', 'base', 'defense', 'attack'];
+export type Phase = 'receive' | 'serve' | 'base' | 'defense' | 'attack' | 'cover';
+export const RECEIVE_PHASES: readonly Phase[] = ['receive', 'attack', 'cover'];
+export const SERVE_PHASES: readonly Phase[] = ['serve', 'base', 'defense', 'attack', 'cover'];
+
+/**
+ * What the opponent sends over in the defense moment: a full attack, a down ball (hit or tipped
+ * without a jump, so the blockers stay down) or a free ball (an easy ball they could not attack).
+ */
+export type Incoming = 'attack' | 'down' | 'free';
+export const INCOMING: readonly Incoming[] = ['attack', 'down', 'free'];
+
+/** Where the setter sets in the coverage moment: a front-row attack from the left, middle or right. */
+export type SetTo = 'left' | 'middle' | 'right';
+export const SET_TO: readonly SetTo[] = ['left', 'middle', 'right'];
 
 export type Task =
-	'serve' | 'pass' | 'hide' | 'set' | 'block' | 'dig' | 'tip' | 'attack' | 'cover' | 'base';
+	| 'serve'
+	| 'pass'
+	| 'hide'
+	| 'set'
+	| 'block'
+	| 'dig'
+	| 'tip'
+	| 'attack'
+	| 'cover'
+	| 'base'
+	| 'stay';
 
 export type Placed = OnCourt & {
 	x: number;
@@ -54,6 +76,19 @@ export type Options = Situation & {
 	 * FIVB 2025–2028 rule 7.4 frees the serving team.
 	 */
 	servingOverlap: boolean;
+	/**
+	 * After serve receive, a front-row outside who passed on the right attacks from there instead
+	 * of switching to the left (most often in rotation 1). False: everyone switches.
+	 */
+	keepSides?: boolean;
+	/** A team's receive formation for particular rotations, overriding `formation`. */
+	formationBy?: Partial<Record<RotationNo, ReceiveFormation>>;
+	/** A team's own receive positions per rotation, by zone. Used only while they are legal. */
+	custom?: Partial<Record<RotationNo, Partial<Record<Zone, Point>>>>;
+	incoming?: Incoming;
+	setTo?: SetTo;
+	/** In transition: the setter played the first ball, so someone else sets. */
+	setterDug?: boolean;
 };
 
 /** Where the setter sets from: just right of centre, at the net. */
@@ -210,24 +245,26 @@ function passers(
 	// sideline instead, so the zone 2 player can still pass. A setter in zone 4 stacks in the
 	// front-left corner with the zone 3 player, who stays with them so the front-row outside
 	// can pass on the left.
+	// When that zone 3 player is itself an outside (a lineup with the middle following the
+	// setter), they pass instead: the setter only has to stay to their left.
 	const setterZone = court.find((p) => p.role === setter)!.zone;
-	const shield = setterZone === 6 ? 3 : setterZone === 5 ? 4 : setterZone === 4 ? 3 : undefined;
+	const zone3Outside = ROLE_KIND[court.find((p) => p.zone === 3)!.role] === 'outside';
+	const shield =
+		setterZone === 6 ? 3 : setterZone === 5 ? 4 : setterZone === 4 && !zone3Outside ? 3 : undefined;
 	const others = court.filter((p) => p.role !== setter && p.zone !== shield);
 	if (formation === 5 || system === '6-6') return others;
 	const core = others.filter((p) => {
 		const kind = ROLE_KIND[p.role];
 		return kind === 'outside' || kind === 'libero' || (kind === 'middle' && !isFront(p.zone));
 	});
-	if (formation === 3) return core;
-	// The fourth passer is whoever plays opposite the setter, or, when that player is shielding
-	// the setter, the remaining front-row middle.
-	const fourth =
-		others.find(
-			(p) =>
-				!core.includes(p) && (ROLE_KIND[p.role] === 'opposite' || ROLE_KIND[p.role] === 'setter')
-		) ?? others.find((p) => !core.includes(p));
-	return fourth ? [...core, fourth] : core;
+	// Extra passers: whoever plays opposite the setter, then a front-row middle. They also fill
+	// in when an outside is the one shielding the setter.
+	const extra = others.filter((p) => !core.includes(p)).sort((a, b) => extraRank(a) - extraRank(b));
+	return [...core, ...extra].slice(0, formation);
 }
+
+const extraRank = (p: OnCourt) =>
+	ROLE_KIND[p.role] === 'opposite' || ROLE_KIND[p.role] === 'setter' ? 0 : 1;
 
 function permutations<T>(items: T[]): T[][] {
 	if (items.length <= 1) return [items];
@@ -239,7 +276,38 @@ function permutations<T>(items: T[]): T[][] {
 const ZONE_X: Record<Zone, number> = { 4: 1.2, 5: 1.2, 3: 4.5, 6: 4.5, 2: 7.8, 1: 7.8 };
 
 function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
-	const passing = passers(court, setter, o.formation, o.system);
+	const placed = autoReceive(o, court, setter);
+	const custom = o.custom?.[o.rotation];
+	if (!custom || !ZONES.every((z) => custom[z])) return placed;
+	const at = custom as Record<Zone, Point>;
+	if (overlapFaults(at).length > 0) return placed;
+	return placed.map((p) => ({ ...p, x: at[p.zone].x, y: at[p.zone].y }));
+}
+
+/** The receive formation size a rotation uses. */
+export const formationOf = (o: Options): ReceiveFormation => {
+	const f = o.formationBy?.[o.rotation] ?? o.formation;
+	return SYSTEM[o.system].receiveFormations.includes(f) ? f : SYSTEM[o.system].receiveFormations[0];
+};
+
+/**
+ * The search below tries every order of the passers, which is slow enough to notice when a page
+ * draws all six rotations, so results are kept: the answer depends only on these inputs.
+ */
+const receiveCache = new Map<string, Placed[]>();
+
+function autoReceive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
+	const key = JSON.stringify([o.system, formationOf(o), setter, court]);
+	const hit = receiveCache.get(key);
+	if (hit) return hit.map((p) => ({ ...p }));
+	const placed = searchReceive(o, court, setter);
+	if (receiveCache.size > 300) receiveCache.clear();
+	receiveCache.set(key, placed);
+	return placed.map((p) => ({ ...p }));
+}
+
+function searchReceive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
+	const passing = passers(court, setter, formationOf(o), o.system);
 	const spots = RECEIVE_SPOTS[passing.length as ReceiveFormation] ?? RECEIVE_SPOTS[5];
 	const idle = court.filter((p) => !passing.includes(p));
 	const setterZone = court.find((p) => p.role === setter)!.zone;
@@ -347,7 +415,37 @@ function serve(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 	});
 }
 
+/** The free-ball spots: the five-player receive line, everyone but the setter passing. */
+const FREE_SPOTS = RECEIVE_SPOTS[5];
+
 function defense(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
+	const from = base(o, court, setter);
+	if (o.incoming === 'free') {
+		// The setter heads for the target; the others pass, front-row hitters dropping off the net
+		// to the short spots so they can still approach. Each takes the spot nearest their base.
+		const passing = from.filter((p) => p.role !== setter);
+		let best: { cost: number; order: Placed[] } | undefined;
+		for (const order of permutations(passing)) {
+			const cost = order.reduce(
+				(sum, p, i) => sum + (p.x - FREE_SPOTS[i].x) ** 2 + (p.y - FREE_SPOTS[i].y) ** 2,
+				0
+			);
+			if (!best || cost < best.cost - 1e-9) best = { cost, order };
+		}
+		return from.map((p) => {
+			if (p.role === setter) return { ...p, ...TARGET, task: 'set', run: undefined };
+			const i = best!.order.indexOf(p);
+			return { ...p, ...FREE_SPOTS[i], task: 'pass' };
+		});
+	}
+	if (o.incoming === 'down') {
+		// Blockers stay at the net without jumping; the back row stays deep to dig.
+		return from.map((p) => {
+			if (isFront(p.zone)) return { ...p, y: 1, task: 'stay' };
+			const deep = BASE.perimeter[p.slot];
+			return { ...p, ...(deep ?? { x: p.x, y: p.y }), task: 'dig' };
+		});
+	}
 	return court.map((p) => {
 		const spot = defenseSpot(o.defense, o.attackFrom, p.slot);
 		return { ...p, x: spot.x, y: spot.y, task: spot.task, setter: p.role === setter };
@@ -370,6 +468,7 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 	const passed = o.serving ? undefined : receive(o, court, setter);
 	const swapSide = (p: OnCourt): Slot | undefined => {
 		const at = passed?.find((q) => q.role === p.role);
+		if (o.keepSides === false) return undefined;
 		if (!at || !isFront(p.zone) || p.role === setter) return undefined;
 		const outsideOnRight = (q: Placed) => q.slot === 'FL' && q.task === 'pass' && q.x > 6;
 		const rightSideOnLeft = (q: Placed) =>
@@ -380,15 +479,31 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 		if (rightSideOnLeft(at)) return 'FL';
 		return undefined;
 	};
+	const dug = o.serving && o.setterDug ? backupSetter(court, setter) : undefined;
 	return court.map((p) => {
 		const isSetter = p.role === setter;
+		if (dug) {
+			// The setter stays where they dug; the libero sets from behind the 3 m line, so the
+			// hitter may attack the ball above the net (rule 19.3.1.4), anyone else at the net.
+			if (isSetter) {
+				const spot = defenseSpot(o.defense, o.attackFrom, p.slot);
+				return { ...p, x: spot.x, y: spot.y, setter: false, task: 'dig' };
+			}
+			if (p === dug) {
+				const at = p.role === 'L' ? { x: TARGET.x, y: 3.6 } : TARGET;
+				return { ...p, ...at, setter: true, task: 'set' };
+			}
+		}
 		if (isSetter) return { ...p, ...TARGET, setter: true, task: 'set' };
 		// A back-row setter who is not setting (4-2) covers from the right back.
 		if (ROLE_KIND[p.role] === 'setter' && !isFront(p.zone)) {
 			return { ...p, x: 7, y: 5.4, setter: false, task: 'cover' };
 		}
+		// The libero never attacks, so from middle back they cover rather than run a pipe; a
+		// back-row outside defending in zone 5 covers on the left.
 		if (p.role === 'L' || (o.system !== '6-6' && p.slot === 'BL')) {
-			return { ...p, x: 2.6, y: 4.8, setter: false, task: 'cover' };
+			const spot = p.slot === 'BM' ? { x: 4.5, y: 5.4 } : { x: 2.6, y: 4.8 };
+			return { ...p, ...spot, setter: false, task: 'cover' };
 		}
 		const side = swapSide(p);
 		const approach = APPROACH[side ?? p.slot];
@@ -408,9 +523,84 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 	});
 }
 
+/** Who sets when the setter dug the first ball: the libero, else the right-front player. */
+function backupSetter(court: OnCourt[], setter: RoleId): OnCourt | undefined {
+	return (
+		court.find((p) => p.role === 'L') ??
+		court.find((p) => p.slot === 'FR' && p.role !== setter) ??
+		court.find((p) => p.slot === 'FM' && p.role !== setter)
+	);
+}
+
+const HITTER_SLOTS: Record<SetTo, Slot[]> = {
+	left: ['FL'],
+	middle: ['FM'],
+	right: ['FR']
+};
+
+const attackSide = (p: Placed): Slot => (p.noSwitch ? swapped(p.slot) : p.slot);
+
+function hitterFor(attackers: Placed[], setTo: SetTo): Placed | undefined {
+	for (const slot of HITTER_SLOTS[setTo]) {
+		const p = attackers.find((q) => q.task === 'attack' && q.run && attackSide(q) === slot);
+		if (p) return p;
+	}
+	return undefined;
+}
+
+/** The sets a rotation can offer: a hitter must be attacking from that spot. */
+export function setsAvailable(o: Options): SetTo[] {
+	const court = lineupOnCourt({ ...o });
+	const before = attack(o, court, setterOf(o.system, o.rotation));
+	return SET_TO.filter((t) => hitterFor(before, t));
+}
+
+/**
+ * Coverage after the set: the hitter jumps, and the other five form a cup to catch a ball
+ * blocked back. The usual teaching pattern: the three players nearest the hitter close in,
+ * the other two cover deep.
+ */
+function cover(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
+	const before = attack(o, court, setter);
+	const hitter =
+		hitterFor(before, o.setTo ?? 'left') ?? before.find((p) => p.task === 'attack' && p.run);
+	if (!hitter?.run) return before;
+	const h = hitter.run;
+	// The cup faces partly toward the middle of the court, where a ball off the block goes.
+	const toCentre = Math.atan2(4.5 - h.x, 4.5 - h.y) / 2;
+	const at = (r: number, a: number): Point => ({
+		x: Math.min(8.6, Math.max(0.4, h.x + r * Math.sin(toCentre + a))),
+		y: Math.min(8.6, Math.max(0.5, h.y + r * Math.cos(toCentre + a)))
+	});
+	const deg = Math.PI / 180;
+	const spots = [
+		at(1.7, -50 * deg),
+		at(1.7, 0),
+		at(1.7, 50 * deg),
+		at(4, -25 * deg),
+		at(4, 25 * deg)
+	];
+	const others = before.filter((p) => p !== hitter);
+	let best: { cost: number; order: Placed[] } | undefined;
+	for (const order of permutations(others)) {
+		const cost = order.reduce(
+			(sum, p, i) => sum + (p.x - spots[i].x) ** 2 + (p.y - spots[i].y) ** 2,
+			0
+		);
+		if (!best || cost < best.cost - 1e-9) best = { cost, order };
+	}
+	return before.map((p) => {
+		if (p === hitter) return { ...p, ...h, run: undefined, task: 'attack' };
+		const i = best!.order.indexOf(p);
+		return { ...p, ...spots[i], run: undefined, noSwitch: undefined, task: 'cover' };
+	});
+}
+
+const swapped = (s: Slot): Slot => (s === 'FL' ? 'FR' : s === 'FR' ? 'FL' : s);
+
 /** Every player's place, task and next run in one moment of a rally. */
 export function formation(o: Options, phase: Phase): Placed[] {
-	const serving = phase !== 'receive' && (phase !== 'attack' || o.serving);
+	const serving = phase !== 'receive' && ((phase !== 'attack' && phase !== 'cover') || o.serving);
 	const court = lineupOnCourt({ ...o, serving });
 	const setter = setterOf(o.system, o.rotation);
 	switch (phase) {
@@ -424,6 +614,8 @@ export function formation(o: Options, phase: Phase): Placed[] {
 			return defense(o, court, setter);
 		case 'attack':
 			return attack(o, court, setter);
+		case 'cover':
+			return cover(o, court, setter);
 	}
 }
 

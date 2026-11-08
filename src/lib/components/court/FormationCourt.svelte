@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { Placed } from '#lib/volley/formations.js';
 	import { coverageAreas } from '#lib/volley/coverage.js';
-	import { roleName, roleShort } from '#lib/volley/labels.js';
+	import { roleName, roleShort, taskName } from '#lib/volley/labels.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import type { Point, RoleId } from '#lib/volley/model.js';
 	import Arrow from './Arrow.svelte';
 	import Court from './Court.svelte';
@@ -16,7 +17,8 @@
 		area = false,
 		runs = true,
 		zones = true,
-		names
+		names,
+		table = true
 	}: {
 		placed: Placed[];
 		label: string;
@@ -30,7 +32,14 @@
 		zones?: boolean;
 		/** Short labels to draw instead of role abbreviations, such as shirt numbers. */
 		names?: Partial<Record<RoleId, string>>;
+		/**
+		 * A table of everyone's spot for screen readers. Leave it out where the diagram sits inside
+		 * a button, which cannot hold a table.
+		 */
+		table?: boolean;
 	} = $props();
+
+	const metres = (n: number) => (Math.round(n * 10) / 10).toLocaleString(m.number_locale());
 
 	const mine = $derived(placed.find((p) => p.role === you));
 
@@ -76,3 +85,40 @@
 		/>
 	{/each}
 </Court>
+
+{#if table && placed.length}
+	<!-- The wrapper hides the table: a table itself grows to fit its content whatever its width. -->
+	<div class="sr-only">
+		<table>
+			<caption>{label}</caption>
+			<thead>
+				<tr>
+					<th scope="col">{m.table_player()}</th>
+					<th scope="col">{m.table_zone()}</th>
+					<th scope="col">{m.table_task()}</th>
+					<th scope="col">{m.table_where()}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each placed as p (p.role)}
+					<tr>
+						<th scope="row"
+							>{names?.[p.role] ? `${names[p.role]} (${roleName(p.role)})` : roleName(p.role)}</th
+						>
+						<td>{p.zone}</td>
+						<td>{taskName(p.task)}</td>
+						<td>
+							{p.y > 9
+								? m.where_behind({ x: metres(p.x) })
+								: m.where_metres({ net: metres(Math.max(0, p.y)), left: metres(p.x) })}
+							{#if p.run}{m.where_then({
+									net: metres(Math.max(0, p.run.y)),
+									left: metres(p.run.x)
+								})}{/if}
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
+{/if}

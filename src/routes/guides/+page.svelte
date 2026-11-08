@@ -14,8 +14,10 @@
 		systems: m.guide_systems_summary,
 		'serve-receive': m.guide_serve_receive_summary,
 		defense: m.guide_defense_summary,
+		coverage: m.guide_coverage_summary,
 		libero: m.guide_libero_summary,
 		substitutions: m.guide_substitutions_summary,
+		leagues: m.guide_leagues_summary,
 		'beach-to-indoor': m.guide_beach_to_indoor_summary,
 		glossary: m.guide_glossary_summary
 	};

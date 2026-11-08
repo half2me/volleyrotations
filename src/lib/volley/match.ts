@@ -1,3 +1,4 @@
+import { leagueOf, type LeagueId } from './leagues.js';
 import { rolesOf, type RoleId, type RotationNo, type SystemId } from './model.js';
 
 /**
@@ -29,17 +30,27 @@ export type MatchState = {
 	usedBench: number[];
 	subCount: number;
 	finished: boolean;
+	/** Decides the substitution and time-out limits; matches saved before leagues mean FIVB. */
+	league?: LeagueId;
+	/** Every rally in order, for the statistics. */
+	log: RallyRecord[];
 };
 
+/** One rally: the set it was in, our rotation, whether we served, and whether we won it. */
+export type RallyRecord = { set: number; rotation: RotationNo; serving: boolean; won: boolean };
+
 export const SETS_TO_WIN = 3;
-export const SUBS_PER_SET = 6;
-export const TIMEOUTS_PER_SET = 2;
+
+export const subsPerSet = (state: Pick<MatchState, 'league'>) => leagueOf(state.league).subsPerSet;
+export const timeoutsPerSet = (state: Pick<MatchState, 'league'>) =>
+	leagueOf(state.league).timeoutsPerSet;
 
 export function newMatch(o: {
 	system: SystemId;
 	libero: boolean;
 	rotation: RotationNo;
 	serving: boolean;
+	league?: LeagueId;
 }): MatchState {
 	return {
 		...o,
@@ -49,7 +60,8 @@ export function newMatch(o: {
 		subs: {},
 		usedBench: [],
 		subCount: 0,
-		finished: false
+		finished: false,
+		log: []
 	};
 }
 
@@ -86,8 +98,15 @@ export function rally(state: MatchState, winner: 'us' | 'them'): MatchState {
 		i === state.sets.length - 1 ? { ...s, [winner]: s[winner] + 1 } : s
 	);
 	const sideout = winner === 'us' && !state.serving;
+	const record: RallyRecord = {
+		set: state.sets.length,
+		rotation: state.rotation,
+		serving: state.serving,
+		won: winner === 'us'
+	};
 	const next = {
 		...state,
+		log: [...(state.log ?? []), record],
 		sets,
 		serving: winner === 'us',
 		rotation: sideout ? nextRotation(state.rotation) : state.rotation
@@ -119,10 +138,20 @@ export const nextSetServing = (state: MatchState) => !state.servedFirst;
 
 export type SubOption = { kind: 'bench'; bench: number } | { kind: 'starter' };
 
-/** What may come on for the player in a starting position now (rule 15.6). */
+/**
+ * What may come on for the player in a starting position now: under FIVB rule 15.6, or, in
+ * leagues that allow more re-entries, anyone not already on court within the team's limit.
+ */
 export function subOptions(state: MatchState, role: RoleId, benchSize: number): SubOption[] {
-	if (state.subCount >= SUBS_PER_SET || role === 'L') return [];
+	if (state.subCount >= subsPerSet(state) || role === 'L') return [];
 	const slot = state.subs[role] ?? { starterLeft: false, starterReturned: false };
+	if (!leagueOf(state.league).fivbReentry) {
+		const onCourt = Object.values(state.subs).map((s) => s?.sub);
+		const bench = Array.from({ length: benchSize }, (_, b) => b)
+			.filter((b) => !onCourt.includes(b))
+			.map((b): SubOption => ({ kind: 'bench', bench: b }));
+		return slot.sub !== undefined ? [{ kind: 'starter' }, ...bench] : bench;
+	}
 	if (slot.sub !== undefined) {
 		// A substitute can only be replaced by the starter they came on for, and only once.
 		return slot.starterReturned ? [] : [{ kind: 'starter' }];
@@ -149,3 +178,64 @@ export function substitute(state: MatchState, role: RoleId, option: SubOption): 
 
 /** The roles that start on court: everyone but the libero. */
 export const courtRoles = (state: MatchState) => rolesOf(state.system, false);
+
+export type RotationStats = {
+	rotation: RotationNo;
+	/** Rallies on the opponent's serve, and how many we won (sideouts). */
+	received: number;
+	sidedOut: number;
+	/** Rallies on our serve, and how many we won (points on serve). */
+	served: number;
+	scored: number;
+};
+
+/** Sideout and point-on-serve counts for each rotation, over the given rallies. */
+export function rotationStats(log: readonly RallyRecord[]): RotationStats[] {
+	return ([1, 2, 3, 4, 5, 6] as RotationNo[]).map((rotation) => {
+		const here = log.filter((r) => r.rotation === rotation);
+		const received = here.filter((r) => !r.serving);
+		const served = here.filter((r) => r.serving);
+		return {
+			rotation,
+			received: received.length,
+			sidedOut: received.filter((r) => r.won).length,
+			served: served.length,
+			scored: served.filter((r) => r.won).length
+		};
+	});
+}
+
+/** The longest run of consecutive points each team won within one set. */
+export function longestRuns(log: readonly RallyRecord[]): { us: number; them: number } {
+	const best = { us: 0, them: 0 };
+	let run = 0;
+	let prev: RallyRecord | undefined;
+	for (const r of log) {
+		run = prev && prev.set === r.set && prev.won === r.won ? run + 1 : 1;
+		const who = r.won ? 'us' : 'them';
+		best[who] = Math.max(best[who], run);
+		prev = r;
+	}
+	return best;
+}
+
+/** The rally log as CSV, one rally per row with the running score. */
+export function logCsv(log: readonly RallyRecord[]): string {
+	const rows = ['set,rally,rotation,serving,won,us,them'];
+	let score = { us: 0, them: 0 };
+	let set = 0;
+	let n = 0;
+	for (const r of log) {
+		if (r.set !== set) {
+			set = r.set;
+			score = { us: 0, them: 0 };
+			n = 0;
+		}
+		n++;
+		score[r.won ? 'us' : 'them']++;
+		rows.push(
+			[r.set, n, r.rotation, r.serving ? 1 : 0, r.won ? 1 : 0, score.us, score.them].join(',')
+		);
+	}
+	return rows.join('\n') + '\n';
+}

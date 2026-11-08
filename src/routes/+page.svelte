@@ -56,6 +56,7 @@
 				{m.home_cta_explore()}
 				<IconArrowRight class="size-4" aria-hidden="true" />
 			</a>
+			<a href={href('/learn')} class="btn-secondary">{m.home_cta_learn()}</a>
 			<a href={href('/guides/beach-to-indoor')} class="btn-secondary">{m.home_cta_beach()}</a>
 		</div>
 	</div>

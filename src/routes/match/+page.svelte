@@ -6,13 +6,32 @@
 	import { href } from '#lib/i18n.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { Persisted } from '#lib/persisted.svelte.js';
-	import { memberLabel, newTeam, teams, type Member, type Team } from '#lib/teams.svelte.js';
-	import { DEFAULT_OPTIONS, formation } from '#lib/volley/formations.js';
-	import { roleName, roleShort, rotationLabel, systemName } from '#lib/volley/labels.js';
 	import {
-		SUBS_PER_SET,
-		TIMEOUTS_PER_SET,
+		memberLabel,
+		newTeam,
+		teamPlaybook,
+		teams,
+		type Member,
+		type Team
+	} from '#lib/teams.svelte.js';
+	import { LEAGUE_IDS, leagueOf, type LeagueId } from '#lib/volley/leagues.js';
+	import { explorerPrefs } from '#lib/prefs.svelte.js';
+	import IconDownload from '~icons/lucide/download';
+	import { DEFAULT_OPTIONS, formation } from '#lib/volley/formations.js';
+	import {
+		leagueName,
+		roleName,
+		roleShort,
+		rotationLabel,
+		systemName
+	} from '#lib/volley/labels.js';
+	import {
 		courtRoles,
+		logCsv,
+		longestRuns,
+		rotationStats,
+		subsPerSet,
+		timeoutsPerSet,
 		newMatch,
 		nextSetServing,
 		rally,
@@ -46,6 +65,7 @@
 	$effect(() => {
 		teams.load();
 		saved.load();
+		explorerPrefs.load();
 	});
 
 	// Setup choices before a match starts.
@@ -57,6 +77,7 @@
 	const setupTeam = $derived(teams.current.list.find((t) => t.id === teamId));
 	// Follows the chosen team's starting rotation until the reader picks another.
 	let startRotation: RotationNo = $derived(setupTeam?.start ?? 1);
+	let setupLeague: LeagueId = $derived(setupTeam?.league ?? explorerPrefs.current.league);
 
 	const team: Team = $derived(
 		teams.current.list.find((t) => t.id === saved.current.teamId) ?? {
@@ -77,7 +98,8 @@
 				system: t?.system ?? looseSystem,
 				libero: t ? t.libero && t.system !== '6-6' : looseSystem !== '6-6',
 				rotation: startRotation,
-				serving: firstServe
+				serving: firstServe,
+				league: setupLeague
 			})
 		});
 	}
@@ -111,11 +133,24 @@
 
 	const options = $derived({
 		...DEFAULT_OPTIONS,
+		...teamPlaybook({ ...team, league: match?.league }),
 		system: match?.system ?? '5-1',
-		libero: match?.libero ?? true,
-		formation: team.formation,
-		defense: team.defense
+		libero: match?.libero ?? true
 	});
+
+	const stats = $derived(match ? rotationStats(match.log ?? []) : []);
+	const runs = $derived(longestRuns(match?.log ?? []));
+	const pct = (n: number, of: number) => (of ? `${Math.round((100 * n) / of)}%` : '–');
+
+	function downloadCsv() {
+		if (!match) return;
+		const blob = new Blob([logCsv(match.log ?? [])], { type: 'text/csv' });
+		const a = document.createElement('a');
+		a.href = URL.createObjectURL(blob);
+		a.download = `${team.name} - ${saved.current.opponent || m.match_them()}.csv`;
+		a.click();
+		URL.revokeObjectURL(a.href);
+	}
 	const phase = $derived(match?.serving ? 'serve' : 'receive');
 	const placed = $derived(match ? formation({ ...options, rotation: match.rotation }, phase) : []);
 	const server = $derived(placed.find((p) => p.zone === 1));
@@ -188,6 +223,17 @@
 				<a class="text-accent underline" href={href('/lineup')}>{m.lineup_title()}</a>
 			</p>
 		{/if}
+		<ChipGroup
+			legend={m.label_league()}
+			options={LEAGUE_IDS.map((l) => ({ value: l, label: leagueName(l) }))}
+			bind:value={setupLeague}
+		/>
+		<p class="text-sm text-ink-soft">
+			{m.match_league_limits({
+				subs: leagueOf(setupLeague).subsPerSet,
+				timeouts: leagueOf(setupLeague).timeoutsPerSet
+			})}
+		</p>
 		<label class="block">
 			<span class="eyebrow">{m.match_opponent()}</span>
 			<input class="field mt-1" bind:value={opponent} placeholder={m.match_them()} />
@@ -326,7 +372,7 @@
 						<button
 							type="button"
 							class="btn-secondary"
-							disabled={match.timeouts[t.side] >= TIMEOUTS_PER_SET}
+							disabled={match.timeouts[t.side] >= timeoutsPerSet(match)}
 							onclick={() =>
 								apply({
 									...match,
@@ -337,13 +383,13 @@
 							{m.match_timeout({
 								team: t.name,
 								used: match.timeouts[t.side],
-								max: TIMEOUTS_PER_SET
+								max: timeoutsPerSet(match)
 							})}
 						</button>
 					{/each}
 					<button type="button" class="btn-secondary" onclick={() => (subOpen = true)}>
 						<IconArrowLeftRight class="size-4" aria-hidden="true" />
-						{m.match_subs({ used: match.subCount, max: SUBS_PER_SET })}
+						{m.match_subs({ used: match.subCount, max: subsPerSet(match) })}
 					</button>
 				</div>
 			{/if}
@@ -382,6 +428,50 @@
 		</section>
 	</div>
 
+	<section class="mt-10" aria-labelledby="stats-heading" data-pagefind-ignore>
+		<h2 id="stats-heading" class="text-xl font-bold">{m.stats_title()}</h2>
+		<p class="mt-1 text-sm text-ink-soft">{m.stats_help()}</p>
+		<div class="mt-3 overflow-x-auto">
+			<table class="w-full max-w-xl table-fixed border-collapse text-sm">
+				<thead>
+					<tr class="text-left text-ink-soft">
+						<th scope="col" class="py-1 pr-2 font-medium">{m.label_rotation()}</th>
+						<th scope="col" class="py-1 pr-2 font-medium">{m.stats_sideout()}</th>
+						<th scope="col" class="py-1 font-medium">{m.stats_on_serve()}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each stats as r (r.rotation)}
+						<tr class="border-t border-line">
+							<th scope="row" class="py-1.5 pr-2 text-left font-medium"
+								>{rotationLabel(r.rotation, match.system)}</th
+							>
+							<td class="py-1.5 pr-2 tabular-nums">
+								{pct(r.sidedOut, r.received)}
+								<span class="text-ink-soft">({r.sidedOut}/{r.received})</span>
+							</td>
+							<td class="py-1.5 tabular-nums">
+								{pct(r.scored, r.served)}
+								<span class="text-ink-soft">({r.scored}/{r.served})</span>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+		<p class="mt-3 text-sm">
+			{m.stats_runs({ us: runs.us, them: runs.them })}
+		</p>
+		<button
+			type="button"
+			class="btn-secondary mt-3"
+			disabled={!match.log?.length}
+			onclick={downloadCsv}
+		>
+			<IconDownload class="size-4" aria-hidden="true" />{m.stats_csv()}
+		</button>
+	</section>
+
 	<Dialog.Root bind:open={subOpen}>
 		<Dialog.Portal>
 			<Dialog.Overlay class="fixed inset-0 z-40 bg-ink/40" />
@@ -395,7 +485,9 @@
 					</Dialog.Close>
 				</div>
 				<Dialog.Description class="mt-1 text-sm text-ink-soft">
-					{m.match_sub_help({ used: match.subCount, max: SUBS_PER_SET })}
+					{leagueOf(match.league).fivbReentry
+						? m.match_sub_help({ used: match.subCount, max: subsPerSet(match) })
+						: m.match_sub_help_league({ used: match.subCount, max: subsPerSet(match) })}
 				</Dialog.Description>
 				<p class="eyebrow mt-4">{m.match_sub_out()}</p>
 				<ul class="mt-2 grid grid-cols-2 gap-2">

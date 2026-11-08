@@ -7,5 +7,10 @@ export const site = {
 	 * Cloudflare Web Analytics beacon token (dash.cloudflare.com → Analytics & Logs → Web
 	 * Analytics). Empty means no beacon script is emitted.
 	 */
-	cfBeaconToken: ''
+	cfBeaconToken: '6267507c9f114af7902a2b0c2c70e2bc',
+	/**
+	 * Who checked the volleyball content, credited in the footer, e.g. 'Jane Doe, MRSZ level 2
+	 * coach'. Empty shows no credit.
+	 */
+	reviewedBy: ''
 };

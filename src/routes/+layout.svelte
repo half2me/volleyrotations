@@ -4,6 +4,7 @@
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
 	import SiteNav from '#lib/components/SiteNav.svelte';
+	import ReportLink from '#lib/components/ReportLink.svelte';
 	import { m } from '#lib/paraglide/messages.js';
 	import IconSearch from '~icons/lucide/search';
 	import type { LayoutProps } from './$types';
@@ -55,7 +56,14 @@
 		<div
 			class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-sm text-ink-soft"
 		>
-			<p>© {new Date().getFullYear()} {site.name}</p>
+			<div>
+				<p>© {new Date().getFullYear()} {site.name}</p>
+				{#if site.reviewedBy}<p>{m.reviewed_by({ name: site.reviewedBy })}</p>{/if}
+				<p class="flex flex-wrap items-center gap-x-1">
+					{m.footer_accuracy()}
+					<ReportLink />
+				</p>
+			</div>
 			<LanguageSwitcher />
 		</div>
 	</footer>

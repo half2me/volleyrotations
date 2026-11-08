@@ -8,7 +8,8 @@
 	import { href } from '#lib/i18n.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { Persisted } from '#lib/persisted.svelte.js';
-	import { explorerPrefs } from '#lib/prefs.svelte.js';
+	import { effectiveOptions, explorerPrefs } from '#lib/prefs.svelte.js';
+	import { teams } from '#lib/teams.svelte.js';
 	import { byZone } from '#lib/volley/formations.js';
 	import {
 		attackFromName,
@@ -23,7 +24,7 @@
 	} from '#lib/volley/labels.js';
 	import { ZONES, rolesOf, type Zone } from '#lib/volley/model.js';
 	import { overlapFaults } from '#lib/volley/overlap.js';
-	import { makeQuestion, type Question } from '#lib/volley/quiz.js';
+	import { makeQuestion, recordAnswer, revisit, topicOf, type Question } from '#lib/volley/quiz.js';
 	import IconArrowRight from '~icons/lucide/arrow-right';
 	import IconCheck from '~icons/lucide/circle-check';
 	import IconX from '~icons/lucide/circle-x';
@@ -33,15 +34,22 @@
 		best: 0,
 		correct: 0,
 		answered: 0,
-		mine: true
+		mine: true,
+		/** Recent misses per topic, so missed questions come back more often. */
+		misses: {} as Record<string, number>
 	});
 
 	$effect(() => {
 		explorerPrefs.load();
+		teams.load();
 		score.load();
 	});
 
-	const prefs = $derived(explorerPrefs.current);
+	const team = $derived(teams.current.list.find((t) => t.id === explorerPrefs.current.team));
+	const prefs = $derived({
+		...explorerPrefs.current,
+		...effectiveOptions(explorerPrefs.current, team)
+	});
 	const myRole = $derived(
 		rolesOf(prefs.system, prefs.libero).includes(prefs.role) ? prefs.role : undefined
 	);
@@ -53,7 +61,11 @@
 
 	function next() {
 		chosen = undefined;
-		question = makeQuestion(prefs, score.current.mine ? myRole : undefined);
+		question = makeQuestion(
+			prefs,
+			score.current.mine ? myRole : undefined,
+			revisit(score.current.misses ?? {})
+		);
 	}
 
 	$effect(() => {
@@ -77,7 +89,8 @@
 			answered: s.answered + 1,
 			correct: s.correct + (right ? 1 : 0),
 			streak: right ? s.streak + 1 : 0,
-			best: Math.max(s.best, right ? s.streak + 1 : 0)
+			best: Math.max(s.best, right ? s.streak + 1 : 0),
+			misses: recordAnswer(s.misses ?? {}, topicOf(question), right)
 		});
 	}
 
@@ -155,6 +168,9 @@
 <p class="mt-2 text-sm text-ink-soft">
 	{m.quiz_settings_note({ system: systemName(prefs.system) })}
 	<a class="text-accent underline" href={href('/explorer')}>{m.explorer_title()}</a>
+</p>
+<p class="mt-1 text-sm text-ink-soft">
+	{m.quiz_revisit_note({ n: Object.keys(score.current.misses ?? {}).length })}
 </p>
 
 <div class="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,26rem)_1fr]" data-pagefind-ignore>

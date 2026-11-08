@@ -151,9 +151,34 @@ export const rotateZone = (zone: Zone, steps = 1): Zone =>
 /** The zone of the first setter in a rotation, which is how coaches often name rotations. */
 export const setterZoneOf = (rotation: RotationNo): Zone => rotateZone(1, rotation - 1);
 
-/** Which role stands in each zone in a rotation, before any libero replacement. */
-export function zonesInRotation(system: SystemId, rotation: RotationNo): Record<Zone, RoleId> {
+/**
+ * Who follows the setter in the service order: the usual lineup has an outside hitter there
+ * ("outside first"); some teams put a middle there instead, which swaps every outside with the
+ * middle beside them. The setters and opposite keep their places either way.
+ */
+export type LineupOrder = 'oh-first' | 'mb-first';
+export const LINEUP_ORDERS: readonly LineupOrder[] = ['oh-first', 'mb-first'];
+
+const MB_FIRST: Partial<Record<RoleId, RoleId>> = {
+	OH1: 'MB1',
+	MB1: 'OH1',
+	OH2: 'MB2',
+	MB2: 'OH2'
+};
+
+/** The roles in zones 1–6 in rotation 1 (index 0 is zone 1). */
+export function lineupOf(system: SystemId, order: LineupOrder = 'oh-first'): readonly RoleId[] {
 	const lineup = SYSTEM[system].lineup;
+	return order === 'mb-first' ? lineup.map((r) => MB_FIRST[r] ?? r) : lineup;
+}
+
+/** Which role stands in each zone in a rotation, before any libero replacement. */
+export function zonesInRotation(
+	system: SystemId,
+	rotation: RotationNo,
+	order: LineupOrder = 'oh-first'
+): Record<Zone, RoleId> {
+	const lineup = lineupOf(system, order);
 	const out = {} as Record<Zone, RoleId>;
 	lineup.forEach((role, i) => {
 		out[rotateZone((i + 1) as Zone, rotation - 1)] = role;
@@ -162,8 +187,13 @@ export function zonesInRotation(system: SystemId, rotation: RotationNo): Record<
 }
 
 /** The role's zone in a rotation. */
-export function zoneOf(system: SystemId, rotation: RotationNo, role: RoleId): Zone | undefined {
-	const zones = zonesInRotation(system, rotation);
+export function zoneOf(
+	system: SystemId,
+	rotation: RotationNo,
+	role: RoleId,
+	order: LineupOrder = 'oh-first'
+): Zone | undefined {
+	const zones = zonesInRotation(system, rotation, order);
 	return ZONES.find((z) => zones[z] === role);
 }
 
@@ -185,15 +215,26 @@ export type Slot = 'FL' | 'FM' | 'FR' | 'BL' | 'BM' | 'BR';
 
 const ZONE_SLOT: Record<Zone, Slot> = { 4: 'FL', 3: 'FM', 2: 'FR', 5: 'BL', 6: 'BM', 1: 'BR' };
 
-export function slotOf(system: SystemId, zone: Zone, role: RoleId): Slot {
+/**
+ * Where the libero (or a back-row middle) defends: left back (zone 5) or middle back (zone 6).
+ * The back-row outside takes the other spot.
+ */
+export type LiberoZone = 5 | 6;
+
+export function slotOf(
+	system: SystemId,
+	zone: Zone,
+	role: RoleId,
+	liberoZone: LiberoZone = 5
+): Slot {
 	if (system === '6-6') return ZONE_SLOT[zone];
 	const front = isFront(zone);
 	switch (ROLE_KIND[role]) {
 		case 'outside':
-			return front ? 'FL' : 'BM';
+			return front ? 'FL' : liberoZone === 6 ? 'BL' : 'BM';
 		case 'middle':
 		case 'libero':
-			return front ? 'FM' : 'BL';
+			return front ? 'FM' : liberoZone === 6 ? 'BM' : 'BL';
 		default:
 			// Setters and opposites play on the right.
 			return front ? 'FR' : 'BR';
@@ -215,20 +256,36 @@ export type Situation = {
 	/** Whether our team serves (true) or receives (false). */
 	serving: boolean;
 	libero: boolean;
+	order?: LineupOrder;
+	liberoZone?: LiberoZone;
+	/**
+	 * The middle the libero also serves for, where the league allows a libero to serve in one
+	 * position of the service order. FIVB rules never allow it.
+	 */
+	liberoServesFor?: RoleId;
 };
 
 /**
  * The six players on court. The libero takes the back-row middle's place, except when that
- * middle serves: under FIVB rules the libero cannot serve (rule 19.3.1.3).
+ * middle serves: under FIVB rules the libero cannot serve (rule 19.3.1.3). Leagues that let the
+ * libero serve in one position set `liberoServesFor`.
  */
-export function lineupOnCourt({ system, rotation, serving, libero }: Situation): OnCourt[] {
-	const zones = zonesInRotation(system, rotation);
+export function lineupOnCourt({
+	system,
+	rotation,
+	serving,
+	libero,
+	order,
+	liberoZone,
+	liberoServesFor
+}: Situation): OnCourt[] {
+	const zones = zonesInRotation(system, rotation, order);
 	const useLibero = libero && SYSTEM[system].libero;
 	return ZONES.map((zone) => {
 		const role = zones[zone];
-		const slot = slotOf(system, zone, role);
+		const slot = slotOf(system, zone, role, liberoZone);
 		const middleInBack = ROLE_KIND[role] === 'middle' && !isFront(zone);
-		const middleServes = serving && zone === 1;
+		const middleServes = serving && zone === 1 && liberoServesFor !== role;
 		if (useLibero && middleInBack && !middleServes) {
 			return { role: 'L', zone, slot, replaces: role };
 		}

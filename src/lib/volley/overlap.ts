@@ -39,7 +39,8 @@ type Body = { zone: Zone; p: Point; weight: number };
 
 /**
  * Moves players the least it can to make a formation legal with a visible gap, so diagrams show
- * the relation clearly: `gap` front to back, and a metre side to side. Any two players are also
+ * the relation clearly: `gap` front to back, and side to side a metre between players standing
+ * about level but only `gap` between players at different depths. Any two players are also
  * kept a metre apart, so no token hides another on the diagram. Heavier players move less: a
  * passer stays on their spot while the setter hiding behind them gives way. The legal
  * constraints are relaxed last in every round, so the result is always legal.

@@ -1,6 +1,15 @@
 import { m } from '#lib/paraglide/messages.js';
 import { getLocale } from '#lib/paraglide/runtime.js';
-import type { AttackFrom, DefenseSystem, Phase, Placed, Task } from './formations.js';
+import type {
+	AttackFrom,
+	DefenseSystem,
+	Incoming,
+	Phase,
+	Placed,
+	SetTo,
+	Task
+} from './formations.js';
+import { leagueOf, type LeagueId } from './leagues.js';
 import {
 	COLUMN_PAIRS,
 	ROLE_KIND,
@@ -106,23 +115,47 @@ export const systemDescription = (s: SystemId) =>
 		'6-6': m.system_66_desc
 	})[s]();
 
+export const leagueName = (l: LeagueId) =>
+	({
+		fivb: m.league_fivb,
+		ncaa: m.league_ncaa,
+		nfhs: m.league_nfhs,
+		usav: m.league_usav
+	})[l]();
+
 export const phaseName = (p: Phase) =>
 	({
 		receive: m.phase_receive,
 		serve: m.phase_serve,
 		base: m.phase_base,
 		defense: m.phase_defense,
-		attack: m.phase_attack
+		attack: m.phase_attack,
+		cover: m.phase_cover
 	})[p]();
 
-export const phaseDescription = (p: Phase, serving: boolean) =>
+export const phaseDescription = (p: Phase, serving: boolean, incoming: Incoming = 'attack') =>
 	({
 		receive: m.phase_receive_desc,
 		serve: m.phase_serve_desc,
 		base: m.phase_base_desc,
-		defense: m.phase_defense_desc,
-		attack: serving ? m.phase_transition_desc : m.phase_attack_desc
+		defense: {
+			attack: m.phase_defense_desc,
+			down: m.phase_defense_down_desc,
+			free: m.phase_defense_free_desc
+		}[incoming],
+		attack: serving ? m.phase_transition_desc : m.phase_attack_desc,
+		cover: m.phase_cover_desc
 	})[p]();
+
+export const incomingName = (i: Incoming) =>
+	({ attack: m.incoming_attack, down: m.incoming_down, free: m.incoming_free })[i]();
+
+export const setToName = (s: SetTo) =>
+	({
+		left: m.set_to_left,
+		middle: m.set_to_middle,
+		right: m.set_to_right
+	})[s]();
 
 export const taskName = (t: Task) =>
 	({
@@ -135,7 +168,8 @@ export const taskName = (t: Task) =>
 		tip: m.task_tip,
 		attack: m.task_attack,
 		cover: m.task_cover,
-		base: m.task_base
+		base: m.task_base,
+		stay: m.task_stay
 	})[t]();
 
 const taskDetail = (t: Task) =>
@@ -149,7 +183,8 @@ const taskDetail = (t: Task) =>
 		tip: m.task_tip_you,
 		attack: m.task_attack_you,
 		cover: m.task_cover_you,
-		base: m.task_base_you
+		base: m.task_base_you,
+		stay: m.task_stay_you
 	})[t]();
 
 export const slotName = (s: Slot) =>
@@ -218,18 +253,29 @@ export type Explanation = {
  * middle serves.
  */
 export function explain(
-	o: { system: SystemId; serving: boolean; servingOverlap: boolean; libero: boolean },
+	o: {
+		system: SystemId;
+		serving: boolean;
+		servingOverlap: boolean;
+		libero: boolean;
+		league?: LeagueId;
+		incoming?: Incoming;
+		setterDug?: boolean;
+	},
 	phase: Phase,
 	placed: Placed[],
 	role: RoleId
 ): Explanation {
 	const you = placed.find((p) => p.role === role);
+	const liberoMayServe = leagueOf(o.league).liberoServes;
 	if (!you) {
 		if (role === 'L') {
 			const middle = placed.find((p) => ROLE_KIND[p.role] === 'middle' && !isFront(p.zone));
 			return {
 				task: m.off_court(),
-				detail: m.libero_off_serving({ middle: middle ? roleInSentence(middle.role) : '' }),
+				detail: (liberoMayServe ? m.libero_off_serving_league : m.libero_off_serving)({
+					middle: middle ? roleInSentence(middle.role) : ''
+				}),
 				tips: [m.tip_libero_rules()]
 			};
 		}
@@ -243,7 +289,15 @@ export function explain(
 
 	const tips: string[] = [];
 	const front = isFront(you.zone);
-	tips.push(front ? m.tip_front_row() : you.role === 'L' ? m.tip_libero_back() : m.tip_back_row());
+	tips.push(
+		front
+			? m.tip_front_row()
+			: you.role === 'L'
+				? liberoMayServe
+					? m.tip_libero_back_league()
+					: m.tip_libero_back()
+				: m.tip_back_row()
+	);
 
 	if (you.role === 'L' && you.replaces) {
 		tips.push(m.tip_libero_replaces({ middle: roleInSentence(you.replaces) }));
@@ -257,8 +311,10 @@ export function explain(
 	if (phase === 'serve') {
 		if (you.task === 'serve') {
 			tips.push(m.tip_server({ slot: slotName(you.slot) }));
+			if (you.role === 'L' && you.replaces)
+				tips.push(m.tip_libero_serves({ middle: roleInSentence(you.replaces) }));
 			if (ROLE_KIND[you.role] === 'middle' && o.libero && o.system !== '6-6')
-				tips.push(m.tip_middle_serves());
+				tips.push(liberoMayServe ? m.tip_middle_serves_league() : m.tip_middle_serves());
 		} else if (o.servingOverlap) {
 			const list = overlapNeighbours(you, placed, [1]);
 			if (list.length) tips.push(m.tip_serving_overlap({ list: list.join('; ') }));
@@ -268,14 +324,27 @@ export function explain(
 		}
 	}
 	if (phase === 'base' && o.system !== '6-6') tips.push(m.tip_base({ slot: slotName(you.slot) }));
+	if (phase === 'defense' && o.incoming === 'free') {
+		if (you.task === 'pass' && front) tips.push(m.tip_free_front());
+		tips.push(m.tip_free_call());
+	}
+	if (phase === 'defense' && o.incoming === 'down') tips.push(m.tip_down());
+	if (phase === 'cover') {
+		tips.push(you.task === 'attack' ? m.tip_cover_hitter() : m.tip_cover_pattern());
+	}
+	if (phase === 'attack' && o.serving && o.setterDug) {
+		if (you.task === 'dig' && ROLE_KIND[you.role] === 'setter') tips.push(m.tip_setter_dug());
+		if (you.setter && you.role === 'L') tips.push(m.tip_backup_libero());
+		else if (you.setter && ROLE_KIND[you.role] !== 'setter') tips.push(m.tip_backup_front());
+	}
 	if (phase === 'attack') {
 		if (you.task === 'attack' && !front) {
 			tips.push(you.slot === 'BM' ? m.tip_pipe() : m.tip_back_attack());
 		}
-		if (you.setter && front) tips.push(m.tip_setter_front());
+		if (you.setter && front && !(o.serving && o.setterDug)) tips.push(m.tip_setter_front());
 		if (o.system === '6-6' && you.setter) tips.push(m.tip_66_setter());
 		if (you.noSwitch) tips.push(m.tip_no_switch());
-		if (o.serving) tips.push(m.tip_transition_simplified());
+		if (o.serving && !o.setterDug) tips.push(m.tip_transition_simplified());
 	}
 	return { task: taskName(you.task), detail: taskDetail(you.task), tips };
 }

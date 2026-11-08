@@ -9,8 +9,10 @@ export const guideLabel: Record<GuideSlug, () => string> = {
 	systems: m.guide_systems,
 	'serve-receive': m.guide_serve_receive,
 	defense: m.guide_defense,
+	coverage: m.guide_coverage,
 	libero: m.guide_libero,
 	substitutions: m.guide_substitutions,
+	leagues: m.guide_leagues,
 	'beach-to-indoor': m.guide_beach_to_indoor,
 	glossary: m.guide_glossary
 };
@@ -18,6 +20,7 @@ export const guideLabel: Record<GuideSlug, () => string> = {
 /** Each page's name in the current locale. Typed by `PagePath`, so a new page needs one. */
 export const pageLabel: Record<PagePath, () => string> = {
 	'/': m.nav_home,
+	'/learn': m.nav_learn,
 	'/explorer': m.nav_explorer,
 	'/overlap': m.nav_overlap,
 	'/quiz': m.nav_quiz,
@@ -30,8 +33,10 @@ export const pageLabel: Record<PagePath, () => string> = {
 	'/guides/systems': guideLabel.systems,
 	'/guides/serve-receive': guideLabel['serve-receive'],
 	'/guides/defense': guideLabel.defense,
+	'/guides/coverage': guideLabel.coverage,
 	'/guides/libero': guideLabel.libero,
 	'/guides/substitutions': guideLabel.substitutions,
+	'/guides/leagues': guideLabel.leagues,
 	'/guides/beach-to-indoor': guideLabel['beach-to-indoor'],
 	'/guides/glossary': guideLabel.glossary,
 	'/search': m.nav_search

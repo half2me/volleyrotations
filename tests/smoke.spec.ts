@@ -2,6 +2,14 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { routes } from './routes.ts';
 
+// The analytics beacon is a third-party script: tests stub it so they neither depend on the
+// network nor count visits.
+test.beforeEach(async ({ page }) => {
+	await page.route('https://static.cloudflareinsights.com/**', (route) =>
+		route.fulfill({ body: '', contentType: 'text/javascript' })
+	);
+});
+
 for (const route of routes) {
 	test(`${route} loads cleanly`, async ({ page }) => {
 		const errors: string[] = [];
@@ -37,6 +45,8 @@ for (const route of routes) {
 
 	test(`${route} passes axe (WCAG 2.1 AA)`, async ({ page }) => {
 		await page.goto(route);
+		// Colour transitions would let axe measure a colour halfway between the two themes.
+		await page.addStyleTag({ content: '*, *::before, *::after { transition: none !important; }' });
 		for (const theme of ['light', 'dark']) {
 			await page.evaluate((t) => (document.documentElement.dataset.theme = t), theme);
 			const { violations } = await new AxeBuilder({ page })
@@ -125,4 +135,81 @@ test('the lineup builder puts shirt numbers on the sheets', async ({ page }) => 
 	await expect(page.getByText('12 = #12')).toBeVisible();
 	await page.reload();
 	await expect(page.getByLabel('Shirt number of the Setter')).toHaveValue('12');
+});
+
+test('a shared team link offers the team and adds it', async ({ page, browser }) => {
+	await page.goto('/lineup');
+	await page.getByLabel('Team name').fill('Falcons');
+	await page.getByLabel('Team name').blur();
+	await page.getByLabel('Shirt number of the Setter').fill('7');
+	await page.getByLabel('Shirt number of the Setter').blur();
+	const link = await page.getByRole('textbox', { name: 'Share this team' }).inputValue();
+	const url = new URL(link);
+
+	// A reader who has never visited: a fresh context with empty storage.
+	const other = await browser.newContext();
+	const fresh = await other.newPage();
+	await fresh.goto(url.pathname + url.hash);
+	await expect(fresh.getByText('Someone shared the team “Falcons” with you.')).toBeVisible();
+	await fresh.getByRole('button', { name: 'Add to my teams' }).click();
+	await expect(fresh.getByLabel('Team name')).toHaveValue('Falcons');
+	await expect(fresh.getByLabel('Shirt number of the Setter')).toHaveValue('7');
+	await other.close();
+});
+
+test('the playbook saves only legal receive positions', async ({ page }) => {
+	await page.goto('/lineup');
+	const save = page.getByRole('button', { name: 'Save positions' });
+	await expect(save).toBeDisabled();
+	const player = page.getByRole('button', { name: /zone 4/ });
+	await player.focus();
+	for (let i = 0; i < 8; i++) await page.keyboard.press('Shift+ArrowRight');
+	await expect(save).toBeDisabled();
+	for (let i = 0; i < 8; i++) await page.keyboard.press('Shift+ArrowLeft');
+	await page.keyboard.press('ArrowDown');
+	await expect(save).toBeEnabled();
+	await save.click();
+	await expect(page.getByText('This rotation uses your own positions.')).toBeVisible();
+});
+
+test('the explorer follows a chosen team and its league', async ({ page }) => {
+	await page.goto('/lineup');
+	await page.getByLabel('Team name').fill('Owls');
+	await page.getByLabel('Team name').blur();
+	await page.locator('label').getByText('NCAA (US college)', { exact: true }).click();
+	await page.goto('/explorer');
+	await page.locator('label').getByText('Owls', { exact: true }).click();
+	await expect(page.getByText(/Using Owls's playbook/)).toBeVisible();
+	await page.locator('label').getByText('Libero', { exact: true }).click();
+	await page.locator('label').getByText('We serve', { exact: true }).click();
+	await expect(page.getByText(/your league lets you serve in one position/i)).toBeVisible();
+});
+
+test('the match tracker shows rotation statistics', async ({ page }) => {
+	await page.goto('/match');
+	await page.locator('label').getByText('They serve', { exact: true }).click();
+	await page.getByRole('button', { name: 'Start match' }).click();
+	await page.getByRole('button', { name: 'Point Us' }).click();
+	await page.getByRole('button', { name: 'Point Us' }).click();
+	const row = page.getByRole('row', { name: /Rotation 1/ });
+	await expect(row).toContainText('100% (1/1)');
+	await expect(page.getByRole('button', { name: 'Download rallies (CSV)' })).toBeEnabled();
+});
+
+test('the learning path remembers finished steps', async ({ page }) => {
+	await page.goto('/learn');
+	await expect(page.getByText(/^0 of \d+ steps done$/)).toBeVisible();
+	await page.getByRole('button', { name: 'Mark as done' }).first().click();
+	await page.reload();
+	await expect(page.getByText(/^1 of \d+ steps done$/)).toBeVisible();
+});
+
+test('the explorer shows free balls and hitter coverage', async ({ page }) => {
+	await page.goto('/explorer');
+	await page.locator('label').getByText('We serve', { exact: true }).click();
+	await page.getByRole('button', { name: 'Defense', exact: true }).click();
+	await page.locator('label').getByText('Free ball', { exact: true }).click();
+	await expect(page.getByText(/can only send a free ball/)).toBeVisible();
+	await page.getByRole('button', { name: 'Cover', exact: true }).click();
+	await expect(page.getByText(/forms a cup/)).toBeVisible();
 });

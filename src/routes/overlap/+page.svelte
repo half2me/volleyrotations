@@ -1,25 +1,16 @@
 <script lang="ts">
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
-	import Court from '#lib/components/court/Court.svelte';
+	import DragCourt from '#lib/components/court/DragCourt.svelte';
+	import { explorerPrefs } from '#lib/prefs.svelte.js';
+	import { LEAGUE_IDS, leagueOf } from '#lib/volley/leagues.js';
 	import Seo from '#lib/components/Seo.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { DEFAULT_OPTIONS, byZone, formation } from '#lib/volley/formations.js';
+	import { leagueName, rotationLabel, zoneRef, systemName, roleRef } from '#lib/volley/labels.js';
 	import {
-		roleInSentence,
-		roleName,
-		roleShort,
-		rotationLabel,
-		zoneRef,
-		systemName,
-		roleRef,
-		capitalize
-	} from '#lib/volley/labels.js';
-	import {
-		COLUMN_PAIRS,
 		ROTATIONS,
-		ROW_ORDER,
 		SYSTEMS,
 		ZONES,
 		lineupOnCourt,
@@ -37,15 +28,32 @@
 	const RULE_URL =
 		'https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27';
 
+	$effect(() => explorerPrefs.load());
+
 	let system: SystemId = $state('5-1');
 	let rotation: RotationNo = $state(1);
+	/** Whether the reader checks their team at its own serve, where their league asks for it. */
+	let serving = $state(false);
 
-	const court = $derived(lineupOnCourt({ system, rotation, serving: false, libero: true }));
+	const league = $derived(explorerPrefs.current.league);
+	const servingChecked = $derived(leagueOf(league).servingOverlap);
+	const atServe = $derived(serving && servingChecked);
+	/** The server stands behind the end line and is never compared (rule 7.4.1). */
+	const exempt: Zone[] = $derived(atServe ? [1] : []);
+
+	const court = $derived(lineupOnCourt({ system, rotation, serving: atServe, libero: true }));
 	const legal = () =>
 		byZone(
 			formation(
-				{ ...DEFAULT_OPTIONS, system, rotation, formation: system === '6-6' ? 5 : 3 },
-				'receive'
+				{
+					...DEFAULT_OPTIONS,
+					system,
+					rotation,
+					serving: atServe,
+					servingOverlap: true,
+					formation: system === '6-6' ? 5 : 3
+				},
+				atServe ? 'serve' : 'receive'
 			)
 		);
 
@@ -63,53 +71,19 @@
 	 */
 	function scramble() {
 		const base = legal();
+		const zones = ZONES.filter((z) => !exempt.includes(z));
 		do {
-			const [a, b] = [...ZONES].sort(() => Math.random() - 0.5);
+			const [a, b] = [...zones].sort(() => Math.random() - 0.5);
 			positions = { ...base, [a]: base[b], [b]: base[a] };
-		} while (overlapFaults(positions).length === 0);
+		} while (overlapFaults(positions, exempt).length === 0);
 		challenge = true;
 	}
 
-	const faults = $derived(overlapFaults(positions));
-	const broken = (a: Zone, b: Zone) => faults.some((f) => f.a === a && f.b === b);
+	const faults = $derived(overlapFaults(positions, exempt));
 	const who = (z: Zone) => {
 		const p = court.find((c) => c.zone === z)!;
 		return m.player_in_zone({ name: roleRef(p.role), zone: zoneRef(z) });
 	};
-
-	// Dragging: pointer coordinates to court metres through the SVG's own transform.
-	let dragging: Zone | undefined = $state();
-	let selected: Zone | undefined = $state();
-
-	function toCourt(e: PointerEvent): Point {
-		const el = e.currentTarget as SVGGraphicsElement;
-		const svg = el instanceof SVGSVGElement ? el : el.ownerSVGElement!;
-		const ctm = svg.getScreenCTM()!.inverse();
-		const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(ctm);
-		return { x: Math.min(8.8, Math.max(0.2, p.x)), y: Math.min(8.8, Math.max(0.2, p.y)) };
-	}
-
-	function onkeydown(e: KeyboardEvent, z: Zone) {
-		const step = e.shiftKey ? 1 : 0.25;
-		const d = {
-			ArrowLeft: [-step, 0],
-			ArrowRight: [step, 0],
-			ArrowUp: [0, -step],
-			ArrowDown: [0, step]
-		}[e.key];
-		if (!d) return;
-		e.preventDefault();
-		const p = positions[z];
-		positions[z] = {
-			x: Math.min(8.8, Math.max(0.2, p.x + d[0])),
-			y: Math.min(8.8, Math.max(0.2, p.y + d[1]))
-		};
-	}
-
-	const relations = [
-		...COLUMN_PAIRS.map(([a, b]) => ({ a, b })),
-		...ROW_ORDER.map(([a, b]) => ({ a, b }))
-	];
 </script>
 
 <Seo
@@ -123,6 +97,38 @@
 <p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.overlap_lead()}</p>
 
 <div class="mt-8 grid gap-4 sm:grid-cols-2" data-pagefind-ignore>
+	<ChipGroup
+		legend={m.label_league()}
+		options={LEAGUE_IDS.map((l) => ({ value: l, label: leagueName(l) }))}
+		bind:value={
+			() => league,
+			(l) => {
+				explorerPrefs.set({ ...explorerPrefs.current, league: l });
+				reset();
+			}
+		}
+	/>
+	<div>
+		<ChipGroup
+			legend={m.label_situation()}
+			options={[
+				{ value: false, label: m.we_receive() },
+				{ value: true, label: m.we_serve() }
+			]}
+			bind:value={
+				() => serving,
+				(v) => {
+					serving = v;
+					reset();
+				}
+			}
+		/>
+		{#if serving && !servingChecked}
+			<p class="mt-2 text-sm text-ink-soft">{m.overlap_serving_free()}</p>
+		{:else if serving}
+			<p class="mt-2 text-sm text-ink-soft">{m.overlap_serving_checked()}</p>
+		{/if}
+	</div>
 	<ChipGroup
 		legend={m.label_system()}
 		options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
@@ -149,80 +155,14 @@
 
 <div class="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,26rem)_1fr]">
 	<div data-pagefind-ignore>
-		<Court
+		<DragCourt
+			{court}
+			bind:positions
+			{faults}
+			{exempt}
+			keysId="overlap-keys"
 			label={m.overlap_court_label({ rotation: rotationLabel(rotation, system) })}
-			serviceZone={false}
-			role="group"
-			onpointermove={(e) => {
-				if (dragging) positions[dragging] = toCourt(e);
-			}}
-			onpointerup={() => (dragging = undefined)}
-			onpointercancel={() => (dragging = undefined)}
-		>
-			{#each relations as r (`${r.a}-${r.b}`)}
-				<line
-					x1={positions[r.a].x}
-					y1={positions[r.a].y}
-					x2={positions[r.b].x}
-					y2={positions[r.b].y}
-					class={broken(r.a, r.b) ? 'stroke-bad' : 'stroke-good'}
-					stroke-width={broken(r.a, r.b) ? 0.12 : 0.06}
-					stroke-dasharray={broken(r.a, r.b) ? undefined : '0.2 0.15'}
-				/>
-			{/each}
-			{#each court as p (p.zone)}
-				{@const at = positions[p.zone]}
-				{@const bad = faults.some((f) => f.a === p.zone || f.b === p.zone)}
-				<g
-					transform="translate({at.x} {at.y})"
-					role="button"
-					tabindex="0"
-					aria-label={m.overlap_player({ who: capitalize(who(p.zone)) })}
-					aria-describedby="overlap-keys"
-					class="cursor-grab outline-none active:cursor-grabbing"
-					onpointerdown={(e) => {
-						e.preventDefault();
-						dragging = p.zone;
-						selected = p.zone;
-						(e.currentTarget as Element).setPointerCapture?.(e.pointerId);
-					}}
-					onpointermove={(e) => {
-						if (dragging === p.zone) positions[p.zone] = toCourt(e);
-					}}
-					onpointerup={() => (dragging = undefined)}
-					onfocus={() => (selected = p.zone)}
-					onkeydown={(e) => onkeydown(e, p.zone)}
-				>
-					{#if selected === p.zone}
-						<circle r="0.68" class="fill-none stroke-accent" stroke-width="0.1" />
-					{/if}
-					<circle r="0.5" class={p.role === 'L' ? 'fill-libero' : 'fill-team'} />
-					{#if bad}<circle r="0.5" class="fill-none stroke-bad" stroke-width="0.12" />{/if}
-				</g>
-			{/each}
-			<!-- Token labels sit outside the focusable groups: each group's accessible name is its
-			     aria-label, which already names the player and zone. -->
-			{#each court as p (p.zone)}
-				{@const at = positions[p.zone]}
-				<g transform="translate({at.x} {at.y})" class="pointer-events-none" aria-hidden="true">
-					<text
-						text-anchor="middle"
-						dominant-baseline="central"
-						font-size="0.3"
-						font-weight="700"
-						y="-0.1"
-						class={p.role === 'L' ? 'fill-libero-ink' : 'fill-team-ink'}>{roleShort(p.role)}</text
-					>
-					<text
-						text-anchor="middle"
-						dominant-baseline="central"
-						font-size="0.24"
-						y="0.2"
-						class={p.role === 'L' ? 'fill-libero-ink' : 'fill-team-ink'}>{p.zone}</text
-					>
-				</g>
-			{/each}
-		</Court>
+		/>
 		<p id="overlap-keys" class="mt-2 text-sm text-ink-soft">{m.overlap_keys()}</p>
 		<div class="mt-3 flex flex-wrap gap-2">
 			<button type="button" class="btn-primary" onclick={scramble}>

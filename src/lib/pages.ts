@@ -15,8 +15,10 @@ export const guides = [
 	'systems',
 	'serve-receive',
 	'defense',
+	'coverage',
 	'libero',
 	'substitutions',
+	'leagues',
 	'beach-to-indoor',
 	'glossary'
 ] as const;
@@ -25,6 +27,7 @@ export type GuideSlug = (typeof guides)[number];
 
 export const pages = [
 	{ path: '/', inNav: false },
+	{ path: '/learn', inNav: true },
 	{ path: '/explorer', inNav: true },
 	{ path: '/overlap', inNav: true },
 	{ path: '/quiz', inNav: true },
