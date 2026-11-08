@@ -1,5 +1,5 @@
 ---
-title: Strandröplabdáról teremre
+title: Strandröplabdáról a terembe
 description: Útmutató strandosoknak, akik teremre váltanak - posztok, forgás és állásrendi hiba, liberó, nagyobb pálya, és a szabálykülönbségek, amelyek meglepik a strandosokat.
 ---
 
@@ -7,7 +7,7 @@ description: Útmutató strandosoknak, akik teremre váltanak - posztok, forgás
 	import Callout from '#lib/components/Callout.svelte';
 </script>
 
-# Strandröplabdáról teremre
+# Strandröplabdáról a terembe
 
 <Callout>
 
@@ -23,19 +23,19 @@ description: Útmutató strandosoknak, akik teremre váltanak - posztok, forgás
 
 ## Ami ugyanaz marad
 
-A fogadás, a feladás, a leütés, a nyitás és a játékolvasás mind átvihető. A strandosok általában kiváló sokoldalú játékosok: jól olvasod az ütőket, mindent felszedsz, és megszoktad, hogy egyedül dönts. A teremedzők ezt nagyon szeretik. A hálómagasság ugyanaz (felnőtt férfiaknál 2,43 m, nőknél 2,24 m), és a pontszámítás is minden labdamenetre szól.
+A fogadás, a feladás, a leütés, a nyitás és a játékolvasás mind átvihető. A strandosok általában kiváló sokoldalú játékosok: jól olvasod az ütőket, mindent felszedsz, és megszoktad, hogy egyedül dönts. A teremedzők ezt nagyon szeretik. A hálómagasság ugyanaz (felnőtt férfiaknál 2,43 m, nőknél 2,24 m), és a pontszámítás is ugyanaz: minden labdamenet pontot ér.
 
 ## A pálya és a csapat
 
-|                        | Strand                                                                      | Terem                                                  |
-| ---------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------ |
-| Játékosok térfelenként | 2                                                                           | 6 (plusz cserék és liberó)                             |
-| Térfél mérete          | 8 × 8 m                                                                     | 9 × 9 m                                                |
-| Játszma hossza         | 21 pont (a harmadik 15)                                                     | 25 pont (az ötödik 15)                                 |
-| Mérkőzés               | két nyert játszmáig                                                         | FIVB-ben három nyert játszmáig                         |
-| Térfélcsere            | 7 pontonként (a harmadik játszmában 5 pontonként)                           | minden játszma után, és az ötödik játszmában 8 pontnál |
-| Csere                  | nincs                                                                       | 6 játszmánként, plusz korlátlan liberó-helyettesítés   |
-| Pihenőidő              | 1 játszmánként, az 1–2. játszmában 21 pontnál technikai pihenőidő is (FIVB) | 2 játszmánként, egyenként 30 mp                        |
+|                        | Strand                                                                                                      | Terem                                                  |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Játékosok térfelenként | 2                                                                                                           | 6 (plusz cserék és liberó)                             |
+| Térfél mérete          | 8 × 8 m                                                                                                     | 9 × 9 m                                                |
+| Játszma hossza         | 21 pont (a harmadik 15)                                                                                     | 25 pont (az ötödik 15)                                 |
+| Mérkőzés               | két nyert játszmáig                                                                                         | FIVB-ben három nyert játszmáig                         |
+| Térfélcsere            | összesen 7 (a harmadikban 5) pontonként                                                                     | minden játszma után, és az ötödik játszmában 8 pontnál |
+| Csere                  | nincs                                                                                                       | 6 játszmánként, plusz korlátlan liberó-helyettesítés   |
+| Pihenőidő              | 1 játszmánként, az 1–2. játszmában technikai pihenőidő is, amikor a két csapat pontjainak összege 21 (FIVB) | 2 játszmánként, egyenként 30 mp                        |
 
 A terempálya nagyobb, de hat játékos osztozik rajta, így mindenkire sokkal kisebb terület jut. A labda ugyanolyan súlyú, de keményebbre fújják és kicsit kisebb, ezért keményebb, és szél nélkül gyorsabban is száll.
 
@@ -46,7 +46,7 @@ Strandon mindent te csinálsz. Teremben általában specialista vagy:
 - **Feladó:** minden labdamenetben ő adja a második érintést.
 - **Nyitásfogadó ütő:** fogad, és bal oldalról támad. Strandosoknak gyakran ez a legtermészetesebb, mert fogadás és sokoldalú támadás kell hozzá.
 - **Center:** sáncol, és gyors feladásokat üt.
-- **Feladó átló:** jobbról támad, és az ellenfél nyitásfogadó ütőjét sáncolja (általában ő támad a legtöbbet).
+- **Feladó átló:** jobbról támad, és az ellenfél nyitásfogadó ütőjét sáncolja (aki általában a legtöbbet támad).
 - **Liberó:** hátsó sorköteles fogadó és védő, eltérő színű mezben. A jó strandos védők gyakran jó liberók.
 
 Bővebben: [a röplabda posztjai](/hu/guides/positions).
@@ -83,7 +83,7 @@ A liberó egy hátsó sorköteles játékos – általában a center – helyér
 ## Hogyan tanuld meg gyorsan a szerepedet?
 
 1. **Tanuld meg a hat forgásodat.** Kérdezd meg az edződet, milyen posztot játszol, aztán lépkedj végig minden forgáson a [Posztkeresőben](/hu/explorer). Tudd, hol állsz fogadáskor, és hová mész a váltás után.
-2. **Tanuld meg a szomszédszabályt.** Minden forgásban tudd, ki áll előtted, mögötted és melletted. Ennyi elég, hogy elkerüld az állásrendi hibát. Gyakorolj a [állásrend-gyakorlóban](/hu/overlap).
+2. **Tanuld meg a szomszédszabályt.** Minden forgásban tudd, ki áll előtted, mögötted és melletted. Ennyi elég, hogy elkerüld az állásrendi hibát. Gyakorolj az [állásrend-gyakorlóban](/hu/overlap).
 3. **Bízz a rendszerben.** Strandon minden labdát kergetsz. Teremben maradj a saját területeden, a többit egy társad fedi. Ha beszaladsz más területére, a sajátod üresen marad.
 4. **Beszélj.** Hat játékosnak több szó kell, mint kettőnek: „Enyém!”, „Kint!”, milyen támadást kérsz, ki veszi az ejtést.
 5. **Használd a strandos erősségeidet.** Az ütő olvasása, a mezőnyvédekezés és a rossz helyzetből való feladás ritka képesség teremben. Hozd magaddal.

@@ -18,7 +18,8 @@
 		rotationLabel,
 		zoneRef,
 		systemName,
-		roleInSentence
+		roleInSentence,
+		roleRef
 	} from '#lib/volley/labels.js';
 	import { ZONES, rolesOf, type Zone } from '#lib/volley/model.js';
 	import { overlapFaults } from '#lib/volley/overlap.js';
@@ -87,9 +88,11 @@
 		if (!q) return '';
 		const rotation = rotationLabel(q.o.rotation, q.o.system);
 		if (q.kind === 'zone')
+			// The plain rotation number: the usual label names the setter's zone, which would give
+			// the answer away when the question is about the setter.
 			return m.quiz_zone_prompt({
 				role: roleInSentence(q.role),
-				rotation,
+				rotation: m.rotation_n({ n: q.o.rotation }),
 				system: systemName(q.o.system)
 			});
 		if (q.kind === 'legal')
@@ -272,7 +275,7 @@
 								{@const f = faults[0]}
 								{@const name = (z: Zone) => {
 									const p = q.placed.find((pl) => pl.zone === z)!;
-									return m.player_in_zone({ name: roleInSentence(p.role), zone: zoneRef(z) });
+									return m.player_in_zone({ name: roleRef(p.role), zone: zoneRef(z) });
 								}}
 								{f.kind === 'depth'
 									? m.fault_depth({ back: name(f.b), front: name(f.a) })

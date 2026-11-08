@@ -12,7 +12,9 @@
 		roleShort,
 		rotationLabel,
 		zoneRef,
-		systemName
+		systemName,
+		roleRef,
+		capitalize
 	} from '#lib/volley/labels.js';
 	import {
 		COLUMN_PAIRS,
@@ -72,7 +74,7 @@
 	const broken = (a: Zone, b: Zone) => faults.some((f) => f.a === a && f.b === b);
 	const who = (z: Zone) => {
 		const p = court.find((c) => c.zone === z)!;
-		return m.player_in_zone({ name: roleInSentence(p.role), zone: zoneRef(z) });
+		return m.player_in_zone({ name: roleRef(p.role), zone: zoneRef(z) });
 	};
 
 	// Dragging: pointer coordinates to court metres through the SVG's own transform.
@@ -175,7 +177,7 @@
 					transform="translate({at.x} {at.y})"
 					role="button"
 					tabindex="0"
-					aria-label={m.overlap_player({ who: who(p.zone) })}
+					aria-label={m.overlap_player({ who: capitalize(who(p.zone)) })}
 					aria-describedby="overlap-keys"
 					class="cursor-grab outline-none active:cursor-grabbing"
 					onpointerdown={(e) => {

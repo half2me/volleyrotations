@@ -64,6 +64,23 @@ export const roleInSentence = (role: RoleId): string => {
 	return getLocale() === 'hu' ? name.charAt(0).toLowerCase() + name.slice(1) : name;
 };
 
+/**
+ * A role named inside a sentence, with its article in Hungarian, where the article depends on
+ * how the name is spoken: "a feladó", "az 1. center" (egy), "az „E” játékos". English needs none.
+ */
+export function roleRef(role: RoleId): string {
+	const name = roleInSentence(role);
+	if (getLocale() !== 'hu') return name;
+	const spoken = name
+		.replace(/^„(.)”/, '$1')
+		.replace(/^1\./, 'egy')
+		.replace(/^5\./, 'öt');
+	return `${/^[aáeéiíoóöőuúüűAEF]/.test(spoken) ? 'az' : 'a'} ${name}`;
+}
+
+/** The first letter in upper case, for a reference that starts a sentence. */
+export const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 export function roleName(role: RoleId): string {
 	const letter = LETTERS[role];
 	if (letter) return m.role_player({ letter });
@@ -174,8 +191,7 @@ export const rotationLabel = (r: RotationNo, system: SystemId) =>
  */
 function overlapNeighbours(you: Placed, everyone: Placed[], exempt: Zone[] = []): string[] {
 	const at = (z: Zone) => everyone.find((p) => p.zone === z)!;
-	const name = (z: Zone) =>
-		m.player_in_zone({ name: roleInSentence(at(z).role), zone: zoneRef(z) });
+	const name = (z: Zone) => m.player_in_zone({ name: roleRef(at(z).role), zone: zoneRef(z) });
 	const out: string[] = [];
 	for (const [front, back] of COLUMN_PAIRS) {
 		if (exempt.includes(front) || exempt.includes(back)) continue;

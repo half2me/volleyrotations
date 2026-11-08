@@ -28,14 +28,14 @@ A pályát a saját alapvonalad mögül, a háló felé nézve írjuk le: első 
 
 A gyakori **5:1-es rendszerben** a hat kezdő úgy áll a forgásban, hogy mindenkinek legyen egy „párja” pontosan vele szemközt: a feladó és a feladó átló, a két nyitásfogadó ütő, a két center. Mivel a párok mindig három helynyire vannak egymástól, egyikük az első, másikuk a hátsó sorban van.
 
-## Feladó (S, setter)
+## Feladó (F; angolul setter, S)
 
 - **Támadás:** szinte minden labdamenetben ő adja a második érintést, és ő dönti el, ki üt. A jó feladás könnyen üthető, de nehezen olvasható. Első sorban a feladó maga is ejtheti vagy leütheti a második labdát.
 - **Sánc:** első sorban általában a jobb oldalon sáncol, az ellenfél nyitásfogadó ütője ellen.
 - **Fogadás:** általában kimarad a fogadásból. A háló közelében „elrejtik”, és a nyitás után a feladóhelyre fut, ami középtől kicsit jobbra, kb. egy méterre van a hálótól.
 - **Védekezés:** hátsó sorban többnyire jobb hátul (1-es hely) védekezik, így rövid az útja a feladóhelyre.
 
-## Nyitásfogadó ütő (OH, outside hitter)
+## Nyitásfogadó ütő (NY; angolul outside hitter, OH)
 
 Szokás egyszerűen fogadónak vagy bal oldali ütőnek is hívni.
 
@@ -44,19 +44,19 @@ Szokás egyszerűen fogadónak vagy bal oldali ütőnek is hívni.
 - **Fogadás:** a liberóval együtt ők a fő fogadók. Minden forgásban fogadnak, ezért jól kell fogadniuk.
 - **Védekezés:** hátsó sorban az oldal eszközeiben hátsó középen (6-os hely) védekezik, más csapatoknál bal hátul.
 
-## Center (MB, middle blocker)
+## Center (C; angolul middle blocker, MB)
 
 - **Támadás:** gyors, alacsony feladásokat üt középen (gyors, „egyes”), illetve a feladó mögé futva csúsztat. Akkor is fontos, ha nem kapja a labdát: a nekifutása leköti az ellenfél centerét.
 - **Sánc:** a legfontosabb sáncoló. Olvassa a feladót, és a háló mentén mindkét oldalra besegít a sáncba.
 - **Fogadás:** többnyire nincs benne a fogadásban.
 - **Hátsó sor:** a legtöbb csapatnál a liberó helyettesíti hátul. FIVB-szabály szerint a center maga nyit, amikor az 1-es helyre ér, mert a liberó nem nyithat. Amint a csapat elveszíti a nyitásjogot, a liberó visszajöhet helyette.
 
-## Feladó átló (OPP, opposite)
+## Feladó átló (Á; angolul opposite, OPP)
 
 Más néven átló, 2-es ütő, jobb oldali ütő vagy egyszerűen ütő.
 
 - **Támadás:** első sorban jobbról (2-es hely), hátsó sorban gyakran jobb hátulról (1-es hely) támad. Sokszor ő a csapat legeredményesebb pontszerzője, mert általában nem fogad.
-- **Sánc:** jobb oldalon, az ellenfél nyitásfogadó ütője ellen, aki rendszerint a legtöbbet támadó ellenfél.
+- **Sánc:** jobb oldalon, az ellenfél nyitásfogadó ütője ellen, aki rendszerint az ellenfél legtöbbet támadó játékosa.
 - **Fogadás:** általában nincs benne.
 - **Védekezés:** hátsó sorban többnyire jobb hátul (1-es hely).
 - A feladó átló a forgásban pontosan a feladóval szemben áll, így mindig pontosan egyikük van az első sorban.
@@ -67,7 +67,7 @@ Más néven átló, 2-es ütő, jobb oldali ütő vagy egyszerűen ütő.
 - Fogad és mezőnyben védekezik. FIVB-szabály szerint nem nyithat, nem sáncolhat, és nem támadhat olyan labdát, amely teljesen a háló felső széle fölött van. Lásd: [a liberó szabályai](/hu/guides/libero) és [FIVB 19. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44) (angol nyelvű).
 - Védekezésben általában bal hátul (5-ös hely) áll, és ő vállalja a fogadás legnagyobb részét.
 
-## Védekező specialista (DS)
+## Védekező specialista (angolul defensive specialist, DS)
 
 Csere, akit egy hátsó sorköteles játékos helyére hoznak be fogadni és védekezni, jellemzően a feladó átló vagy egy gyengébben fogadó ütő helyére. A liberóval szemben ő rendes cserének számít ([FIVB 15.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)), nyithat, és ugyanolyan mezt visel, mint a többiek. Azok az amatőr csapatok, amelyeknek nincs liberójuk, gyakran védekező specialistát használnak helyette.
 

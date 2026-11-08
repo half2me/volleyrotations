@@ -28,12 +28,12 @@ Csere az, amikor egy pályán lévő játékos helyére a kispadról jön be val
 Az FIVB korlátai ([15.1 és 15.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39), angol nyelvű):
 
 - Csapatonként és játszmánként **hat csere**. Egyszerre több játékos is cserélhető, mindegyik egynek számít.
-- **Kezdő játékos** (aki az adott játszma kezdő állásrendjében szerepelt) játszmánként **csak egyszer** hagyhatja el a pályát, és **csak egyszer** térhet vissza, mégpedig a felállásban elfoglalt korábbi helyére.
+- **Kezdő játékos** (aki az adott játszma kezdő állásrendjében szerepelt) játszmánként **csak egyszer** hagyhatja el a pályát, és **csak egyszer** térhet vissza, mégpedig a kezdő állásrendben elfoglalt helyére.
 - **Cserejátékos** játszmánként **csak egyszer** léphet pályára egy kezdő helyére, és **csak ugyanaz a kezdő** válthatja le.
 
 A párosítás tehát a játszmára rögzül: ha a B cserejátékos az A kezdőjátékos helyére jön be, A csak B helyére térhet vissza, és A visszatérése után egyikük sem cserélhető le újra abban a játszmában (a kivételes játékoscserét kivéve).
 
-**Rendkívüli csere** ([15.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)): ha egy sérült játékost nem lehet szabályosan lecserélni, bárki beállhat, aki abban a pillanatban nincs a pályán (a liberót és az általa helyettesített játékost kivéve). Ez nem számít bele a hat cserébe, de a sérült játékos azon a mérkőzésen már nem térhet vissza.
+**Kivételes játékoscsere** ([15.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)): ha egy sérült játékost nem lehet szabályosan lecserélni, bárki beállhat, aki abban a pillanatban nincs a pályán (a liberót és az általa helyettesített játékost kivéve). Ez nem számít bele a hat cserébe, de a sérült játékos azon a mérkőzésen már nem térhet vissza.
 
 Sok amatőr és utánpótlás-bajnokság több cserét vagy szabad cserét enged. Nézd meg a saját bajnokságod szabályait.
 

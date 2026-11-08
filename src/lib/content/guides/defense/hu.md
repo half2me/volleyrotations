@@ -15,7 +15,7 @@ description: A hátsós (6-os hátul), a forgó és a sarkos (6-os elöl) védek
 
 - A védekezés az **alapállásból** indul: itt vár mindenki, amíg az ellenfél fogad és felad. Amint látszik, honnan jön a támadás, mindenki a helyére mozdul.
 - **Hátsós rendszer, 6-os hátul** (angolul perimeter): a hátsó sor a pálya szélein és mélyen védekezik, a sáncon kívüli első sorköteles a rövid labdákat veszi. Ez az oldal alapbeállítása.
-- **Forgó védekezés:** a hátsó sor a támadás felé fordul, így valaki a sánc mögé jön az ejtésekre.
+- **Forgó védekezés:** a hátsó sor a támadás felé forog, így valaki a sánc mögé jön az ejtésekre.
 - **Sarkos rendszer, 6-os elöl** (angolul middle-up): a hátsó középső a sánc mögött áll az ejtésekre, a mély közép üresen marad.
 - Amikor a **ti** ütőtök támad, a többiek mélyen guggolva körbeveszik, és **biztosítanak** a sáncról visszapattanó labdára.
 
@@ -61,10 +61,10 @@ A másik oldalról jövő támadásnál minden tükrözve van.
 
 ## Forgó védekezés
 
-A hátsó sor a támadás felé **fordul**:
+A hátsó sor a támadás felé **forog**:
 
 - Az ellenfél bal oldali támadásánál a **jobb hátsó (1-es hely)** a sánc mögé jön az ejtésekre.
-- A **hátsó középső (6-os hely)** átfordul az egyenesre, mélyen.
+- A **hátsó középső (6-os hely)** átmegy mélyen az egyenesre.
 - A **bal hátsó (5-ös hely)** a mély közép felé csúszik; a rövid átlót a sáncon kívüli első sorköteles veszi.
 - A **sáncon kívüli** visszalép a rövid átlóra.
 

@@ -16,7 +16,7 @@ description: Az állásrendi hiba (átfedés) szabálya részletesen, a 2025-ös
 - A nyitás pillanatában a játékosoknak szabályos állásrendben kell állniuk. Ha ezt megsértik, az **állásrendi hiba** (angolul overlap, átfedés), és a csapat elveszíti a labdamenetet.
 - Mindenkit csak a **szomszédjaival** kell összevetni: elöl-hátul ugyanabban az oszlopban (4–5, 3–6, 2–1), és oldalirányban ugyanabban a sorban (4–3–2, 5–6–1).
 - A helyzetet a **talajon lévő lábak** alapján ítélik meg. Elég, ha egy vonalban áll, vagy ha az egyik láb egy része jó helyen van.
-- A 2025–2028-as FIVB-szabályok szerint csak a **fogadó csapatnak** kell sorrendben állnia, a nyitó csapat bárhol állhat a saját térfelén. Egyes bajnokságok még mindkét csapatot ellenőrizhetik, kérdezd meg a sajátodat.
+- A 2025–2028-as FIVB-szabályok szerint csak a **fogadó csapatnak** kell szabályos állásrendben állnia, a nyitó csapat bárhol állhat a saját térfelén. Egyes bajnokságok még mindkét csapatot ellenőrizhetik, kérdezd meg a sajátodat.
 - A nyitás után mindenki bárhová mehet.
 
 </Callout>
@@ -54,13 +54,13 @@ Mindenkit csak az oszlopában és a sorában mellette állókkal kell összevetn
 | 6    | 3             |                | 1           | 5          |
 | 1    | 2             |                |             | 6          |
 
-Az 5-ös és a 3-as helyet tehát soha nem vetik össze, ahogy a 4-est és a 6-ost vagy a 2-est és a 6-ost sem. A gyakorlatban a 4-es és a 2-es hely nem cserélhet helyet, ha mindkettő jól áll a 3-ashoz képest. Egy hátsó sorköteles játékos szabályosan állhat egy olyan első sorköteles játékos előtt, aki nem az ő oszlopában van. Erre épül minden fogadási alakzat.
+Az 5-ös és a 3-as helyet tehát soha nem vetik össze, ahogy a 4-est és a 6-ost vagy a 2-est és a 6-ost sem. A gyakorlatban a 4-es és a 2-es helyen álló játékos nem cserélhet helyet, ha mindkettő jól áll a 3-ashoz képest. Egy hátsó sorköteles játékos szabályosan állhat egy olyan első sorköteles játékos előtt, aki nem az ő oszlopában van. Erre épül minden fogadási alakzat.
 
 ## A 2025-ös változás és az eltérő bajnokságok
 
-A korábbi FIVB-szabályok szerint a nyitáskor **mindkét** csapatnak sorrendben kellett állnia. 2025 óta az FIVB csak a fogadó csapatot ellenőrzi, a nyitó csapat tetszés szerint állhat fel, ha a nyitón kívül mindenki a pályán van. Takarni viszont most sem szabad: a játékosok nem integethetnek, nem ugrálhatnak, nem mozoghatnak oldalra, és nem állhatnak csoportban úgy, hogy eltakarják a nyitót vagy a labda útját ([12.5. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34)).
+A korábbi FIVB-szabályok szerint a nyitáskor **mindkét** csapatnak szabályos állásrendben kellett állnia. 2025 óta az FIVB csak a fogadó csapatot ellenőrzi, a nyitó csapat tetszés szerint állhat fel, ha a nyitón kívül mindenki a pályán van. Takarni viszont most sem szabad: a játékosok nem integethetnek, nem ugrálhatnak, nem mozoghatnak oldalra, és nem állhatnak csoportban úgy, hogy eltakarják a nyitót vagy a labda útját ([12.5. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34)).
 
-Sok versenyrendszer ezt nem vette át, vagy más szabálykönyvet használ, például az amerikai középiskolai és egyetemi röplabda, valamint sok helyi és iskolai bajnokság. Egyes nemzeti szövetségek csak egy-két idénnyel később vezetik be az FIVB változásait. **Nézd meg, melyik szabály érvényes a bajnokságodban.** A [állásrend-gyakorlóban](/hu/overlap) be lehet kapcsolni a régi szabályt is, amely a nyitó csapatot is ellenőrzi.
+Sok versenyrendszer ezt nem vette át, vagy más szabálykönyvet használ, például az amerikai középiskolai és egyetemi röplabda, valamint sok helyi és iskolai bajnokság. Egyes nemzeti szövetségek csak egy-két idénnyel később vezetik be az FIVB változásait. **Nézd meg, melyik szabály érvényes a bajnokságodban.** Az [állásrend-gyakorlóban](/hu/overlap) be lehet kapcsolni a régi szabályt is, amely a nyitó csapatot is ellenőrzi.
 
 ## Rejtés (stacking)
 
@@ -88,4 +88,4 @@ Az **állásrendi hiba** azt jelenti, hogy a nyitáskor valaki rossz helyen áll
 
 ## Gyakorolj
 
-Húzogasd a játékosokat a [állásrend-gyakorlóban](/hu/overlap): azonnal megmutatja, szabályos-e a felállás, és melyik pár van átfedésben.
+Húzogasd a játékosokat az [állásrend-gyakorlóban](/hu/overlap): azonnal megmutatja, szabályos-e a felállás, és melyik pár van átfedésben.

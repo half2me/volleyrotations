@@ -53,7 +53,7 @@ description: An English-Hungarian glossary of indoor volleyball terms for positi
 | Centre line             | középvonal                 | The line under the net dividing the two courts.                           |
 | Free zone               | kifutó                     | The area around the court where play is still allowed.                    |
 | Service zone            | nyitási zóna               | Behind the end line, between the sideline extensions.                     |
-| Libero replacement zone | liberó-helyettesítési zóna | Part of the free zone by the bench, between the attack line and end line. |
+| Libero replacement zone | Libero helyettesítési zóna | Part of the free zone by the bench, between the attack line and end line. |
 | Net                     | háló                       | 2.43 m for men, 2.24 m for women.                                         |
 | Antenna                 | antenna                    | Rods on the net marking the crossing space.                               |
 | Target                  | feladóhely                 | Where the pass should go: just right of the middle, near the net.         |
@@ -69,7 +69,7 @@ description: An English-Hungarian glossary of indoor volleyball terms for positi
 | Serve receive, pass | fogadás, nyitásfogadás    | The first contact on the opponent's serve.                      |
 | Forearm pass, bump  | alkarérintés              | Passing with the forearms held together.                        |
 | Overhand pass       | kosárérintés              | Playing the ball with the fingers above the head.               |
-| Set                 | játszma                   | The second touch, setting up the attack.                        |
+| Set                 | feladás                   | The second touch, setting up the attack.                        |
 | Attack, spike       | támadás, leütés           | Sending the ball over with a hit.                               |
 | Quick attack        | gyors, gyorsindítás       | A fast, low set to the middle blocker.                          |
 | Pipe                | pipe, hátsó közép támadás | A back-row attack from the middle, from behind the attack line. |

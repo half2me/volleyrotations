@@ -15,7 +15,7 @@ description: Angol–magyar röplabda szószedet a posztok, a pálya, a technika
 
 - A kifejezések témák szerint csoportosítva: posztok, pálya, technikai elemek, taktika és szabályok.
 - Minden sorban szerepel az angol kifejezés, a szokásos magyar megfelelője és egy rövid magyarázat.
-- A magyar edzők gyakran az angol szót is használják (liberó, pipe, stack). Ahol két elterjedt magyar alak van, mindkettő szerepel.
+- A magyar edzők gyakran az angol szót is használják (libero, pipe, stack). Ahol két elterjedt magyar alak van, mindkettő szerepel.
 - A böngésző keresőjével (Ctrl+F vagy Cmd+F) gyorsan megtalálhatsz egy szót.
 
 </Callout>
@@ -53,7 +53,7 @@ description: Angol–magyar röplabda szószedet a posztok, a pálya, a technika
 | Centre line             | középvonal                 | A háló alatti vonal, amely a két térfelet elválasztja.                    |
 | Free zone               | kifutó                     | A pálya körüli terület, ahol még szabad játszani.                         |
 | Service zone            | nyitási zóna               | Az alapvonal mögött, az oldalvonalak meghosszabbításai között.            |
-| Libero replacement zone | liberó-helyettesítési zóna | A kifutó része a kispad mellett, a támadóvonal és az alapvonal között.    |
+| Libero replacement zone | Libero helyettesítési zóna | A kifutó része a kispad mellett, a támadóvonal és az alapvonal között.    |
 | Net                     | háló                       | Férfiaknál 2,43 m, nőknél 2,24 m magas.                                   |
 | Antenna                 | antenna                    | A hálón lévő rudak, amelyek az átjátszási teret jelölik.                  |
 | Target                  | feladóhely                 | Ahová a fogadásnak mennie kell: középtől kicsit jobbra, a háló közelében. |
@@ -83,26 +83,26 @@ description: Angol–magyar röplabda szószedet a posztok, a pálya, a technika
 
 ## Taktika
 
-| Angol              | Magyar                   | Magyarázat                                                                               |
-| ------------------ | ------------------------ | ---------------------------------------------------------------------------------------- |
-| Rotation           | forgás (rotáció)         | Egy hely az óramutató járásával megegyezően, amikor a csapat visszaszerzi a nyitást.     |
-| Rotation 1 to 6    | 1–6. forgás              | A hat felállás, a feladó helye szerint elnevezve.                                        |
-| Sideout            | nyitásjog visszaszerzése | Labdamenet megnyerése az ellenfél nyitásából.                                            |
-| Switch             | posztváltás              | Átmenés a saját posztra a nyitás után.                                                   |
-| Stack, hide        | rejtés                   | A játékosok szabályos elhelyezése úgy, hogy már nyitás előtt közel legyenek a helyükhöz. |
-| 5-1 system         | 5:1-es rendszer          | Öt ütő, egy feladó.                                                                      |
-| 6-2 system         | 6:2-es rendszer          | Két feladó, a hátsó sorköteles ad fel.                                                   |
-| 4-2 system         | 4:2-es rendszer          | Két feladó, az első sorköteles ad fel.                                                   |
-| 6-6 system         | 6:6-os rendszer          | Mindenki sorra kerül feladóként.                                                         |
-| Transition         | átmenet                  | Váltás védekezésből támadásba vagy vissza.                                               |
-| Perimeter defense  | hátsós (6-os hátul)      | A hátsó középső mélyen marad.                                                            |
-| Middle-up defense  | sarkos (6-os elöl)       | A hátsó középső a sánc mögé jön az ejtésekre.                                            |
-| Rotational defense | forgó védekezés          | A hátsó sor a támadás felé fordul.                                                       |
-| Attack coverage    | biztosítás               | A társak az ütő köré guggolnak, hogy megmentsék a sáncról visszajövő labdát.             |
-| Off-blocker        | sáncon kívüli játékos    | Az az első sorköteles játékos, aki nem vesz részt a sáncban.                             |
-| Seam               | rés                      | Két fogadó vagy védő közötti hézag.                                                      |
-| Line               | egyenes                  | Az oldalvonal mentén ütött támadás.                                                      |
-| Cross, angle       | átló                     | A pályán átlósan ütött támadás.                                                          |
+| Angol              | Magyar                   | Magyarázat                                                                                         |
+| ------------------ | ------------------------ | -------------------------------------------------------------------------------------------------- |
+| Rotation           | forgás (rotáció)         | Elmozdulás egy hellyel az óramutató járásával megegyezően, amikor a csapat visszaszerzi a nyitást. |
+| Rotation 1 to 6    | 1–6. forgás              | A hat felállás, a feladó helye szerint elnevezve.                                                  |
+| Sideout            | nyitásjog visszaszerzése | Labdamenet megnyerése az ellenfél nyitásából.                                                      |
+| Switch             | posztváltás              | Átállás a posztnak megfelelő helyre a nyitás után.                                                 |
+| Stack, hide        | rejtés                   | A játékosok szabályos elhelyezése úgy, hogy már nyitás előtt közel legyenek a helyükhöz.           |
+| 5-1 system         | 5:1-es rendszer          | Öt ütő, egy feladó.                                                                                |
+| 6-2 system         | 6:2-es rendszer          | Két feladó, a hátsó sorköteles ad fel.                                                             |
+| 4-2 system         | 4:2-es rendszer          | Két feladó, az első sorköteles ad fel.                                                             |
+| 6-6 system         | 6:6-os rendszer          | Mindenki sorra kerül feladóként.                                                                   |
+| Transition         | átmenet                  | Váltás védekezésből támadásba vagy vissza.                                                         |
+| Perimeter defense  | hátsós (6-os hátul)      | A hátsó középső mélyen marad.                                                                      |
+| Middle-up defense  | sarkos (6-os elöl)       | A hátsó középső a sánc mögé jön az ejtésekre.                                                      |
+| Rotational defense | forgó védekezés          | A hátsó sor a támadás felé forog.                                                                  |
+| Attack coverage    | biztosítás               | A társak az ütő köré guggolnak, hogy megmentsék a sáncról visszajövő labdát.                       |
+| Off-blocker        | sáncon kívüli játékos    | Az az első sorköteles játékos, aki nem vesz részt a sáncban.                                       |
+| Seam               | rés                      | Két fogadó vagy védő közötti hézag.                                                                |
+| Line               | egyenes                  | Az oldalvonal mentén ütött támadás.                                                                |
+| Cross, angle       | átló                     | A pályán átlósan ütött támadás.                                                                    |
 
 ## Szabályok
 

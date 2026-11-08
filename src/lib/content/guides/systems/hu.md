@@ -1,5 +1,5 @@
 ---
-title: Játékrendszerek a röplabdában
+title: Játékrendszerek a röplabdában: 6:6, 4:2, 6:2, 5:1
 description: A 6:6, 4:2, 6:2 és 5:1 rendszer összehasonlítva – ki ad fel melyik forgásban, hány első sorköteles támadó van, és mik az előnyeik, hátrányaik.
 ---
 

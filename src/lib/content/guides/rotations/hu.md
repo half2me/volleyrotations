@@ -47,7 +47,7 @@ Csak akkor forogtok, amikor a csapat **visszaszerzi a nyitás jogát**: az ellen
 - 4 → 3
 - 3 → 2
 
-Ha a ti nyitásotokból nyeritek a labdamenetet, ugyanaz a játékos nyit újra, és senki nem mozdul. Ha a saját nyitásotokból veszítetek, akkor az ellenfél fordul, nem ti.
+Ha a ti nyitásotokból nyeritek a labdamenetet, ugyanaz a játékos nyit újra, és senki nem mozdul. Ha a saját nyitásotokból veszítetek, akkor az ellenfél forog, nem ti.
 
 Egy játszma alatt a csapat újra és újra ugyanazon a hat felálláson megy végig.
 
