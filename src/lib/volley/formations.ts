@@ -41,6 +41,8 @@ export type Placed = OnCourt & {
 	/** Where the player heads next, drawn as a dashed run (the setter to the target, a hitter's approach). */
 	run?: Point;
 	setter: boolean;
+	/** Attacks from the side they stood on in serve receive instead of switching. */
+	noSwitch?: boolean;
 };
 
 export type Options = Situation & {
@@ -215,10 +217,13 @@ function passers(
 		return kind === 'outside' || kind === 'libero' || (kind === 'middle' && !isFront(p.zone));
 	});
 	if (formation === 3) return core;
-	// The fourth passer is whoever plays opposite the setter.
-	const fourth = others.find(
-		(p) => !core.includes(p) && (ROLE_KIND[p.role] === 'opposite' || ROLE_KIND[p.role] === 'setter')
-	);
+	// The fourth passer is whoever plays opposite the setter, or, when that player is shielding
+	// the setter, the remaining front-row middle.
+	const fourth =
+		others.find(
+			(p) =>
+				!core.includes(p) && (ROLE_KIND[p.role] === 'opposite' || ROLE_KIND[p.role] === 'setter')
+		) ?? others.find((p) => !core.includes(p));
 	return fourth ? [...core, fourth] : core;
 }
 
@@ -241,7 +246,9 @@ function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 		if (p.role === setter) {
 			// A front-row setter is already at the net, so they give way sideways to the passers
 			// they must stay beside.
-			if (isFront(p.zone)) return { p: { x: TARGET.x, y: 0.9 }, weight: 0.25 };
+			// From zone 4 they stack in the front-left corner with the middle, so the front-row
+			// outside can pass on the left, where they attack from.
+			if (isFront(p.zone)) return { p: { x: p.zone === 4 ? 0.4 : TARGET.x, y: 0.9 }, weight: 0.25 };
 			// From zone 1, along the right sideline behind the zone 2 player; from 6 or 5, at the
 			// net behind the player shielding them.
 			return p.zone === 1
@@ -252,7 +259,7 @@ function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 			// Non-passing hitters wait at the net. With the setter in zone 4, the zone 3 player
 			// waits a step off it, so the setter's run along the net to the target is clear.
 			const offNet = p.zone === 3 && setterZone === 4;
-			return { p: { x: ZONE_X[p.zone], y: offNet ? 2 : 0.9 }, weight: 1 };
+			return { p: offNet ? { x: 1.4, y: 2 } : { x: ZONE_X[p.zone], y: 0.9 }, weight: 1 };
 		}
 		// Back-row non-passers wait deep, out of the passers' way and their line of sight: in the
 		// right corner, where an opposite attacks from, unless their zone keeps them left.
@@ -286,6 +293,9 @@ function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 			// Front-row passers take the short spots and back-row passers the deep ones, so they
 			// stay in their own row's order and front-row hitters are close to their approach.
 			cost += 0.15 * (isFront(p.zone) ? spots[i].y : 9 - spots[i].y);
+			// A front-row hitter passes on the side they attack from when the rules allow it.
+			const attackX = { FL: 1.5, FM: 4.5, FR: 7.5 }[p.slot as 'FL' | 'FM' | 'FR'];
+			if (isFront(p.zone) && attackX !== undefined) cost += 0.6 * Math.abs(spots[i].x - attackX);
 		});
 		if (!best || cost < best.cost - 1e-9) best = { cost, at };
 	}
@@ -352,6 +362,22 @@ const APPROACH: Partial<Record<Slot, { from: Point; to: Point }>> = {
 };
 
 function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
+	// After serve receive, a front-row outside who passed on the right attacks from the right,
+	// and the front-row player waiting on the left takes the left: switching would send them
+	// across the court during the pass. Many teams play Rotation 1 this way.
+	const passed = o.serving ? undefined : receive(o, court, setter);
+	const swapSide = (p: OnCourt): Slot | undefined => {
+		const at = passed?.find((q) => q.role === p.role);
+		if (!at || !isFront(p.zone) || p.role === setter) return undefined;
+		const outsideOnRight = (q: Placed) => q.slot === 'FL' && q.task === 'pass' && q.x > 6;
+		const rightSideOnLeft = (q: Placed) =>
+			q.slot === 'FR' && isFront(q.zone) && q.role !== setter && q.x < 3;
+		// Only a pair trades sides: one hitter must still attack from each wing.
+		if (!passed!.some(outsideOnRight) || !passed!.some(rightSideOnLeft)) return undefined;
+		if (outsideOnRight(at)) return 'FR';
+		if (rightSideOnLeft(at)) return 'FL';
+		return undefined;
+	};
 	return court.map((p) => {
 		const isSetter = p.role === setter;
 		if (isSetter) return { ...p, ...TARGET, setter: true, task: 'set' };
@@ -363,12 +389,20 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 			return { ...p, x: 2.6, y: 4.8, setter: false, task: 'cover' };
 		}
 		// A back-row setter's partner on the right, and in 6-6 the whole back row, cover.
-		const approach = APPROACH[p.slot];
+		const side = swapSide(p);
+		const approach = APPROACH[side ?? p.slot];
 		if (!approach || (o.system === '6-6' && !isFront(p.zone))) {
 			const centre = ZONE_CENTRE[p.zone];
 			return { ...p, x: centre.x, y: Math.max(centre.y, 5.2), setter: false, task: 'cover' };
 		}
-		return { ...p, ...approach.from, run: approach.to, setter: false, task: 'attack' };
+		return {
+			...p,
+			...approach.from,
+			run: approach.to,
+			setter: false,
+			task: 'attack',
+			noSwitch: side !== undefined
+		};
 	});
 }
 

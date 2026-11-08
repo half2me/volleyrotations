@@ -22,22 +22,22 @@ description: An English-Hungarian glossary of indoor volleyball terms for positi
 
 ## Positions and roles
 
-| English                   | Hungarian                      | Explanation                                                                                   |
-| ------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------- |
-| Setter (S)                | feladó                         | Takes the second touch and sets up the attack.                                                |
-| Outside hitter (OH)       | nyitásfogadó (4-es) ütő        | Passes and attacks from the left side.                                                        |
-| Middle blocker (MB)       | center                         | Blocks in the middle and hits quick sets.                                                     |
-| Opposite (OPP)            | feladó átló, átlóütő, 2-es ütő | Attacks from the right, stands opposite the setter in the rotation.                           |
-| Libero (L)                | liberó                         | Back-row specialist in a different shirt; cannot serve (FIVB), block or attack above the net. |
-| Defensive specialist (DS) | védekező specialista           | Substitute who comes on to pass and dig in the back row.                                      |
-| Server                    | nyitó                          | The player in zone 1 who serves.                                                              |
-| Front-row player          | első sorköteles játékos        | A player in zone 4, 3 or 2 at the serve.                                                      |
-| Back-row player           | hátsó sorköteles játékos       | A player in zone 5, 6 or 1 at the serve.                                                      |
-| Captain                   | csapatkapitány, játékkapitány  | Speaks to the referees for the team.                                                          |
-| Coach                     | edző                           | Gives the line-up, asks for substitutions and time-outs.                                      |
-| First referee             | első játékvezető               | Stands on the referee stand at the net and runs the match.                                    |
-| Second referee            | második játékvezető            | Stands on the floor opposite the first referee; watches the net and the centre line.          |
-| Scorer                    | jegyzőkönyvvezető              | Keeps the score sheet and the rotation order.                                                 |
+| English                   | Hungarian                      | Explanation                                                                                                              |
+| ------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Setter (S)                | feladó                         | Takes the second touch and sets up the attack.                                                                           |
+| Outside hitter (OH)       | nyitásfogadó (4-es) ütő        | Passes and attacks from the left side.                                                                                   |
+| Middle blocker (MB)       | center                         | Blocks in the middle and hits quick sets.                                                                                |
+| Opposite (OPP)            | feladó átló, átlóütő, 2-es ütő | Attacks from the right, stands opposite the setter in the rotation.                                                      |
+| Libero (L)                | liberó                         | Back-row specialist in a different shirt; cannot serve (FIVB) or block, and cannot attack a ball entirely above the net. |
+| Defensive specialist (DS) | védekező specialista           | Substitute who comes on to pass and dig in the back row.                                                                 |
+| Server                    | nyitó                          | The player in zone 1 who serves.                                                                                         |
+| Front-row player          | első sorköteles játékos        | A player in zone 4, 3 or 2 at the serve.                                                                                 |
+| Back-row player           | hátsó sorköteles játékos       | A player in zone 5, 6 or 1 at the serve.                                                                                 |
+| Captain                   | csapatkapitány, játékkapitány  | Speaks to the referees for the team.                                                                                     |
+| Coach                     | edző                           | Gives the line-up, asks for substitutions and time-outs.                                                                 |
+| First referee             | első játékvezető               | Stands on the referee stand at the net and runs the match.                                                               |
+| Second referee            | második játékvezető            | Stands on the floor opposite the first referee; watches the net and the centre line.                                     |
+| Scorer                    | jegyzőkönyvvezető              | Keeps the score sheet and the rotation order.                                                                            |
 
 ## The court
 
@@ -116,7 +116,7 @@ description: An English-Hungarian glossary of indoor volleyball terms for positi
 | Overlap, positional fault | állásrendi hiba, átfedés       | Receiving team out of rotation order at the serve.                                                        |
 | Rotational fault          | forgásrendi hiba               | Serving out of order.                                                                                     |
 | Substitution              | csere                          | Replacing a player; 6 per set.                                                                            |
-| Exceptional substitution  | kivételes játékoscsere         | Replacing an injured player when a normal substitution is not possible.                                   |
+| Exceptional substitution  | kivételes játékoscsere         | Replacing an injured, ill, expelled or disqualified player when a normal substitution is not possible.    |
 | Libero replacement        | liberó-helyettesítés           | The libero coming on or off; not a substitution.                                                          |
 | Time-out                  | pihenőidő                      | 30-second break; 2 per team per set.                                                                      |
 | Double contact            | kettős érintés                 | One player touching the ball twice in a row; a fault, with exceptions on the first contact and the block. |
@@ -125,7 +125,7 @@ description: An English-Hungarian glossary of indoor volleyball terms for positi
 | Net fault                 | hálóérintés                    | Touching the net between the antennae while playing the ball.                                             |
 | Centre line fault         | középvonal-átlépés             | Crossing the centre line in a way the rules forbid.                                                       |
 | Foot fault                | lépéshiba                      | Stepping on the court or end line when serving.                                                           |
-| Back-row attack fault     | hátsó sorköteles támadási hiba | A back-row player attacking above the net from in front of the attack line.                               |
+| Back-row attack fault     | hátsó sorköteles támadási hiba | A back-row player completing an attack on a ball entirely above the net from in front of the attack line. |
 | In, out                   | bent, kint                     | Whether the ball lands inside the lines; the lines are in.                                                |
 
 The full rules: [FIVB Official Volleyball Rules 2025–2028](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf).

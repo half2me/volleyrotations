@@ -56,7 +56,7 @@ Again two setters opposite each other, but now **the back-row setter sets**. The
 One setter sets in every rotation. Opposite the setter in the rotation stands the **opposite** hitter.
 
 - **Front-row attackers:** three when the setter is in the back row (Rotations 1, 2 and 3: setter in zones 1, 6 and 5), two when the setter is in the front row (Rotations 4, 5 and 6: zones 4, 3 and 2). In the front-row rotations the setter can attack the second ball, which keeps the block honest.
-- **Pros:** one setter means one rhythm and one decision-maker. The hitters get the same set every time. Fewer substitutions are needed.
+- **Pros:** one setter means one rhythm and one decision-maker. The hitters get the same setter every time. Fewer substitutions are needed.
 - **Cons:** the team depends heavily on one player. Half the rotations have only two front-row hitters.
 - A typical 5-1 Rotation 1: setter in 1, outside hitter in 2, middle blocker in 3, opposite in 4, outside hitter in 5, middle blocker in 6. Every player has their partner directly opposite: setter and opposite, the two outsides, the two middles.
 

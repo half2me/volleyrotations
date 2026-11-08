@@ -29,7 +29,7 @@ Minden alakzatnak szabályosnak kell lennie a nyitás pillanatában. Az FIVB-sza
 
 ## Ötfős W
 
-Három játékos áll egy sorban keresztben, nagyjából 4–5 méterre a hálótól, kettő pedig mélyebben, a köztük lévő résekben. Felülről nézve W betűre hasonlít. A feladó a hálónál van: 6:6-ban és 4:2-ben mindig első sorköteles, 6:2-ben mindig hátsó sorköteles, 5:1-ben az 1–3. forgásban hátsó, a 4–6.-ban első sorköteles. A hátsó sorköteles feladó előtt álló társ általában nem tud fogadni, mert a nyitáskor a feladó előtt kell maradnia, így ezekben a forgásokban a W négy fogadóval áll fel.
+Három játékos áll egy sorban keresztben, nagyjából 4–5 méterre a hálótól, kettő pedig mélyebben, a köztük lévő résekben. Felülről nézve W betűre hasonlít. A feladó a hálónál van: 6:6-ban és 4:2-ben mindig első sorköteles, 6:2-ben mindig hátsó sorköteles, 5:1-ben az 1–3. forgásban hátsó, a 4–6.-ban első sorköteles. Ha a feladó a 6-os vagy az 5-ös helyről indul, és a hálónál rejtőzik, az előtte álló első sorkötelesnek a nyitáskor előtte kell maradnia, így ezekben a forgásokban a W négy fogadóval áll fel. Az 1-es helyről a feladó a jobb oldalvonal mentén, a 2-es helyen fogadó társ mögött rejtőzhet.
 
 - **Előnyök:** könnyű megtanulni, jól kezeli a rövid nyitást, és senkinek nem kell nagy területet lefednie.
 - **Hátrányok:** sok fogadó, sok **rés** (a fogadók közötti hézag), és a gyengébb fogadók nem rejthetők el. A W elülső három játékosának fogadás után támadásra is készülnie kell.

@@ -17,17 +17,17 @@ description: Mit tehet és mit nem a liberó az FIVB-szabályok szerint, hogyan 
 - Az FIVB-szabályok szerint a liberó **nem nyithat, nem sáncolhat, és sánckísérletben sem vehet részt**, valamint nem támadhat olyan labdát, amely teljesen a háló felső széle fölött van.
 - **Bármelyik hátsó sorköteles játékost** helyettesítheti, általában a centereket. A liberó-helyettesítés **nem számít cserének**, és korlátlan.
 - A liberó-helyettesítés a kispad melletti **Libero helyettesítési zónában** történik, amikor a labda nincs játékban, és még nem fújták be a nyitást.
-- Ha a liberó **a támadóvonal előtt** ujjal felad, a labdát nem lehet a háló felső széle fölött támadni.
+- Ha a liberó **a támadóvonal előtt** ujjal felad, a labdát nem lehet megtámadni, amíg teljes terjedelmével a háló felső széle fölött van.
 
 </Callout>
 
 ## Miért van liberó?
 
-A liberóval a csapat cserék nélkül tarthatja pályán a legjobb fogadóját és védőjét a hátsó sorban. Cserébe a liberó (FIVB-szabály szerint) nem nyit, nem sáncol, és nem támad a háló fölött. A szabályok: [FIVB 19. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44) (angol nyelvű).
+A liberóval a csapat cserék nélkül tarthatja pályán a legjobb fogadóját és védőjét a hátsó sorban. Cserébe a liberó (FIVB-szabály szerint) nem nyit, nem sáncol, és nem támad olyan labdát, amely teljes terjedelmével a háló fölött van. A szabályok: [FIVB 19. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44) (angol nyelvű).
 
 ## Kit helyettesít a liberó?
 
-A liberó bármelyik hátsó sorköteles játékost helyettesítheti ([19.3.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=45)). A legtöbb csapat a **centerek** helyére hozza be: a centerek magasak, sáncra és gyors támadásra épülnek, és általában gyengébben fogadnak. Amikor a center a hátsó sorba kerül (miután az 1-es helyről nyitott, és a csapat elvesztette a nyitásjogot), a liberó beáll; amikor a center újra az első sorba kerülne, a liberó lejön, és a center visszamegy.
+A liberó bármelyik hátsó sorköteles játékost helyettesítheti ([19.3.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)). A legtöbb csapat a **centerek** helyére hozza be: a centerek magasak, sáncra és gyors támadásra épülnek, és általában gyengébben fogadnak. Amikor a center a hátsó sorba kerül (miután az 1-es helyről nyitott, és a csapat elvesztette a nyitásjogot), a liberó beáll; amikor a center újra az első sorba kerülne, a liberó lejön, és a center visszamegy.
 
 A liberó pontosan a helyettesített játékos helyét veszi át a forgásrendben, az [állásrendi szabály](/hu/guides/overlap) szempontjából is.
 

@@ -16,7 +16,7 @@ description: Mit csinál a feladó, a nyitásfogadó ütő, a center, a feladó 
 - Teremröplabdában hat játékos van a pályán: általában egy **feladó**, két **nyitásfogadó ütő**, két **center** és egy **feladó átló**, valamint egy **liberó**, aki a hátsó sorban áll be.
 - A feladó irányítja a támadást, ő játssza meg a második labdát. A többiek támadnak, sáncolnak, fogadnak és védekeznek.
 - A nyitás pillanatában a forgás szabja meg, ki hol áll. A nyitás után mindenki **átmegy** a saját posztjára.
-- Az első sor bárhonnan támadhat és sáncolhat. A hátsó sor nem sáncolhat, és a háló fölött csak a támadóvonal mögül elrugaszkodva támadhat.
+- Az első sor bárhonnan támadhat és sáncolhat. A hátsó sor nem vehet részt befejezett sáncban, és a teljes terjedelmével a háló fölött lévő labdát csak a támadóvonal mögül elrugaszkodva támadhatja.
 
 </Callout>
 
@@ -73,13 +73,13 @@ Csere, akit egy hátsó sorköteles játékos helyére hoznak be fogadni és vé
 
 ## Első sor és hátsó sor
 
-|                       | Első sor (4, 3, 2) | Hátsó sor (5, 6, 1)                                                                                                                                |
-| --------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sánc                  | Igen               | Nem ([14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37))                                    |
-| Támadás a háló fölött | Bárhonnan          | Csak a támadóvonal mögül elrugaszkodva ([13.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=35)) |
-| Nyitás                | Nem                | Csak az 1-es helyen álló játékos                                                                                                                   |
+|                                             | Első sor (4, 3, 2) | Hátsó sor (5, 6, 1)                                                                                                                                |
+| ------------------------------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sánc                                        | Igen               | Nem ([14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37))                                    |
+| Támadás teljesen a háló fölött lévő labdára | Bárhonnan          | Csak a támadóvonal mögül elrugaszkodva ([13.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=35)) |
+| Nyitás                                      | Nem                | Csak az 1-es helyen álló játékos                                                                                                                   |
 
-Az, hogy első vagy hátsó sorköteles vagy, a nyitás pillanatában elfoglalt helyedtől függ, nem attól, hová futsz utána. Ha egy hátsó sorköteles játékos a nyitás után a hálóhoz megy, akkor sem sáncolhat.
+Az, hogy első vagy hátsó sorköteles vagy, a nyitás pillanatában elfoglalt helyedtől függ, nem attól, hová futsz utána. Ha egy hátsó sorköteles játékos a nyitás után a hálóhoz megy, akkor sem vehet részt befejezett sáncban.
 
 ## Merre tovább?
 

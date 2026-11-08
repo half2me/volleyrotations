@@ -28,7 +28,7 @@ description: The six court zones, clockwise rotation after a sideout, service or
 | **Front row** (at the net) | 4    | 3      | 2     |
 | **Back row**               | 5    | 6      | 1     |
 
-Picture yourself standing behind your own end line, looking at the net. That is how this site draws every court: the net at the top. Zone 1 is right back, the serving position. The zones are numbered in [FIVB rule 7.4.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27), and the numbering follows the order in which players rotate.
+Picture yourself standing behind your own end line, looking at the net. That is how this site draws every court: the net at the top. Zone 1 is right back, the serving position. The zones are numbered in [FIVB rule 7.4.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27), and the numbering follows the service order: after the player in zone 1, the player in zone 2 serves next, then the one in zone 3, and so on.
 
 The attack line, 3 m from the centre line, splits each half into a front zone and a back zone. Note that the attack line is not what makes you "front row": that depends only on your place in the rotation.
 
@@ -77,13 +77,13 @@ Rotation only governs the moment the serve is hit. As soon as the server's hand 
 - **Front row:** outside hitter to the left, middle blocker to the middle, setter or opposite to the right.
 - **Back row:** setter or opposite to right back (zone 1), outside hitter to middle back (zone 6, ready for the pipe), libero to left back (zone 5).
 
-Before the serve, players stand as close to their target spot as the [overlap rule](/guides/overlap) allows, then switch the moment the ball is hit. On your own serve, the switch happens as soon as the server contacts the ball. On the opponent's serve, most players pass first and switch on the transition.
+When you receive, players stand as close to their target spot as the [overlap rule](/guides/overlap) allows, then switch the moment the serve is hit. When you serve, the FIVB 2025–2028 rules let you wait in your spot already; under the older rule you switch at the serve hit. On the opponent's serve, most players pass first and switch on the transition.
 
 ## Front row and back row limits
 
 Switching does not change who is front row. At the serve, zones 4, 3 and 2 are front row and zones 5, 6 and 1 are back row, and that holds for the whole rally:
 
-- A back-row player may **not block** or take part in a completed block ([rule 14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37)).
+- A back-row player may **not complete a block** or take part in a completed block ([rule 14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37)).
 - A back-row player may **attack a ball that is entirely above the net** only if they take off from behind the attack line. They may land in front of it ([rule 13.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=35)). From in front of the line they may only complete an attack hit on a ball that is at least partly below the top of the net; setting or passing there is fine.
 - The libero has stricter limits again: see [the libero guide](/guides/libero).
 

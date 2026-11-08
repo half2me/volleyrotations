@@ -58,15 +58,15 @@ This is the biggest change. On the beach you only have to serve in the right ord
 - The six players have a **fixed order** for the whole set. Each time your team wins back the serve, everyone moves one place **clockwise**, and the player moving into zone 1 serves. See [how rotation works](/guides/rotations).
 - At the moment of the serve, the receiving team's players must stand in that order relative to their neighbours: front to back and side to side. Otherwise it is a **positional fault**. See [the overlap rule](/guides/overlap).
 - After the serve is hit, everyone **switches** to their specialty spot.
-- If you are in the **back row** at the serve, you may not block, and you may only attack a ball above the net if you take off from behind the **attack line**, 3 m from the net.
+- If you are in the **back row** at the serve, you may not complete a block, and you may only attack a ball that is entirely above the net if you take off from behind the **attack line**, 3 m from the net.
 
 ## The libero
 
-The libero comes on for a back-row player, usually a middle blocker, without using a substitution. Under FIVB rules the libero may not serve, block or attack above the net. See [the libero guide](/guides/libero).
+The libero comes on for a back-row player, usually a middle blocker, without using a substitution. Under FIVB rules the libero may not serve or block, and may not attack a ball that is entirely above the net. See [the libero guide](/guides/libero).
 
 ## Rule differences that catch beach players
 
-**Tipping.** Indoors you may tip with your fingertips, open hand. On the beach, an open-hand tip is a fault, so you learned to use your knuckles ("cobra") or a roll shot. Indoors, use whichever works.
+**Tipping.** Indoors you may tip with your fingertips, open hand. On the beach, an open-hand tip is a fault, so you learned to use your knuckles (a "pokey"), stiff straight fingertips (a "cobra") or a roll shot. Indoors, use whichever works.
 
 **The block is not a touch.** On the beach a block counts as one of your three contacts. Indoors it does not ([rule 14.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37)): after a block, your team still has three touches, and the blocker may also make the next one.
 
@@ -78,7 +78,7 @@ The libero comes on for a back-row player, usually a middle blocker, without usi
 
 **Attacking the serve.** As on the beach, you may not attack the opponent's serve while it is entirely above the net, but indoors this applies only while the ball is in your front zone ([rule 13.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)).
 
-**Communication and coaching.** Indoors a coach can give instructions from the bench, call time-outs and make substitutions. On the beach you are on your own.
+**Communication and coaching.** Indoors a coach can give instructions from the bench, call time-outs and make substitutions. On the beach, coaching is limited or not allowed at all, depending on the competition.
 
 ## How to learn your role fast
 

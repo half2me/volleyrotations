@@ -113,7 +113,7 @@ export function startSet(state: MatchState, rotation: RotationNo, serving: boole
 
 /**
  * Who serves first in the next set: in sets 2–4 the team that did not serve first in the
- * previous set (rule 12.1.2). The deciding set starts with a new toss (12.1.1).
+ * previous set (rule 12.1.2). The deciding set starts with a new toss (7.1).
  */
 export const nextSetServing = (state: MatchState) => !state.servedFirst;
 

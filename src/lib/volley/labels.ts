@@ -274,6 +274,8 @@ export function explain(
 		}
 		if (you.setter && front) tips.push(m.tip_setter_front());
 		if (o.system === '6-6' && you.setter) tips.push(m.tip_66_setter());
+		if (you.noSwitch) tips.push(m.tip_no_switch());
+		if (o.serving) tips.push(m.tip_transition_simplified());
 	}
 	return { task: taskName(you.task), detail: taskDetail(you.task), tips };
 }

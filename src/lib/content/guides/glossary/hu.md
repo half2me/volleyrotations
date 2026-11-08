@@ -22,22 +22,22 @@ description: Angol–magyar röplabda szószedet a posztok, a pálya, a technika
 
 ## Posztok és szerepek
 
-| Angol                     | Magyar                         | Magyarázat                                                                                                   |
-| ------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| Setter (S)                | feladó                         | Ő adja a második érintést, és ő szervezi a támadást.                                                         |
-| Outside hitter (OH)       | nyitásfogadó (4-es) ütő        | Fogad, és bal oldalról támad.                                                                                |
-| Middle blocker (MB)       | center                         | Középen sáncol, és gyors feladásokat üt.                                                                     |
-| Opposite (OPP)            | feladó átló, átlóütő, 2-es ütő | Jobbról támad, a forgásban a feladóval szemben áll.                                                          |
-| Libero (L)                | liberó                         | Eltérő mezes hátsó sorköteles specialista; nem nyithat (FIVB), nem sáncolhat, és nem támadhat a háló fölött. |
-| Defensive specialist (DS) | védekező specialista           | Csere, aki a hátsó sorban fogadni és védekezni áll be.                                                       |
-| Server                    | nyitó                          | Az 1-es helyen álló játékos, aki nyit.                                                                       |
-| Front-row player          | első sorköteles játékos        | A nyitáskor a 4-es, 3-as vagy 2-es helyen álló játékos.                                                      |
-| Back-row player           | hátsó sorköteles játékos       | A nyitáskor az 5-ös, 6-os vagy 1-es helyen álló játékos.                                                     |
-| Captain                   | csapatkapitány, játékkapitány  | A csapat nevében beszél a játékvezetőkkel.                                                                   |
-| Coach                     | edző                           | Leadja a kezdő állásrendet, cserét és pihenőidőt kér.                                                        |
-| First referee             | első játékvezető               | A háló melletti emelvényen áll, és vezeti a mérkőzést.                                                       |
-| Second referee            | második játékvezető            | Az első játékvezetővel szemben, a talajon áll; a hálót és a középvonalat figyeli.                            |
-| Scorer                    | jegyzőkönyvvezető              | Vezeti a jegyzőkönyvet és a forgásrendet.                                                                    |
+| Angol                     | Magyar                         | Magyarázat                                                                                                                        |
+| ------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Setter (S)                | feladó                         | Ő adja a második érintést, és ő szervezi a támadást.                                                                              |
+| Outside hitter (OH)       | nyitásfogadó (4-es) ütő        | Fogad, és bal oldalról támad.                                                                                                     |
+| Middle blocker (MB)       | center                         | Középen sáncol, és gyors feladásokat üt.                                                                                          |
+| Opposite (OPP)            | feladó átló, átlóütő, 2-es ütő | Jobbról támad, a forgásban a feladóval szemben áll.                                                                               |
+| Libero (L)                | liberó                         | Eltérő mezes hátsó sorköteles specialista; nem nyithat (FIVB), nem sáncolhat, és nem támadhat teljesen a háló fölött lévő labdát. |
+| Defensive specialist (DS) | védekező specialista           | Csere, aki a hátsó sorban fogadni és védekezni áll be.                                                                            |
+| Server                    | nyitó                          | Az 1-es helyen álló játékos, aki nyit.                                                                                            |
+| Front-row player          | első sorköteles játékos        | A nyitáskor a 4-es, 3-as vagy 2-es helyen álló játékos.                                                                           |
+| Back-row player           | hátsó sorköteles játékos       | A nyitáskor az 5-ös, 6-os vagy 1-es helyen álló játékos.                                                                          |
+| Captain                   | csapatkapitány, játékkapitány  | A csapat nevében beszél a játékvezetőkkel.                                                                                        |
+| Coach                     | edző                           | Leadja a kezdő állásrendet, cserét és pihenőidőt kér.                                                                             |
+| First referee             | első játékvezető               | A háló melletti emelvényen áll, és vezeti a mérkőzést.                                                                            |
+| Second referee            | második játékvezető            | Az első játékvezetővel szemben, a talajon áll; a hálót és a középvonalat figyeli.                                                 |
+| Scorer                    | jegyzőkönyvvezető              | Vezeti a jegyzőkönyvet és a forgásrendet.                                                                                         |
 
 ## A pálya
 
@@ -106,26 +106,26 @@ description: Angol–magyar röplabda szószedet a posztok, a pálya, a technika
 
 ## Szabályok
 
-| Angol                     | Magyar                         | Magyarázat                                                                                     |
-| ------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------- |
-| Rally                     | labdamenet                     | A nyitástól addig, amíg a labda játékon kívülre kerül.                                         |
-| Rally scoring             | minden labdamenet pontot ér    | Minden labdamenet pontot ér valamelyik csapatnak.                                              |
-| Set                       | játszma                        | 25 pontig tart (az ötödik 15-ig), 2 pont különbséggel.                                         |
-| Match                     | mérkőzés                       | FIVB-ben három nyert játszmáig tart.                                                           |
-| Starting line-up          | kezdő állásrend                | A hat kezdőjátékos sorrendje, minden játszma előtt az állásrendi lapon leadva.                 |
-| Overlap, positional fault | állásrendi hiba, átfedés       | A fogadó csapat nem szabályos állásrendben áll a nyitáskor.                                    |
-| Rotational fault          | forgásrendi hiba               | Rossz sorrendben történő nyitás.                                                               |
-| Substitution              | csere                          | Játékos lecserélése; játszmánként 6.                                                           |
-| Exceptional substitution  | kivételes játékoscsere         | Sérült játékos cseréje, amikor szabályos csere nem lehetséges.                                 |
-| Libero replacement        | liberó-helyettesítés           | A liberó be- vagy kiállása; nem számít cserének.                                               |
-| Time-out                  | pihenőidő                      | 30 másodperces szünet; csapatonként játszmánként 2.                                            |
-| Double contact            | kettős érintés                 | Egy játékos kétszer egymás után érinti a labdát; hiba, kivéve az első érintésnél és a sáncnál. |
-| Catch, lift               | fogott labda                   | A labda megtartása vagy dobása ütés helyett.                                                   |
-| Four hits                 | négy érintés                   | Háromnál több érintés; a sánc nem számít bele.                                                 |
-| Net fault                 | hálóérintés                    | A háló érintése az antennák között, labdaérintés közben.                                       |
-| Centre line fault         | középvonal-átlépés             | A középvonal szabálytalan átlépése.                                                            |
-| Foot fault                | lépéshiba                      | Nyitáskor a pálya vagy az alapvonal érintése.                                                  |
-| Back-row attack fault     | hátsó sorköteles támadási hiba | Hátsó sorköteles játékos a támadóvonal előtt elrugaszkodva támad a háló fölötti labdára.       |
-| In, out                   | bent, kint                     | A labda a vonalakon belül ér-e talajt; a vonal bentnek számít.                                 |
+| Angol                     | Magyar                         | Magyarázat                                                                                            |
+| ------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| Rally                     | labdamenet                     | A nyitástól addig, amíg a labda játékon kívülre kerül.                                                |
+| Rally scoring             | minden labdamenet pontot ér    | Minden labdamenet pontot ér valamelyik csapatnak.                                                     |
+| Set                       | játszma                        | 25 pontig tart (az ötödik 15-ig), 2 pont különbséggel.                                                |
+| Match                     | mérkőzés                       | FIVB-ben három nyert játszmáig tart.                                                                  |
+| Starting line-up          | kezdő állásrend                | A hat kezdőjátékos sorrendje, minden játszma előtt az állásrendi lapon leadva.                        |
+| Overlap, positional fault | állásrendi hiba, átfedés       | A fogadó csapat nem szabályos állásrendben áll a nyitáskor.                                           |
+| Rotational fault          | forgásrendi hiba               | Rossz sorrendben történő nyitás.                                                                      |
+| Substitution              | csere                          | Játékos lecserélése; játszmánként 6.                                                                  |
+| Exceptional substitution  | kivételes játékoscsere         | Sérült, beteg, kiállított vagy kizárt játékos cseréje, amikor szabályos csere nem lehetséges.         |
+| Libero replacement        | liberó-helyettesítés           | A liberó be- vagy kiállása; nem számít cserének.                                                      |
+| Time-out                  | pihenőidő                      | 30 másodperces szünet; csapatonként játszmánként 2.                                                   |
+| Double contact            | kettős érintés                 | Egy játékos kétszer egymás után érinti a labdát; hiba, kivéve az első érintésnél és a sáncnál.        |
+| Catch, lift               | fogott labda                   | A labda megtartása vagy dobása ütés helyett.                                                          |
+| Four hits                 | négy érintés                   | Háromnál több érintés; a sánc nem számít bele.                                                        |
+| Net fault                 | hálóérintés                    | A háló érintése az antennák között, labdaérintés közben.                                              |
+| Centre line fault         | középvonal-átlépés             | A középvonal szabálytalan átlépése.                                                                   |
+| Foot fault                | lépéshiba                      | Nyitáskor a pálya vagy az alapvonal érintése.                                                         |
+| Back-row attack fault     | hátsó sorköteles támadási hiba | Hátsó sorköteles játékos a támadóvonal előtt elrugaszkodva támad teljesen a háló fölött lévő labdára. |
+| In, out                   | bent, kint                     | A labda a vonalakon belül ér-e talajt; a vonal bentnek számít.                                        |
 
 A teljes szabálykönyv: [FIVB hivatalos röplabda-szabályok 2025–2028](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf) (angol nyelvű).

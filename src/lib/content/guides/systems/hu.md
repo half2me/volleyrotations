@@ -1,5 +1,5 @@
 ---
-title: Játékrendszerek a röplabdában: 6:6, 4:2, 6:2, 5:1
+title: 'Játékrendszerek a röplabdában: 6:6, 4:2, 6:2, 5:1'
 description: A 6:6, 4:2, 6:2 és 5:1 rendszer összehasonlítva – ki ad fel melyik forgásban, hány első sorköteles támadó van, és mik az előnyeik, hátrányaik.
 ---
 
@@ -56,7 +56,7 @@ Itt is két feladó áll egymással szemben, de most **a hátsó sorköteles fel
 Egyetlen feladó ad fel minden forgásban. A forgásban vele szemben a **feladó átló** áll.
 
 - **Első sorköteles támadók:** három, amikor a feladó hátul van (1., 2. és 3. forgás: feladó az 1-es, 6-os és 5-ös helyen), kettő, amikor elöl (4., 5. és 6. forgás: 4-es, 3-as és 2-es hely). Első sorban a feladó maga is támadhatja a második labdát, így a sánc nem hagyhatja figyelmen kívül.
-- **Előnyök:** egy feladó, egy ritmus, egy döntéshozó. Az ütők mindig ugyanolyan labdát kapnak. Kevesebb csere kell.
+- **Előnyök:** egy feladó, egy ritmus, egy döntéshozó. Az ütők mindig ugyanattól a feladótól kapják a labdát. Kevesebb csere kell.
 - **Hátrányok:** a csapat nagyon függ egy játékostól. A forgások felében csak két első sorköteles ütő van.
 - Egy jellemző 5:1-es 1. forgás: feladó az 1-esben, nyitásfogadó ütő a 2-esben, center a 3-asban, feladó átló a 4-esben, nyitásfogadó ütő az 5-ösben, center a 6-osban. Mindenkinek a párja áll vele szemben: feladó és feladó átló, a két nyitásfogadó ütő, a két center.
 

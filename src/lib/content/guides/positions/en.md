@@ -16,7 +16,7 @@ description: What the setter, outside hitter, middle blocker, opposite, libero a
 - An indoor team has six players on court: usually one **setter**, two **outside hitters**, two **middle blockers** and one **opposite**, plus a **libero** who comes in for back-row players.
 - The setter runs the offence and takes the second touch. The others attack, block, pass and dig.
 - Where you stand at the serve is fixed by the rotation. Once the serve is hit, everyone **switches** to their specialty spot.
-- Front-row players can attack from anywhere and block. Back-row players may not block, and may only attack above the net from behind the attack line.
+- Front-row players can attack from anywhere and block. Back-row players may not complete a block, and may only attack a ball that is entirely above the net if they take off from behind the attack line.
 
 </Callout>
 
@@ -75,13 +75,13 @@ A substitute brought in for a back-row player to pass and dig, typically for the
 
 ## Front row versus back row
 
-|                      | Front row (zones 4, 3, 2) | Back row (zones 5, 6, 1)                                                                                                                                     |
-| -------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Block                | Yes                       | No ([rule 14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37))                                          |
-| Attack above the net | From anywhere             | Only taking off from behind the attack line ([rule 13.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=35)) |
-| Serve                | No                        | Only the player in zone 1                                                                                                                                    |
+|                                      | Front row (zones 4, 3, 2) | Back row (zones 5, 6, 1)                                                                                                                                     |
+| ------------------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Block                                | Yes                       | No ([rule 14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37))                                          |
+| Attack a ball entirely above the net | From anywhere             | Only taking off from behind the attack line ([rule 13.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=35)) |
+| Serve                                | No                        | Only the player in zone 1                                                                                                                                    |
 
-Whether you are front or back row depends on your zone at the moment of the serve, not where you run to afterwards. A back-row player who sneaks to the net after the serve still may not block.
+Whether you are front or back row depends on your zone at the moment of the serve, not where you run to afterwards. A back-row player who sneaks to the net after the serve still may not complete a block.
 
 ## Where to go next
 

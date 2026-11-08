@@ -28,7 +28,7 @@ description: A hat hely, az óramutató járásával megegyező forgás, a nyit�
 | **Első sor** (a hálónál) | 4   | 3     | 2    |
 | **Hátsó sor**            | 5   | 6     | 1    |
 
-Képzeld el, hogy a saját alapvonalad mögött állsz, és a háló felé nézel. Az oldal minden pályarajza így készül: a háló felül van. Az 1-es hely a jobb hátsó, innen nyitnak. A helyeket az [FIVB 7.4.1 szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27) (angol nyelvű) határozza meg, a számozás a forgás sorrendjét követi.
+Képzeld el, hogy a saját alapvonalad mögött állsz, és a háló felé nézel. Az oldal minden pályarajza így készül: a háló felül van. Az 1-es hely a jobb hátsó, innen nyitnak. A helyeket az [FIVB 7.4.1 szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27) (angol nyelvű) határozza meg, a számozás a nyitási sorrendet követi: az 1-es hely után a 2-es helyen álló játékos nyit, aztán a 3-ason álló, és így tovább.
 
 A középvonaltól 3 méterre lévő támadóvonal minden térfelet első és hátsó zónára oszt. Fontos: nem a támadóvonal tesz valakit első sorkötelessé, hanem kizárólag a helye a forgásrendben.
 
@@ -77,13 +77,13 @@ Az állásrend csak a nyitás pillanatára vonatkozik. Amint a nyitó megüti a 
 - **Első sor:** a nyitásfogadó ütő balra, a center középre, a feladó vagy a feladó átló jobbra.
 - **Hátsó sor:** a feladó vagy a feladó átló jobb hátulra (1-es hely), a nyitásfogadó ütő hátsó középre (6-os hely, készen a pipe-ra), a liberó bal hátulra (5-ös hely).
 
-A nyitás előtt a játékosok olyan közel állnak a céljukhoz, amennyire az [állásrendi szabály](/hu/guides/overlap) engedi, és a nyitás pillanatában váltanak. Saját nyitásnál a váltás azonnal megtörténik. Az ellenfél nyitásánál a legtöbben előbb fogadnak, és a támadás közben vagy után váltanak.
+Fogadásnál a játékosok olyan közel állnak a céljukhoz, amennyire az [állásrendi szabály](/hu/guides/overlap) engedi, és a nyitás pillanatában váltanak. Saját nyitásnál az FIVB 2025–2028-as szabályai szerint már a helyeteken várhattok; a régi szabály szerint a nyitás pillanatában váltotok. Az ellenfél nyitásánál a legtöbben előbb fogadnak, és a támadás közben vagy után váltanak.
 
 ## Az első és a hátsó sor korlátai
 
 A váltás nem változtat azon, ki első sorköteles. A nyitás pillanatában a 4-es, 3-as és 2-es hely az első sor, az 5-ös, 6-os és 1-es a hátsó, és ez az egész labdamenetre érvényes:
 
-- Hátsó sorköteles játékos **nem sáncolhat**, és nem vehet részt befejezett sáncban ([14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37)).
+- Hátsó sorköteles játékos **nem sáncolhat**: nem hajthat végre befejezett sáncot, és nem vehet részt benne ([14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37)).
 - Hátsó sorköteles játékos **a háló felső széle fölött teljesen fent lévő labdát** csak akkor támadhatja, ha a támadóvonal mögül rugaszkodik el; a vonal elé érkezhet ([13.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=35)). A támadóvonal előtti területről (az első zónából) csak olyan labdával hajthat végre befejezett támadóérintést, amely legalább részben a háló felső széle alatt van; feladni vagy fogadni ott bármit szabad.
 - A liberóra még szigorúbb szabályok vonatkoznak: lásd [a liberóról szóló útmutatót](/hu/guides/libero).
 

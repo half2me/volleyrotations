@@ -12,7 +12,8 @@ static, built from the static-site template; the README covers the stack.
   (rule 7.4 check and `makeLegal`), `formations.ts` (positions per rally phase), `coverage.ts`,
   `quiz.ts` and `match.ts`. `labels.ts` is the only part that uses messages.
 - Court coordinates are metres seen from behind our end line: x 0–9 left to right, y 0–9 from the
-  net. Rotation N has the first setter in zone 1, 6, 5, 4, 3, 2 for N = 1…6.
+  net. Rotation N has the first setter (S or S1) in zone 1, 6, 5, 4, 3, 2 for N = 1…6; labels
+  name the zone of the setter who sets in that rotation (`settingZone`), which differs in 6-2 and 4-2.
 - Rules follow the FIVB 2025–2028 rulebook. Rule 7.4 now frees the serving team from rotational
   order; the older rule is the `servingOverlap` option. Link rules to the PDF with `#page=N`.
 - Receive formations are computed, not hand-drawn. Every one must pass the overlap test in

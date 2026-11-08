@@ -25,22 +25,22 @@ description: A röplabda cserekorlátai, a pihenőidők, hogyan nyerhető meg a 
 
 Csere az, amikor egy pályán lévő játékos helyére a kispadról jön be valaki, a hivatalos eljárással: az edző kéri, a jegyzőkönyvvezető rögzíti. A liberó-helyettesítések ettől külön állnak, és nem számítanak bele (lásd: [a liberó szabályai](/hu/guides/libero)).
 
-Az FIVB korlátai ([15.1 és 15.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39), angol nyelvű):
+Az FIVB korlátai ([15.1 és 15.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=38), angol nyelvű):
 
 - Csapatonként és játszmánként **hat csere**. Egyszerre több játékos is cserélhető, mindegyik egynek számít.
 - **Kezdő játékos** (aki az adott játszma kezdő állásrendjében szerepelt) játszmánként **csak egyszer** hagyhatja el a pályát, és **csak egyszer** térhet vissza, mégpedig a kezdő állásrendben elfoglalt helyére.
 - **Cserejátékos** játszmánként **csak egyszer** léphet pályára egy kezdő helyére, és **csak ugyanaz a kezdő** válthatja le.
 
-A párosítás tehát a játszmára rögzül: ha a B cserejátékos az A kezdőjátékos helyére jön be, A csak B helyére térhet vissza, és A visszatérése után egyikük sem cserélhető le újra abban a játszmában (a kivételes játékoscserét kivéve).
+A párosítás tehát a játszmára rögzül: ha a B cserejátékos az A kezdőjátékos helyére jön be, A csak B helyére térhet vissza, és A visszatérése után abban a játszmában A nem mehet le újra, B pedig nem jöhet vissza (a kivételes játékoscserét kivéve).
 
-**Kivételes játékoscsere** ([15.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)): ha egy sérült játékost nem lehet szabályosan lecserélni, bárki beállhat, aki abban a pillanatban nincs a pályán (a liberót és az általa helyettesített játékost kivéve). Ez nem számít bele a hat cserébe, de a sérült játékos azon a mérkőzésen már nem térhet vissza.
+**Kivételes játékoscsere** ([15.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)): ha egy játékos sérülés vagy betegség miatt nem tud tovább játszani, vagy kiállították, illetve kizárták, és szabályosan nem cserélhető le, bárki beállhat, aki abban a pillanatban nincs a pályán (a liberókat és a szokásos helyettesített játékosukat kivéve). Ez nem számít bele a hat cserébe, de a lecserélt játékos azon a mérkőzésen már nem térhet vissza.
 
 Sok amatőr és utánpótlás-bajnokság több cserét vagy szabad cserét enged. Nézd meg a saját bajnokságod szabályait.
 
 ## Pihenőidők
 
 - Csapatonként és játszmánként **két pihenőidő** ([15.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=38)), mindegyik **30 másodperc** ([15.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)).
-- Csak az edző (edző hiányában a játékkapitány) kérheti, amikor a labda nincs játékban, és még nem fújták be a nyitást.
+- Csak az edző (edző hiányában a segédedző vagy a játékkapitány) kérheti, amikor a labda nincs játékban, és még nem fújták be a nyitást.
 - Egyes versenyeken, főleg a legmagasabb szinten, technikai pihenőidő is van, vagy eltérnek a pihenőidő szabályai. Klubszinten a két 30 másodperces pihenőidő az általános.
 
 ## Pontszámítás
@@ -68,14 +68,14 @@ A nyitás szabályai a [12. szabályban](https://www.fivb.com/wp-content/uploads
 
 A kettőt könnyű összekeverni.
 
-|              | Forgásrendi hiba                                                                                                                                                          | Állásrendi hiba                                                                                                 |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Mi történik? | Nem az nyit, akinek kellene                                                                                                                                               | A fogadó csapat egyik játékosa a nyitáskor nem szabályos állásrendben áll                                       |
-| Szabály      | [7.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=28)                                                                  | [7.4 és 7.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27) |
-| Büntetés     | Pont és nyitás az ellenfélnek, a sorrendet kijavítják                                                                                                                     | Pont és nyitás az ellenfélnek (elveszett labdamenet), a helyeket kijavítják                                     |
-| Ezen felül   | A hibázó csapat hibás sorrendben szerzett pontjait törlik, ha a jegyzőkönyvvezető pontosan meg tudja állapítani, mikor kezdődött a hiba. Az ellenfél pontjai megmaradnak. | Nincs                                                                                                           |
+|              | Forgásrendi hiba                                                                                                                                                          | Állásrendi hiba                                                                                                            |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Mi történik? | Nem az nyit, akinek kellene                                                                                                                                               | A fogadó csapat egyik játékosa a nyitáskor nem szabályos állásrendben áll, vagy bárki (a nyitót kivéve) a pályán kívül áll |
+| Szabály      | [7.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=28)                                                                  | [7.4 és 7.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)            |
+| Büntetés     | Pont és nyitás az ellenfélnek, a sorrendet kijavítják                                                                                                                     | Pont és nyitás az ellenfélnek (elveszett labdamenet), a helyeket kijavítják                                                |
+| Ezen felül   | A hibázó csapat hibás sorrendben szerzett pontjait törlik, ha a jegyzőkönyvvezető pontosan meg tudja állapítani, mikor kezdődött a hiba. Az ellenfél pontjai megmaradnak. | Nincs                                                                                                                      |
 
-A 2025–2028-as FIVB-szabályok szerint állásrendi hibát csak a fogadó csapat követhet el; a nyitó csapat bárhol állhat a saját térfelén. Egyes bajnokságok még a régi szabályt alkalmazhatják mindkét csapatra. Bővebben: [az állásrendi hiba szabálya](/hu/guides/overlap).
+A 2025–2028-as FIVB-szabályok szerint a nyitáskor csak a fogadó csapatnak kell szabályos állásrendben állnia; a nyitó csapat bárhol állhat a saját térfelén. Ha viszont a nyitó csapat egy játékosa (a nyitót kivéve) a pályán kívül áll, az ott is állásrendi hiba. Egyes bajnokságok még a régi szabályt alkalmazhatják mindkét csapatra. Bővebben: [az állásrendi hiba szabálya](/hu/guides/overlap).
 
 Ha nyitási hiba és állásrendi hiba egyszerre történik (például a nyitó rálép az alapvonalra), a nyitó hibája számít. Ha a nyitás az ütés után válik hibássá, például a hálóba megy, az állásrendi hiba számít ([7.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)).
 

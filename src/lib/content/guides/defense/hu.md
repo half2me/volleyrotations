@@ -65,7 +65,7 @@ A hátsó sor a támadás felé **forog**:
 
 - Az ellenfél bal oldali támadásánál a **jobb hátsó (1-es hely)** a sánc mögé jön az ejtésekre.
 - A **hátsó középső (6-os hely)** átmegy mélyen az egyenesre.
-- A **bal hátsó (5-ös hely)** a mély közép felé csúszik; a rövid átlót a sáncon kívüli első sorköteles veszi.
+- A **bal hátsó (5-ös hely)** a mély közép felé csúszik.
 - A **sáncon kívüli** visszalép a rövid átlóra.
 
 Előnye, hogy nagyon jó az ejtések és a lassított ütések ellen, és a sánc mögötti védő korán a helyén van. Hátránya, hogy a mély átlós sarok és a mély közép nyitva maradhat, és a játékosoknak többet kell mozogniuk. Középről érkező támadás ellen ugyanúgy játszik, mint a hátsós rendszer.

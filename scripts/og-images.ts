@@ -41,7 +41,12 @@ const EYEBROW: Record<string, { guide: string; tool: string }> = {
 
 function frontmatter(slug: string, locale: string) {
 	const md = readFileSync(join(root, `src/lib/content/guides/${slug}/${locale}.md`), 'utf8');
-	const field = (name: string) => md.match(new RegExp(`^${name}: (.*)$`, 'm'))?.[1].trim() ?? '';
+	// YAML values may be quoted when they contain a colon.
+	const field = (name: string) =>
+		(md.match(new RegExp(`^${name}: (.*)$`, 'm'))?.[1].trim() ?? '').replace(
+			/^(["'])(.*)\1$/,
+			'$2'
+		);
 	return { title: field('title'), description: field('description') };
 }
 

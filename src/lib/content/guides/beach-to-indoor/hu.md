@@ -58,15 +58,15 @@ Ez a legnagyobb változás. Strandon csak a nyitás sorrendjére kell figyelni. 
 - A hat játékosnak **rögzített sorrendje** van az egész játszmára. Amikor a csapat visszaszerzi a nyitást, mindenki egy helyet lép **az óramutató járásával megegyezően**, és aki az 1-es helyre kerül, nyit. Lásd: [hogyan működik a forgás](/hu/guides/rotations).
 - A nyitás pillanatában a fogadó csapat játékosainak a szomszédaikhoz képest ebben a sorrendben kell állniuk, elöl-hátul és oldalirányban is. Ha nem így van, az **állásrendi hiba**. Lásd: [az állásrendi hiba szabálya](/hu/guides/overlap).
 - A nyitás után mindenki **átmegy** a saját posztjára.
-- Ha a nyitáskor a **hátsó sorban** vagy, nem sáncolhatsz, és a háló fölötti labdát csak akkor támadhatod, ha a hálótól 3 méterre lévő **támadóvonal** mögül rugaszkodsz el.
+- Ha a nyitáskor a **hátsó sorban** vagy, nem vehetsz részt befejezett sáncban, és a teljes terjedelmével a háló fölött lévő labdát csak akkor támadhatod, ha a hálótól 3 méterre lévő **támadóvonal** mögül rugaszkodsz el.
 
 ## A liberó
 
-A liberó egy hátsó sorköteles játékos – általában a center – helyére áll be, és ez nem számít cserének. Az FIVB-szabályok szerint a liberó nem nyithat, nem sáncolhat, és nem támadhat a háló fölött. Lásd: [a liberó szabályai](/hu/guides/libero).
+A liberó egy hátsó sorköteles játékos – általában a center – helyére áll be, és ez nem számít cserének. Az FIVB-szabályok szerint a liberó nem nyithat, nem sáncolhat, és nem támadhat olyan labdát, amely teljes terjedelmével a háló fölött van. Lásd: [a liberó szabályai](/hu/guides/libero).
 
 ## Szabálykülönbségek, amelyek meglepik a strandosokat
 
-**Ejtés.** Teremben szabad ujjbeggyel, nyitott kézzel ejteni. Strandon a nyitott kezes ejtés hiba, ezért megtanultad bütyökkel („kobra”) vagy lassított ütéssel megoldani. Teremben azt használd, ami beválik.
+**Ejtés.** Teremben szabad ujjbeggyel, nyitott kézzel ejteni. Strandon a nyitott kezes ejtés hiba, ezért megtanultad bütykökkel („pokey”), merev, egyenes ujjhegyekkel („kobra”) vagy lassított ütéssel megoldani. Teremben azt használd, ami beválik.
 
 **A sánc nem érintés.** Strandon a sánc a három érintés egyikének számít. Teremben nem ([14.4. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37), angol nyelvű): sánc után a csapatnak még három érintése van, és a következőt a sáncoló meg is játszhatja.
 
@@ -78,7 +78,7 @@ A liberó egy hátsó sorköteles játékos – általában a center – helyér
 
 **A nyitás leütése.** A strandhoz hasonlóan teremben sem támadhatod meg az ellenfél nyitását, ha a labda teljesen a háló felső széle fölött van, de teremben ez csak akkor tilos, ha a labda az első zónában van ([13.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)).
 
-**Kommunikáció és edzői segítség.** Teremben az edző a kispadról utasításokat adhat, pihenőidőt kérhet és cserélhet. Strandon magadra vagy utalva.
+**Kommunikáció és edzői segítség.** Teremben az edző a kispadról utasításokat adhat, pihenőidőt kérhet és cserélhet. Strandon a versenytől függően az edzői segítség korlátozott, vagy egyáltalán nem megengedett.
 
 ## Hogyan tanuld meg gyorsan a szerepedet?
 

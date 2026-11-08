@@ -65,7 +65,7 @@ The back row **rotates** towards the attack:
 
 - Against an attack from the opponent's left, **right back (zone 1)** comes up behind the block to take tips.
 - **Middle back (zone 6)** rotates over to defend the line, deep.
-- **Left back (zone 5)** slides towards the deep middle; the off-blocker takes the sharp cross.
+- **Left back (zone 5)** slides towards the deep middle.
 - The **off-blocker** drops to cover the sharp angle.
 
 It is very good against tips and roll shots, because the defender behind the block is in place early. The downside is that the deep cross corner and the deep middle can be open, and players have to move more. Against an attack from the middle it plays like perimeter.

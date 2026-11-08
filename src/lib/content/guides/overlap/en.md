@@ -58,7 +58,7 @@ So zone 5 and zone 3 are never compared, nor are 4 and 6 or 2 and 6. In practice
 
 ## The 2025 change, and leagues that differ
 
-Older FIVB rules applied rotation order to **both** teams at the serve. Since 2025, FIVB only checks the receiving team, and the serving team can line up however it likes, as long as everyone except the server is on the court. It still may not screen: players may not wave their arms, jump, move sideways or stand grouped to hide the server or the flight of the ball ([rule 12.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34)).
+Older FIVB rules applied rotation order to **both** teams at the serve. Since 2025, FIVB only checks the receiving team, and the serving team can line up however it likes, as long as everyone except the server is on the court. It still may not screen: players may not wave their arms, jump, move sideways or stand grouped to hide the server or the flight of the ball, and since 2025 no serving-team player may raise their hands above their head during the serve until the ball has crossed the net ([rule 12.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34)).
 
 Many competitions have not followed, or follow a different rulebook: for example, US high school and college volleyball and plenty of local and school leagues. Some national federations adopt FIVB changes a season or more later. **Check which rule your league uses.** The [overlap trainer](/overlap) has a switch for the older rule where the serving team is checked too.
 

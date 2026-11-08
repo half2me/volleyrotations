@@ -58,7 +58,7 @@ Az 5-ös és a 3-as helyet tehát soha nem vetik össze, ahogy a 4-est és a 6-o
 
 ## A 2025-ös változás és az eltérő bajnokságok
 
-A korábbi FIVB-szabályok szerint a nyitáskor **mindkét** csapatnak szabályos állásrendben kellett állnia. 2025 óta az FIVB csak a fogadó csapatot ellenőrzi, a nyitó csapat tetszés szerint állhat fel, ha a nyitón kívül mindenki a pályán van. Takarni viszont most sem szabad: a játékosok nem integethetnek, nem ugrálhatnak, nem mozoghatnak oldalra, és nem állhatnak csoportban úgy, hogy eltakarják a nyitót vagy a labda útját ([12.5. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34)).
+A korábbi FIVB-szabályok szerint a nyitáskor **mindkét** csapatnak szabályos állásrendben kellett állnia. 2025 óta az FIVB csak a fogadó csapatot ellenőrzi, a nyitó csapat tetszés szerint állhat fel, ha a nyitón kívül mindenki a pályán van. Takarni viszont most sem szabad: a játékosok nem integethetnek, nem ugrálhatnak, nem mozoghatnak oldalra, és nem állhatnak csoportban úgy, hogy eltakarják a nyitót vagy a labda útját, és 2025 óta a nyitó csapat egyik játékosa sem emelheti a kezét a feje fölé a nyitás közben, amíg a labda át nem jutott a hálón ([12.5. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34)).
 
 Sok versenyrendszer ezt nem vette át, vagy más szabálykönyvet használ, például az amerikai középiskolai és egyetemi röplabda, valamint sok helyi és iskolai bajnokság. Egyes nemzeti szövetségek csak egy-két idénnyel később vezetik be az FIVB változásait. **Nézd meg, melyik szabály érvényes a bajnokságodban.** Az [állásrend-gyakorlóban](/hu/overlap) be lehet kapcsolni a régi szabályt is, amely a nyitó csapatot is ellenőrzi.
 

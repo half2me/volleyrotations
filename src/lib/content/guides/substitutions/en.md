@@ -25,22 +25,22 @@ description: Volleyball substitution limits, time-outs, how sets and matches are
 
 A substitution is when a player on court is replaced by a player from the bench, through the official procedure: the coach asks, the scorer records it. Libero replacements are separate and do not count (see [the libero guide](/guides/libero)).
 
-The FIVB limits ([rules 15.1 and 15.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)):
+The FIVB limits ([rules 15.1 and 15.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=38)):
 
 - **Six substitutions** per team per set. Several players can be substituted at the same time; each one counts.
 - **A starter** (a player in the starting line-up of that set) may leave the game, and come back, **only once each per set**, and only to their previous position in the line-up.
 - **A substitute** may enter **only once per set**, in place of a starter, and can be replaced **only by that same starter**.
 
-So each pairing is fixed for the set: if substitute B comes on for starter A, the only way back for A is to replace B, and once A is back, neither of them can go off again in that set (except for an exceptional substitution).
+So each pairing is fixed for the set: if substitute B comes on for starter A, the only way back for A is to replace B, and once A is back, A cannot leave again and B cannot return in that set (except for an exceptional substitution).
 
-**Exceptional substitution** ([rule 15.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)): if an injured player cannot be substituted legally, any player not on court at that moment (apart from the libero and their replacement player) can come on. It does not count towards the six, but the injured player may not return in that match.
+**Exceptional substitution** ([rule 15.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)): if a player cannot continue because of injury or illness, or is expelled or disqualified, and cannot be substituted legally, any player not on court at that moment (apart from the liberos and their regular replacement player) can come on. It does not count towards the six, but the replaced player may not return in that match.
 
 Many recreational and youth leagues allow more substitutions or free substitution. Check your league.
 
 ## Time-outs
 
 - **Two time-outs** per team per set ([rule 15.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=38)), each lasting **30 seconds** ([rule 15.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=39)).
-- Only the coach (or the game captain if there is no coach) can ask, while the ball is out of play and before the whistle for the serve.
+- Only the coach (or, without a coach, the assistant coach or the game captain) can ask, while the ball is out of play and before the whistle for the serve.
 - Some competitions, especially at top level, add technical time-outs or use different time-out rules. At club level, two 30-second time-outs is the norm.
 
 ## Scoring
@@ -68,14 +68,14 @@ The serve rules are in [rule 12](https://www.fivb.com/wp-content/uploads/2025/01
 
 These two are easily confused.
 
-|              | Rotational fault                                                                                                                              | Positional fault                                                                                                 |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| What happens | The wrong player serves                                                                                                                       | A player of the receiving team stands out of rotation order at the serve                                         |
-| Rule         | [7.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=28)                                      | [7.4 and 7.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27) |
-| Sanction     | Point and serve to the opponent; the order is corrected                                                                                       | Point and serve to the opponent (lost rally); positions are corrected                                            |
-| Extra        | Points the faulting team scored while out of order are cancelled, if the scorer can say exactly when it started. The opponent's points stand. | None                                                                                                             |
+|              | Rotational fault                                                                                                                              | Positional fault                                                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| What happens | The wrong player serves                                                                                                                       | A receiving-team player stands out of rotation order at the serve, or any player (except the server) stands outside the court |
+| Rule         | [7.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=28)                                      | [7.4 and 7.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)              |
+| Sanction     | Point and serve to the opponent; the order is corrected                                                                                       | Point and serve to the opponent (lost rally); positions are corrected                                                         |
+| Extra        | Points the faulting team scored while out of order are cancelled, if the scorer can say exactly when it started. The opponent's points stand. | None                                                                                                                          |
 
-Under FIVB rules for 2025–2028, only the receiving team can commit a positional fault; the serving team may stand anywhere in its court. Many leagues still apply the older rule to both teams. Read more in [the overlap guide](/guides/overlap).
+Under FIVB rules for 2025–2028, only the receiving team must be in rotation order at the serve; the serving team may stand anywhere in its court. A serving-team player other than the server who stands outside the court at the serve still commits a positional fault. Many leagues still apply the older rule to both teams. Read more in [the overlap guide](/guides/overlap).
 
 If a serving fault and a positional fault happen at the same moment, the server's fault counts (for example, a foot fault on the serve). If the serve goes wrong after it has been hit, for example into the net, the positional fault counts ([rule 7.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)).
 
