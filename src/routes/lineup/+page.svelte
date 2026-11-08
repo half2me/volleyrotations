@@ -97,7 +97,12 @@
 	let printCards = $state(true);
 </script>
 
-<Seo title="{m.lineup_title()} · {site.name}" description={m.lineup_description()} path="/lineup" />
+<Seo
+	title="{m.lineup_title()} · {site.name}"
+	description={m.lineup_description()}
+	path="/lineup"
+	schema="WebApplication"
+/>
 
 <div class="print:hidden">
 	<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.lineup_title()}</h1>

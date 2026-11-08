@@ -108,7 +108,12 @@
 	});
 </script>
 
-<Seo title="{m.quiz_title()} · {site.name}" description={m.quiz_description()} path="/quiz" />
+<Seo
+	title="{m.quiz_title()} · {site.name}"
+	description={m.quiz_description()}
+	path="/quiz"
+	schema="WebApplication"
+/>
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.quiz_title()}</h1>
 <p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.quiz_lead()}</p>

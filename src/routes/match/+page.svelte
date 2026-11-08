@@ -148,7 +148,12 @@
 	}
 </script>
 
-<Seo title="{m.match_title()} · {site.name}" description={m.match_description()} path="/match" />
+<Seo
+	title="{m.match_title()} · {site.name}"
+	description={m.match_description()}
+	path="/match"
+	schema="WebApplication"
+/>
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.match_title()}</h1>
 

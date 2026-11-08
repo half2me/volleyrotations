@@ -107,6 +107,7 @@
 	title="{m.overlap_title()} · {site.name}"
 	description={m.overlap_description()}
 	path="/overlap"
+	schema="WebApplication"
 />
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.overlap_title()}</h1>

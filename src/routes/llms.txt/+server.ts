@@ -15,7 +15,10 @@ export function GET() {
 
 ## Pages
 
-${pages.map((p) => `- [${pageLabel[p.path]()}](${site.url}${p.path})`).join('\n')}
+${pages
+	.filter((p) => !('noindex' in p))
+	.map((p) => `- [${pageLabel[p.path]()}](${site.url}${p.path})`)
+	.join('\n')}
 `;
 	return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

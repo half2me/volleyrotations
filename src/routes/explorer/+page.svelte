@@ -94,6 +94,7 @@
 	title="{m.explorer_title()} · {site.name}"
 	description={m.explorer_description()}
 	path="/explorer"
+	schema="WebApplication"
 />
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.explorer_title()}</h1>

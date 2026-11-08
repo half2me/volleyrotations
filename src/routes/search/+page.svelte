@@ -34,7 +34,12 @@
 	});
 </script>
 
-<Seo title="{m.nav_search()} · {site.name}" description={m.search_description()} path="/search" />
+<Seo
+	title="{m.nav_search()} · {site.name}"
+	description={m.search_description()}
+	path="/search"
+	noindex
+/>
 
 <h1 class="text-3xl font-bold tracking-tight">{m.nav_search()}</h1>
 {#if dev}

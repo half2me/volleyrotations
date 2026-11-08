@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
+	import { ogImagePath } from '#lib/pages.js';
 	import { baseLocale, getLocale, locales, type Locale } from '#lib/paraglide/runtime.js';
 
 	let {
@@ -8,22 +9,67 @@
 		description,
 		path,
 		type = 'website',
-		image,
+		schema,
 		noindex = false
 	}: {
 		/** Full document title. */
 		title: string;
 		description: string;
-		/** Base-locale path from the site root, e.g. '/about'; '/' for the homepage. */
+		/** Base-locale path from the site root, e.g. '/explorer'; '/' for the homepage. */
 		path: string;
 		type?: 'website' | 'article';
-		/** Social card, 1200×630, as a path under static/ (e.g. '/og.png'). */
-		image?: string;
+		/**
+		 * The schema.org type to describe the page with, as JSON-LD: the whole site on the
+		 * homepage, an interactive tool, or a guide.
+		 */
+		schema?: 'WebSite' | 'WebApplication' | 'Article';
 		noindex?: boolean;
 	} = $props();
 
+	/** Open Graph wants a territory with the language. */
+	const OG_LOCALE: Record<Locale, string> = { en: 'en_GB', hu: 'hu_HU' };
+
 	const urlFor = (locale: Locale) => site.url + href(path, locale);
-	const url = $derived(urlFor(getLocale()));
+	const locale = $derived(getLocale());
+	const url = $derived(urlFor(locale));
+	// Every page has its own preview image, drawn by `pnpm og` (scripts/og-images.ts).
+	const image = $derived(site.url + ogImagePath(path, locale));
+
+	const jsonLd = $derived.by(() => {
+		if (!schema) return undefined;
+		// Structured data names the page itself, without the site name the <title> ends with.
+		const name = title.replace(` · ${site.name}`, '');
+		const common = {
+			'@context': 'https://schema.org',
+			'@type': schema,
+			name,
+			description,
+			url,
+			inLanguage: locale,
+			image
+		};
+		const extra =
+			schema === 'WebSite'
+				? { name: site.name, alternateName: name }
+				: schema === 'WebApplication'
+					? {
+							applicationCategory: 'SportsApplication',
+							operatingSystem: 'Any',
+							browserRequirements: 'Requires JavaScript',
+							isAccessibleForFree: true,
+							offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+							isPartOf: { '@type': 'WebSite', name: site.name, url: site.url }
+						}
+					: {
+							headline: name,
+							mainEntityOfPage: url,
+							author: { '@type': 'Organization', name: site.name, url: site.url },
+							publisher: { '@type': 'Organization', name: site.name, url: site.url },
+							isPartOf: { '@type': 'WebSite', name: site.name, url: site.url }
+						};
+		// `<` is escaped so the JSON cannot close the script element early.
+		return JSON.stringify({ ...common, ...extra }).replace(/</g, '\\u003c');
+	});
 </script>
 
 <svelte:head>
@@ -33,22 +79,33 @@
 	{#if noindex}
 		<meta name="robots" content="noindex" />
 	{:else}
-		{#each locales as locale (locale)}
-			<link rel="alternate" hreflang={locale} href={urlFor(locale)} />
+		<meta name="robots" content="index, follow, max-image-preview:large" />
+		{#each locales as l (l)}
+			<link rel="alternate" hreflang={l} href={urlFor(l)} />
 		{/each}
 		<link rel="alternate" hreflang="x-default" href={urlFor(baseLocale)} />
 	{/if}
 
 	<meta property="og:type" content={type} />
 	<meta property="og:site_name" content={site.name} />
-	<meta property="og:locale" content={getLocale()} />
+	<meta property="og:locale" content={OG_LOCALE[locale]} />
+	{#each locales.filter((l) => l !== locale) as l (l)}
+		<meta property="og:locale:alternate" content={OG_LOCALE[l]} />
+	{/each}
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={url} />
-	{#if image}
-		<meta property="og:image" content={site.url + image} />
-		<meta property="og:image:width" content="1200" />
-		<meta property="og:image:height" content="630" />
-		<meta name="twitter:card" content="summary_large_image" />
+	<meta property="og:image" content={image} />
+	<meta property="og:image:type" content="image/png" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:image:alt" content={title} />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={title} />
+	<meta name="twitter:description" content={description} />
+	<meta name="twitter:image" content={image} />
+	<meta name="twitter:image:alt" content={title} />
+	{#if jsonLd}
+		{@html `<script type="application/ld+json">${jsonLd}</script>`}
 	{/if}
 </svelte:head>

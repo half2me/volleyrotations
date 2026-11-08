@@ -19,6 +19,22 @@ for (const route of routes) {
 		expect(overflow, 'page scrolls sideways').toBe(false);
 	});
 
+	test(`${route} has a social preview image and valid structured data`, async ({
+		page,
+		request
+	}) => {
+		await page.goto(route);
+		const image = await page.locator('meta[property="og:image"]').getAttribute('content');
+		expect(image, 'og:image').toBeTruthy();
+		// The tag names the production origin; fetch the same path from the server under test.
+		const response = await request.get(new URL(image!).pathname);
+		expect(response.status(), image!).toBe(200);
+		expect(response.headers()['content-type']).toBe('image/png');
+		for (const json of await page.locator('script[type="application/ld+json"]').allTextContents()) {
+			expect(() => JSON.parse(json)).not.toThrow();
+		}
+	});
+
 	test(`${route} passes axe (WCAG 2.1 AA)`, async ({ page }) => {
 		await page.goto(route);
 		for (const theme of ['light', 'dark']) {

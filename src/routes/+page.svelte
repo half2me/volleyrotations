@@ -37,7 +37,12 @@
 	] as const;
 </script>
 
-<Seo title="{site.name} · {m.home_tagline()}" description={m.home_description()} path="/" />
+<Seo
+	title="{site.name} · {m.home_tagline()}"
+	description={m.home_description()}
+	path="/"
+	schema="WebSite"
+/>
 
 <section class="grid items-center gap-10 md:grid-cols-[1fr_minmax(0,20rem)]">
 	<div>

@@ -32,7 +32,15 @@ export const pages = [
 	{ path: '/match', inNav: true },
 	{ path: '/guides', inNav: true },
 	...guides.map((slug) => ({ path: `/guides/${slug}` as const, inNav: false })),
-	{ path: '/search', inNav: false }
+	// Search results are not content of their own, so the page is kept out of search engines.
+	{ path: '/search', inNav: false, noindex: true }
 ] as const;
 
 export type PagePath = (typeof pages)[number]['path'];
+
+/**
+ * Where a page's social preview image lives under static/, as `pnpm og` writes it:
+ * `/og/<locale>/<path with slashes as dashes>.png`, `home` for the homepage.
+ */
+export const ogImagePath = (path: string, locale: string) =>
+	`/og/${locale}/${path === '/' ? 'home' : path.slice(1).replaceAll('/', '-')}.png`;
