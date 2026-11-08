@@ -32,6 +32,10 @@ const HU_SUFFIX: Record<number, string> = { 1: 'es', 2: 'es', 3: 'as', 4: 'es', 
 export const zoneRef = (zone: number): string =>
 	getLocale() === 'hu' ? `${zone}-${HU_SUFFIX[zone] ?? 'es'}` : String(zone);
 
+/** A system's name as the locale writes it: "5-1" in English, "5:1" in Hungarian. */
+export const systemName = (system: SystemId): string =>
+	getLocale() === 'hu' ? system.replace('-', ':') : system;
+
 /** The few characters drawn on a player token. */
 export function roleShort(role: RoleId): string {
 	const letter = LETTERS[role];

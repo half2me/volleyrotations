@@ -6,7 +6,7 @@
 	import { href } from '#lib/i18n.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { DEFAULT_OPTIONS, byZone, formation } from '#lib/volley/formations.js';
-	import { roleName, roleShort, rotationLabel, zoneRef } from '#lib/volley/labels.js';
+	import { roleName, roleShort, rotationLabel, zoneRef, systemName } from '#lib/volley/labels.js';
 	import {
 		COLUMN_PAIRS,
 		ROTATIONS,
@@ -115,7 +115,7 @@
 <div class="mt-8 grid gap-4 sm:grid-cols-2" data-pagefind-ignore>
 	<ChipGroup
 		legend={m.label_system()}
-		options={SYSTEMS.map((s) => ({ value: s, label: s }))}
+		options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
 		bind:value={
 			() => system,
 			(s) => {

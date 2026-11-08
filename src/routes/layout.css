@@ -113,9 +113,14 @@
 		--tw-prose-code: var(--color-ink);
 		--tw-prose-captions: var(--color-ink-soft);
 
-		/* A wide table scrolls inside itself instead of pushing the page sideways on a phone. */
+		/* Tables fit the column and wrap their cells, so a phone never scrolls sideways (a
+		   scrolling table would also need to be keyboard-focusable). */
 		& table {
-			@apply block overflow-x-auto;
+			@apply w-full table-fixed;
+		}
+		& :is(th, td) {
+			overflow-wrap: anywhere;
+			hyphens: auto;
 		}
 	}
 

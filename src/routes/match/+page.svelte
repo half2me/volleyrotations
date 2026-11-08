@@ -8,7 +8,7 @@
 	import { Persisted } from '#lib/persisted.svelte.js';
 	import { memberLabel, newTeam, teams, type Member, type Team } from '#lib/teams.svelte.js';
 	import { DEFAULT_OPTIONS, formation } from '#lib/volley/formations.js';
-	import { roleName, roleShort, rotationLabel } from '#lib/volley/labels.js';
+	import { roleName, roleShort, rotationLabel, systemName } from '#lib/volley/labels.js';
 	import {
 		SUBS_PER_SET,
 		TIMEOUTS_PER_SET,
@@ -168,14 +168,14 @@
 			<select class="field mt-1" bind:value={teamId}>
 				<option value={undefined}>{m.match_no_team()}</option>
 				{#each teams.current.list as t (t.id)}
-					<option value={t.id}>{t.name} ({t.system})</option>
+					<option value={t.id}>{t.name} ({systemName(t.system)})</option>
 				{/each}
 			</select>
 		</label>
 		{#if !setupTeam}
 			<ChipGroup
 				legend={m.label_system()}
-				options={SYSTEMS.map((s) => ({ value: s, label: s }))}
+				options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
 				bind:value={looseSystem}
 			/>
 			<p class="text-sm text-ink-soft">

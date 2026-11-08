@@ -6,7 +6,7 @@
 	import { guideLabel } from '#lib/page-labels.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { DEFAULT_OPTIONS, formation } from '#lib/volley/formations.js';
-	import { phaseName, roleName, rotationLabel } from '#lib/volley/labels.js';
+	import { phaseName, roleName, rotationLabel, systemName } from '#lib/volley/labels.js';
 	import type { RotationNo } from '#lib/volley/model.js';
 	import { prefersReducedMotion } from 'svelte/motion';
 	import IconArrowRight from '~icons/lucide/arrow-right';
@@ -66,7 +66,7 @@
 			})}
 		/>
 		<figcaption class="mt-2 text-center text-sm text-ink-soft">
-			5-1 · {phaseName('receive')} · {rotationLabel(rotation, '5-1')}
+			{systemName('5-1')} · {phaseName('receive')} · {rotationLabel(rotation, '5-1')}
 		</figcaption>
 	</figure>
 </section>

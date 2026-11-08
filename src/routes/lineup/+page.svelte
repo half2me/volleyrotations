@@ -19,7 +19,8 @@
 		roleShort,
 		rotationLabel,
 		slotName,
-		taskName
+		taskName,
+		systemName
 	} from '#lib/volley/labels.js';
 	import {
 		ROTATIONS,
@@ -146,7 +147,7 @@
 		</label>
 		<ChipGroup
 			legend={m.label_system()}
-			options={SYSTEMS.map((s) => ({ value: s, label: s }))}
+			options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
 			bind:value={() => team.system, (system) => save({ system })}
 		/>
 		{#if team.system !== '6-6'}
@@ -310,7 +311,7 @@
 <!-- The sheets: a preview on screen, the whole page when printed. -->
 <section class="mt-12 print:mt-0" aria-labelledby="sheet-heading" data-pagefind-ignore>
 	<h2 id="sheet-heading" class="text-2xl font-bold tracking-tight print:text-xl">
-		{team.name}: {m.lineup_sheet_title({ system: team.system })}
+		{team.name}: {m.lineup_sheet_title({ system: systemName(team.system) })}
 	</h2>
 	<p class="mt-1 text-sm text-ink-soft">
 		{roles.map((r) => `${tokens[r]} = ${label(r)}`).join(' · ')}

@@ -28,7 +28,7 @@ description: The six court zones, clockwise rotation after a sideout, service or
 | **Front row** (at the net) | 4    | 3      | 2     |
 | **Back row**               | 5    | 6      | 1     |
 
-Picture yourself standing behind your own end line, looking at the net. That is how this site draws every court: the net at the top. Zone 1 is right back, the serving position. The zones are defined in [FIVB rule 1.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=15), and the numbering follows the order in which players rotate.
+Picture yourself standing behind your own end line, looking at the net. That is how this site draws every court: the net at the top. Zone 1 is right back, the serving position. The zones are numbered in [FIVB rule 7.4.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27), and the numbering follows the order in which players rotate.
 
 The attack line, 3 m from the centre line, splits each half into a front zone and a back zone. Note that the attack line is not what makes you "front row": that depends only on your place in the rotation.
 

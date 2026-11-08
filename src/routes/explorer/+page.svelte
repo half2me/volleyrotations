@@ -24,7 +24,8 @@
 		rotationLabel,
 		slotName,
 		systemDescription,
-		zoneRef
+		zoneRef,
+		systemName
 	} from '#lib/volley/labels.js';
 	import {
 		ROTATIONS,
@@ -101,7 +102,7 @@
 <div class="mt-8 grid gap-4 lg:grid-cols-2" data-pagefind-ignore>
 	<ChipGroup
 		legend={m.label_system()}
-		options={SYSTEMS.map((s) => ({ value: s, label: s }))}
+		options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
 		bind:value={() => o.system, (system) => update({ system })}
 	/>
 	<ChipGroup

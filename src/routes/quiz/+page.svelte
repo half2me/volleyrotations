@@ -16,7 +16,8 @@
 		roleName,
 		roleShort,
 		rotationLabel,
-		zoneRef
+		zoneRef,
+		systemName
 	} from '#lib/volley/labels.js';
 	import { ZONES, rolesOf, type Zone } from '#lib/volley/model.js';
 	import { overlapFaults } from '#lib/volley/overlap.js';
@@ -85,15 +86,25 @@
 		if (!q) return '';
 		const rotation = rotationLabel(q.o.rotation, q.o.system);
 		if (q.kind === 'zone')
-			return m.quiz_zone_prompt({ role: roleName(q.role), rotation, system: q.o.system });
-		if (q.kind === 'legal') return m.quiz_legal_prompt({ rotation, system: q.o.system });
+			return m.quiz_zone_prompt({
+				role: roleName(q.role),
+				rotation,
+				system: systemName(q.o.system)
+			});
+		if (q.kind === 'legal')
+			return m.quiz_legal_prompt({ rotation, system: systemName(q.o.system) });
 		const moment =
 			q.phase === 'defense'
 				? `${phaseName(q.phase)} (${attackFromName(q.o.attackFrom)})`
 				: q.phase === 'receive'
 					? m.quiz_moment_receive()
 					: `${phaseName(q.phase)}, ${q.o.serving ? m.we_serve() : m.we_receive()}`;
-		return m.quiz_spot_prompt({ role: roleName(q.role), moment, rotation, system: q.o.system });
+		return m.quiz_spot_prompt({
+			role: roleName(q.role),
+			moment,
+			rotation,
+			system: systemName(q.o.system)
+		});
 	});
 </script>
 
@@ -133,7 +144,7 @@
 	</dl>
 </div>
 <p class="mt-2 text-sm text-ink-soft">
-	{m.quiz_settings_note({ system: prefs.system })}
+	{m.quiz_settings_note({ system: systemName(prefs.system) })}
 	<a class="text-accent underline" href={href('/explorer')}>{m.explorer_title()}</a>
 </p>
 
