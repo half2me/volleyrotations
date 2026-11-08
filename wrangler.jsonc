@@ -1,0 +1,17 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	// The Worker name in the Cloudflare dashboard and the <name>.<account>.workers.dev subdomain.
+	"name": "volleyrotations",
+	"compatibility_date": "2026-11-01",
+	// Assets only: no `main`, so no Worker script runs and requests are served straight
+	// from Cloudflare's asset store.
+	"assets": {
+		"directory": "./build",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page"
+	},
+	"workers_dev": true,
+	"preview_urls": true
+	// Attach a custom domain once its zone is on the account:
+	// "routes": [{ "pattern": "example.com", "custom_domain": true }]
+}

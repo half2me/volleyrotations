@@ -1,0 +1,20 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"nav_main": "Fő",
+	"nav_home": "Kezdőlap",
+	"nav_about": "Rólunk",
+	"nav_search": "Keresés",
+	"skip_to_content": "Ugrás a tartalomra",
+	"language": "Nyelv",
+	"theme_light": "Váltás világos módra",
+	"theme_dark": "Váltás sötét módra",
+	"home_title": "Statikus oldal, a peremhálózatról kiszolgálva",
+	"home_lead": "Előre renderelt SvelteKit oldalak a Cloudflare-en, interaktív részekkel a böngészőben.",
+	"home_description": "Kiinduló sablon statikus SvelteKit oldalakhoz a Cloudflare-en.",
+	"home_cta": "Tovább",
+	"search_description": "Keresés az oldal összes tartalmában.",
+	"search_dev_notice": "A keresés csak a lefordított oldalon működik: pnpm build, majd pnpm preview.",
+	"error_title": "Hiba történt",
+	"error_not_found": "Az oldal nem található",
+	"error_home": "Vissza a kezdőlapra"
+}

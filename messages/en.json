@@ -1,0 +1,20 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"nav_main": "Main",
+	"nav_home": "Home",
+	"nav_about": "About",
+	"nav_search": "Search",
+	"skip_to_content": "Skip to content",
+	"language": "Language",
+	"theme_light": "Switch to light mode",
+	"theme_dark": "Switch to dark mode",
+	"home_title": "A static site, served from the edge",
+	"home_lead": "Prerendered SvelteKit pages on Cloudflare, with interactivity in the browser.",
+	"home_description": "A starter for static SvelteKit sites on Cloudflare.",
+	"home_cta": "Read more",
+	"search_description": "Search every page of the site.",
+	"search_dev_notice": "Search works in a built site only: run pnpm build, then pnpm preview.",
+	"error_title": "Something went wrong",
+	"error_not_found": "Page not found",
+	"error_home": "Back to the homepage"
+}
