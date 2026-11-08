@@ -12,5 +12,8 @@
 	},
 	"workers_dev": true,
 	"preview_urls": true,
-	"routes": [{ "pattern": "volleyrotations.uk", "custom_domain": true }]
+	"routes": [
+		{ "pattern": "volleyrotations.uk", "custom_domain": true },
+		{ "pattern": "www.volleyrotations.uk", "custom_domain": true }
+	]
 }
