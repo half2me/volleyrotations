@@ -11,7 +11,6 @@
 		"not_found_handling": "404-page"
 	},
 	"workers_dev": true,
-	"preview_urls": true
-	// Attach a custom domain once its zone is on the account:
-	// "routes": [{ "pattern": "example.com", "custom_domain": true }]
+	"preview_urls": true,
+	"routes": [{ "pattern": "volleyrotations.uk", "custom_domain": true }]
 }

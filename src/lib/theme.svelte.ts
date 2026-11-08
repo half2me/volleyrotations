@@ -10,7 +10,7 @@
 const THEME_KEY = 'site:theme';
 
 /** Browser-chrome colour per theme; keep in step with `--color-paper` in layout.css. */
-const THEME_COLOR = { light: '#f8f9fb', dark: '#15171c' } as const;
+const THEME_COLOR = { light: '#fbf6ee', dark: '#11161f' } as const;
 
 export type ThemeName = keyof typeof THEME_COLOR;
 

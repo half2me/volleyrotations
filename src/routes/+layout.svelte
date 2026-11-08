@@ -1,20 +1,15 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import LanguageSwitcher from '#lib/components/LanguageSwitcher.svelte';
 	import ThemeToggle from '#lib/components/ThemeToggle.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
-	import { pageLabel } from '#lib/page-labels.js';
-	import { pages } from '#lib/pages.js';
+	import SiteNav from '#lib/components/SiteNav.svelte';
 	import { m } from '#lib/paraglide/messages.js';
-	import { deLocalizeHref } from '#lib/paraglide/runtime.js';
 	import IconSearch from '~icons/lucide/search';
 	import type { LayoutProps } from './$types';
 	import './layout.css';
 
 	let { children }: LayoutProps = $props();
-
-	const current = $derived(deLocalizeHref(page.url.pathname));
 </script>
 
 <svelte:head>
@@ -36,32 +31,29 @@
 
 <div class="flex min-h-dvh flex-col">
 	<header class="border-b border-line print:hidden">
-		<div class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
-			<a href={href('/')} class="mr-auto text-lg font-semibold">{site.name}</a>
-			<nav aria-label={m.nav_main()} class="flex items-center gap-1">
-				{#each pages.filter((p) => p.inNav) as p (p.path)}
-					<a
-						href={href(p.path)}
-						aria-current={current === p.path ? 'page' : undefined}
-						class="btn-ghost aria-[current]:text-ink">{pageLabel[p.path]()}</a
-					>
-				{/each}
+		<div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+			<a href={href('/')} class="mr-auto flex min-h-11 items-center gap-2 font-bold sm:text-lg">
+				<img src="/favicon.svg" alt="" class="size-8" />
+				{site.name}
+			</a>
+			<div class="flex items-center gap-1">
+				<SiteNav />
 				<a href={href('/search')} class="btn-ghost" aria-label={m.nav_search()}>
 					<IconSearch class="size-5" aria-hidden="true" />
 				</a>
 				<ThemeToggle />
-			</nav>
+			</div>
 		</div>
 	</header>
 
 	<!-- data-pagefind-body: search indexes page content only, never the header and footer. -->
-	<main id="main" data-pagefind-body class="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:py-16">
+	<main id="main" data-pagefind-body class="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:py-16">
 		{@render children()}
 	</main>
 
 	<footer class="border-t border-line print:hidden">
 		<div
-			class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-sm text-ink-soft"
+			class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-sm text-ink-soft"
 		>
 			<p>© {new Date().getFullYear()} {site.name}</p>
 			<LanguageSwitcher />

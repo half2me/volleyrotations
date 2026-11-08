@@ -16,36 +16,65 @@
 @theme {
 	--font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
 
-	--color-paper: oklch(98.5% 0.004 260); /* page background */
-	--color-surface: oklch(100% 0 0); /* raised cards, menus */
-	--color-line: oklch(90% 0.006 260); /* borders, dividers */
-	--color-ink: oklch(24% 0.02 260); /* body text */
-	--color-ink-soft: oklch(46% 0.02 260); /* secondary text */
-	--color-accent: oklch(52% 0.15 255); /* links, primary action, focus */
+	--color-paper: oklch(97.5% 0.012 80); /* page background: warm, like a maple floor in daylight */
+	--color-surface: oklch(99.5% 0.004 80); /* raised cards, menus */
+	--color-line: oklch(87% 0.02 70); /* borders, dividers */
+	--color-ink: oklch(25% 0.045 262); /* body text: navy */
+	--color-ink-soft: oklch(44% 0.035 262); /* secondary text */
+	--color-accent: oklch(50% 0.16 40); /* links, primary action, focus: ball orange */
 	--color-accent-ink: oklch(100% 0 0); /* text on an accent background */
+
+	/* Court diagrams */
+	--color-court: oklch(83% 0.08 68); /* the playing floor */
+	--color-court-front: oklch(77% 0.095 58); /* the front zone, between net and attack line */
+	--color-court-line: oklch(99% 0 0);
+	--color-team: oklch(31% 0.08 262); /* a player token */
+	--color-team-ink: oklch(100% 0 0);
+	--color-libero: oklch(45% 0.11 170);
+	--color-libero-ink: oklch(100% 0 0);
+	--color-good: oklch(47% 0.13 150); /* legal, correct */
+	--color-bad: oklch(50% 0.19 27); /* fault, wrong */
 }
 
 /* Kept in sync with the @media block below: the attribute rule covers an explicit choice, the
    media query covers a reader with JavaScript off. */
 :root[data-theme='dark'] {
-	--color-paper: oklch(19% 0.012 260);
-	--color-surface: oklch(23.5% 0.014 260);
-	--color-line: oklch(32% 0.014 260);
-	--color-ink: oklch(93% 0.006 260);
-	--color-ink-soft: oklch(72% 0.016 260);
-	--color-accent: oklch(72% 0.13 255);
-	--color-accent-ink: oklch(19% 0.012 260);
+	--color-paper: oklch(20% 0.02 262);
+	--color-surface: oklch(24.5% 0.022 262);
+	--color-line: oklch(35% 0.02 262);
+	--color-ink: oklch(94% 0.01 80);
+	--color-ink-soft: oklch(76% 0.02 80);
+	--color-accent: oklch(76% 0.14 58);
+	--color-accent-ink: oklch(20% 0.02 262);
+	--color-court: oklch(40% 0.06 60);
+	--color-court-front: oklch(36% 0.065 52);
+	--color-court-line: oklch(90% 0.02 80);
+	--color-team: oklch(86% 0.06 250);
+	--color-team-ink: oklch(20% 0.04 262);
+	--color-libero: oklch(82% 0.12 168);
+	--color-libero-ink: oklch(20% 0.04 262);
+	--color-good: oklch(80% 0.15 150);
+	--color-bad: oklch(74% 0.16 27);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
-		--color-paper: oklch(19% 0.012 260);
-		--color-surface: oklch(23.5% 0.014 260);
-		--color-line: oklch(32% 0.014 260);
-		--color-ink: oklch(93% 0.006 260);
-		--color-ink-soft: oklch(72% 0.016 260);
-		--color-accent: oklch(72% 0.13 255);
-		--color-accent-ink: oklch(19% 0.012 260);
+		--color-paper: oklch(20% 0.02 262);
+		--color-surface: oklch(24.5% 0.022 262);
+		--color-line: oklch(35% 0.02 262);
+		--color-ink: oklch(94% 0.01 80);
+		--color-ink-soft: oklch(76% 0.02 80);
+		--color-accent: oklch(76% 0.14 58);
+		--color-accent-ink: oklch(20% 0.02 262);
+		--color-court: oklch(40% 0.06 60);
+		--color-court-front: oklch(36% 0.065 52);
+		--color-court-line: oklch(90% 0.02 80);
+		--color-team: oklch(86% 0.06 250);
+		--color-team-ink: oklch(20% 0.04 262);
+		--color-libero: oklch(82% 0.12 168);
+		--color-libero-ink: oklch(20% 0.04 262);
+		--color-good: oklch(80% 0.15 150);
+		--color-bad: oklch(74% 0.16 27);
 	}
 }
 
@@ -83,10 +112,40 @@
 		--tw-prose-counters: var(--color-ink-soft);
 		--tw-prose-code: var(--color-ink);
 		--tw-prose-captions: var(--color-ink-soft);
+
+		/* A wide table scrolls inside itself instead of pushing the page sideways on a phone. */
+		& table {
+			@apply block overflow-x-auto;
+		}
 	}
 
 	.btn-primary {
 		@apply inline-flex min-h-11 items-center gap-2 rounded-full bg-accent px-5 font-medium text-accent-ink transition-opacity hover:opacity-90;
+	}
+
+	.btn-secondary {
+		@apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-line bg-surface px-4 font-medium text-ink transition-colors hover:border-ink-soft disabled:opacity-50;
+	}
+
+	/* A raised panel. */
+	.card {
+		@apply rounded-2xl border border-line bg-surface p-4;
+	}
+
+	/* One option of a segmented choice: a radio input hidden inside its label, or a button with
+	   aria-pressed. */
+	.chip {
+		@apply inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-line bg-surface px-3 text-sm font-medium text-ink-soft select-none hover:text-ink has-checked:border-accent has-checked:bg-accent has-checked:text-accent-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent aria-pressed:border-accent aria-pressed:bg-accent aria-pressed:text-accent-ink;
+	}
+
+	/* Text inputs and selects. */
+	.field {
+		@apply min-h-11 w-full rounded-xl border border-line bg-surface px-3 text-ink;
+	}
+
+	/* The small caps label above a group of controls. */
+	.eyebrow {
+		@apply text-xs font-semibold tracking-wider text-ink-soft uppercase;
 	}
 
 	.btn-ghost {
@@ -95,13 +154,21 @@
 }
 
 @media print {
-	:root[data-theme='dark'] {
+	/* Every theme prints black on white, with a pale court that saves ink. */
+	:root[data-theme] {
 		color-scheme: light;
 		--color-paper: oklch(100% 0 0);
 		--color-surface: oklch(100% 0 0);
 		--color-line: oklch(85% 0 0);
 		--color-ink: oklch(0% 0 0);
 		--color-ink-soft: oklch(35% 0 0);
-		--color-accent: oklch(40% 0.15 255);
+		--color-accent: oklch(45% 0.16 40);
+		--color-court: oklch(96% 0 0);
+		--color-court-front: oklch(91% 0 0);
+		--color-court-line: oklch(30% 0 0);
+		--color-team: oklch(20% 0 0);
+		--color-team-ink: oklch(100% 0 0);
+		--color-libero: oklch(45% 0 0);
+		--color-libero-ink: oklch(100% 0 0);
 	}
 }

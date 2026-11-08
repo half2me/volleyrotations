@@ -1,7 +1,24 @@
 # CLAUDE.md
 
-A template for fully static websites. Each site made from it is its own repo; the README covers
-the stack and how to start one.
+Volley Rotations (volleyrotations.uk): an English/Hungarian site that teaches indoor volleyball
+rotations to players and coaches. It has a position explorer, an overlap trainer, a quiz, a
+lineup builder with printable sheets, a courtside match tracker, and Markdown guides. It is fully
+static, built from the static-site template; the README covers the stack.
+
+## Volleyball model
+
+- `src/lib/volley/` is the model every tool shares, free of Svelte and Paraglide so
+  `tests/engine.spec.ts` can load it: `model.ts` (zones, systems, roles, libero), `overlap.ts`
+  (rule 7.4 check and `makeLegal`), `formations.ts` (positions per rally phase), `coverage.ts`,
+  `quiz.ts` and `match.ts`. `labels.ts` is the only part that uses messages.
+- Court coordinates are metres seen from behind our end line: x 0–9 left to right, y 0–9 from the
+  net. Rotation N has the first setter in zone 1, 6, 5, 4, 3, 2 for N = 1…6.
+- Rules follow the FIVB 2025–2028 rulebook. Rule 7.4 now frees the serving team from rotational
+  order; the older rule is the `servingOverlap` option. Link rules to the PDF with `#page=N`.
+- Receive formations are computed, not hand-drawn. Every one must pass the overlap test in
+  `tests/engine.spec.ts`; check a change to `formations.ts` visually in the explorer too.
+- Reader data lives in `localStorage` through `Persisted` (`src/lib/persisted.svelte.ts`): keys
+  `vr:explorer`, `vr:quiz`, `vr:teams`, `vr:match`. There is no server.
 
 ## Commands (pnpm only, never npm or npx)
 
@@ -9,7 +26,7 @@ the stack and how to start one.
 - `pnpm build`: prerenders every page to `build/` (it fails if a page touches `window` or
   `document` during render), then indexes search with Pagefind.
 - `pnpm check`: svelte-check + TypeScript. Run after every change.
-- `pnpm test`: builds, serves `build/` with `wrangler dev`, and runs `tests/smoke.spec.ts` at
+- `pnpm test`: runs `tests/engine.spec.ts` (the volleyball model, no browser) and builds, serves `build/` with `wrangler dev`, and runs `tests/smoke.spec.ts` at
   desktop and phone sizes: every page in every locale loads without errors or sideways scroll,
   and passes axe (WCAG 2.1 AA) in light and dark mode.
 - `pnpm format`: Prettier. Run after every change.
