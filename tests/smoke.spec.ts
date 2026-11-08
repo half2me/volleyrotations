@@ -199,7 +199,12 @@ test('the match tracker shows rotation statistics', async ({ page }) => {
 test('the learning path remembers finished steps', async ({ page }) => {
 	await page.goto('/learn');
 	await expect(page.getByText(/^0 of \d+ steps done$/)).toBeVisible();
-	await page.getByRole('button', { name: 'Mark as done' }).first().click();
+	// A click before hydration does nothing, so retry until the count changes.
+	await expect(async () => {
+		if (await page.getByText(/^0 of \d+ steps done$/).isVisible())
+			await page.getByRole('button', { name: 'Mark as done' }).first().click();
+		await expect(page.getByText(/^1 of \d+ steps done$/)).toBeVisible({ timeout: 1000 });
+	}).toPass();
 	await page.reload();
 	await expect(page.getByText(/^1 of \d+ steps done$/)).toBeVisible();
 });
@@ -212,4 +217,24 @@ test('the explorer shows free balls and hitter coverage', async ({ page }) => {
 	await expect(page.getByText(/can only send a free ball/)).toBeVisible();
 	await page.getByRole('button', { name: 'Cover', exact: true }).click();
 	await expect(page.getByText(/forms a cup/)).toBeVisible();
+});
+
+test('a shared explorer view opens on the moment it names', async ({ page }) => {
+	await page.goto('/explorer#system=6-2&rotation=4&serving=1&role=MB1&phase=defense&incoming=free');
+	await expect(page.getByRole('radio', { name: '6-2', exact: true })).toBeChecked();
+	await expect(page.getByRole('radio', { name: 'Middle 1', exact: true })).toBeChecked();
+	await expect(page.getByText(/can only send a free ball/)).toBeVisible();
+	await expect(page.getByText(/Rotation 4/).first()).toBeVisible();
+	expect(new URL(page.url()).hash).toBe('');
+});
+
+test('the question of the day keeps the answer and the streak', async ({ page }) => {
+	await page.goto('/');
+	const day = page.getByRole('region', { name: 'Question of the day' });
+	await expect(day.getByText('Question', { exact: true })).toBeVisible();
+	await day.getByRole('button', { disabled: false }).first().click();
+	await expect(day.getByText('1-day streak')).toBeVisible();
+	await page.reload();
+	await expect(day.getByText('1-day streak')).toBeVisible();
+	await expect(day.getByText('A new question comes tomorrow.')).toBeVisible();
 });

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DailyQuestion from '#lib/components/DailyQuestion.svelte';
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
 	import Seo from '#lib/components/Seo.svelte';
 	import { site } from '#lib/config.js';
@@ -102,6 +103,8 @@
 		</li>
 	</ul>
 </section>
+
+<div class="mt-16"><DailyQuestion /></div>
 
 <section class="mt-16 grid gap-6 md:grid-cols-2" aria-labelledby="start-heading">
 	<div>

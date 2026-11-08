@@ -59,10 +59,17 @@
 	import IconPlay from '~icons/lucide/play';
 	import IconSettings from '~icons/lucide/settings-2';
 	import IconPrinter from '~icons/lucide/printer';
+	import IconLink from '~icons/lucide/link';
+	import { page } from '$app/state';
+	import { viewFragment, viewFromFragment, type View } from '#lib/view-link.js';
+	import { untrack } from 'svelte';
 
 	$effect(() => {
 		prefs.load();
 		teams.load();
+		// A shared view opens on the moment it names, replacing the reader's own settings for it.
+		const view = viewFromFragment(location.hash);
+		if (view) untrack(() => openView(view));
 	});
 
 	const update = (patch: Partial<ExplorerPrefs>) => prefs.set({ ...prefs.current, ...patch });
@@ -86,6 +93,44 @@
 
 	const phases = $derived(o.serving ? SERVE_PHASES : RECEIVE_PHASES);
 	let step = $state(0);
+
+	function openView({ phase: sharedPhase, ...settings }: View) {
+		prefs.set({ ...prefs.current, ...settings, team: undefined });
+		const list = prefs.current.serving ? SERVE_PHASES : RECEIVE_PHASES;
+		step = Math.max(0, list.indexOf(sharedPhase ?? list[0]));
+		// Drop the fragment so the address no longer claims a view the reader has moved on from.
+		// The page may still be hydrating, before SvelteKit's own replaceState can run.
+		history.replaceState(history.state, '', location.pathname + location.search);
+	}
+
+	let shared: 'yes' | 'failed' | undefined = $state();
+	async function shareView() {
+		const fragment = viewFragment({
+			system: o.system,
+			rotation: o.rotation,
+			serving: o.serving,
+			role,
+			phase,
+			libero: o.libero,
+			formation: options.formation,
+			defense: o.defense,
+			attackFrom: o.attackFrom,
+			incoming: o.incoming,
+			setTo,
+			setterDug: o.setterDug,
+			league,
+			order: o.order,
+			liberoZone: o.liberoZone,
+			keepSides: o.keepSides,
+			liberoServesFor: o.liberoServesFor
+		});
+		try {
+			await navigator.clipboard.writeText(`${site.url}${page.url.pathname}#${fragment}`);
+			shared = 'yes';
+		} catch {
+			shared = 'failed';
+		}
+	}
 	const phase = $derived(phases[Math.min(step, phases.length - 1)]);
 
 	// Only the sets a hitter in this rotation can take; the cover moment follows the choice.
@@ -343,6 +388,9 @@
 				<button type="button" class="btn-secondary" onclick={() => print()}>
 					<IconPrinter class="size-4" aria-hidden="true" />{m.print_my_card()}
 				</button>
+				<button type="button" class="btn-secondary" onclick={shareView}>
+					<IconLink class="size-4" aria-hidden="true" />{m.share_view()}
+				</button>
 				<ul class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-soft">
 					<li class="flex items-center gap-1.5">
 						<span class="size-3 rounded-full bg-accent"></span>{m.legend_you()}
@@ -360,6 +408,15 @@
 					</li>
 				</ul>
 			</div>
+			<p class="mt-2 text-sm" aria-live="polite">
+				{shared === 'yes'
+					? team?.custom
+						? m.share_view_copied_custom()
+						: m.share_view_copied()
+					: shared === 'failed'
+						? m.share_view_failed()
+						: ''}
+			</p>
 
 			{#if phase === 'receive' && passerCount < options.formation && o.system !== '6-6'}
 				<p class="card mt-3 text-sm">{m.passers_fewer({ n: passerCount })}</p>

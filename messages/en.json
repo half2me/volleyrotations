@@ -444,5 +444,14 @@
 	"home_cta_learn": "Start the learning path",
 	"match_ncaa_note": "NCAA limits shown are Division I's; Divisions II and III allow 18 substitutions.",
 	"tip_outside_shields": "In this rotation you stay at the net and the setter hides behind you, so the opposite passes in your place.",
-	"tip_extra_passer": "In this rotation you pass too, so the setter can hide behind a front-row player or the passing line stays full."
+	"tip_extra_passer": "In this rotation you pass too, so the setter can hide behind a front-row player or the passing line stays full.",
+	"daily_title": "Question of the day",
+	"daily_lead": "Everyone gets the same 5-1 question today. Answer it every day to keep your streak going.",
+	"daily_streak": "{n}-day streak",
+	"daily_come_back": "A new question comes tomorrow.",
+	"daily_more": "More questions in the quiz",
+	"share_view": "Share this view",
+	"share_view_copied": "Link copied: it opens the explorer on this moment, rotation and position.",
+	"share_view_copied_custom": "Link copied. It shows the suggested receive positions, not your team's own.",
+	"share_view_failed": "Couldn't copy the link. Your browser may not allow it here."
 }

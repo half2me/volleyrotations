@@ -38,9 +38,34 @@ export type ZoneQuestion = {
 
 export type Question = SpotQuestion | LegalQuestion | ZoneQuestion;
 
-const pick = <T>(items: readonly T[]): T => items[Math.floor(Math.random() * items.length)];
-const shuffle = <T>(items: T[]): T[] => items.sort(() => Math.random() - 0.5);
+/** A source of random numbers in [0, 1), like `Math.random`. */
+export type Random = () => number;
+
+/**
+ * Random numbers from a seed, the same sequence on every device (mulberry32), so a question
+ * of the day is the same for everyone.
+ */
+export function seeded(seed: number): Random {
+	let a = seed >>> 0;
+	return () => {
+		a = (a + 0x6d2b79f5) >>> 0;
+		let t = a;
+		t = Math.imul(t ^ (t >>> 15), t | 1);
+		t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+		return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+	};
+}
+
+/** A seed from a calendar day such as '2026-11-08'. */
+export const daySeed = (day: string) =>
+	[...day].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) >>> 0, 7);
 const far = (a: Point, b: Point, d: number) => Math.hypot(a.x - b.x, a.y - b.y) >= d;
+
+/** Whether a choice answers the question: a choice index, 1 or 0 for legal or fault, or a zone. */
+export function isCorrect(q: Question, choice: number): boolean {
+	if (q.kind === 'legal') return (choice === 1) === q.legal;
+	return choice === q.answer;
+}
 
 /** What a question tests, so a missed one can come back: its kind, rotation and moment. */
 export type Topic = { kind: Question['kind']; rotation: RotationNo; phase?: Phase };
@@ -95,7 +120,20 @@ export function recordAnswer(
  * system. The system and team settings come from `base`. `focus` asks again about a topic the
  * reader missed.
  */
-export function makeQuestion(base: Options, role?: RoleId, focus?: Topic): Question {
+export function makeQuestion(
+	base: Options,
+	role?: RoleId,
+	focus?: Topic,
+	random: Random = Math.random
+): Question {
+	const pick = <T>(items: readonly T[]): T => items[Math.floor(random() * items.length)];
+	const shuffle = <T>(items: T[]): T[] => {
+		for (let i = items.length - 1; i > 0; i--) {
+			const j = Math.floor(random() * (i + 1));
+			[items[i], items[j]] = [items[j], items[i]];
+		}
+		return items;
+	};
 	const rotation = focus?.rotation ?? pick(ROTATIONS);
 	// The libero has no rotational zone of their own, so they get no zone questions.
 	const kind =
@@ -118,7 +156,7 @@ export function makeQuestion(base: Options, role?: RoleId, focus?: Topic): Quest
 	if (kind === 'legal') {
 		const o = { ...base, rotation, serving: false };
 		const placed = formation(o, 'receive');
-		if (Math.random() < 0.4) return { kind, o, placed, legal: true };
+		if (random() < 0.4) return { kind, o, placed, legal: true };
 		const positions = byZone(placed);
 		for (let tries = 0; tries < 20; tries++) {
 			const [a, b] = shuffle([...ZONES]);
@@ -139,12 +177,15 @@ export function makeQuestion(base: Options, role?: RoleId, focus?: Topic): Quest
 	const o: Options = {
 		...base,
 		rotation,
-		serving: phase !== 'receive' && (phase !== 'attack' || Math.random() < 0.5),
-		attackFrom: pick(['outside', 'middle', 'opposite'] as const)
+		serving: phase !== 'receive' && (phase !== 'attack' || random() < 0.5),
+		attackFrom: pick(['outside', 'middle', 'opposite'] as const),
+		// The prompt names only the attacker, so the defense shown is against a full attack.
+		incoming: 'attack',
+		setterDug: false
 	};
 	const placed = formation(o, phase);
 	const you = placed.find((p) => p.role === who);
-	if (!you) return makeQuestion(base, role);
+	if (!you) return makeQuestion(base, role, focus, random);
 
 	// Wrong answers: where the same player stands in other rotations and moments, the mix-ups a
 	// player actually makes. Kept apart from each other and from teammates so each is a clear spot.
@@ -164,7 +205,7 @@ export function makeQuestion(base: Options, role?: RoleId, focus?: Topic): Quest
 	}
 	// When the player's other spots are all crowded, pad with open floor.
 	for (let tries = 0; choices.length < 4 && tries < 200; tries++) {
-		const p = { x: 0.8 + Math.random() * 7.4, y: 0.8 + Math.random() * 7.6 };
+		const p = { x: 0.8 + random() * 7.4, y: 0.8 + random() * 7.6 };
 		if (choices.every((c) => far(c, p, 1.6)) && teammates.every((t) => far(t, p, 1.1)))
 			choices.push(p);
 	}

@@ -25,6 +25,7 @@ import {
 } from '../src/lib/volley/match.ts';
 import { ROLE_KIND, ROTATIONS, setterOf, SYSTEM, SYSTEMS, ZONES } from '../src/lib/volley/model.ts';
 import { overlapFaults } from '../src/lib/volley/overlap.ts';
+import { daySeed, makeQuestion, seeded } from '../src/lib/volley/quiz.ts';
 
 const PHASES: Phase[] = ['receive', 'serve', 'base', 'defense', 'attack', 'cover'];
 
@@ -358,4 +359,12 @@ test('a back-row middle never attacks, and only a back-row setter digs in transi
 					if ([2, 3, 4].includes(setter.zone))
 						expect(setter.setter, `${system} ${rotation}`).toBe(true);
 				}
+});
+
+test('the question of the day is the same for everyone on a day', () => {
+	const ask = (day: string) =>
+		JSON.stringify(makeQuestion(DEFAULT_OPTIONS, undefined, undefined, seeded(daySeed(day))));
+	expect(ask('2026-11-09')).toBe(ask('2026-11-09'));
+	const week = ['10', '11', '12', '13', '14', '15', '16'].map((d) => ask(`2026-11-${d}`));
+	expect(new Set(week).size).toBeGreaterThan(4);
 });

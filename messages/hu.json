@@ -444,5 +444,14 @@
 	"home_cta_learn": "Tanulási útvonal",
 	"match_ncaa_note": "Az NCAA-nál a Division I kereteit mutatjuk; a Division II-ben és III-ban 18 csere engedélyezett.",
 	"tip_outside_shields": "Ebben a forgásban a hálónál maradsz, és a feladó mögötted bújik el, ezért helyetted a feladó átló fogad.",
-	"tip_extra_passer": "Ebben a forgásban te is fogadsz, hogy a feladó elbújhasson egy első soros játékos mögött, vagy hogy teljes legyen a fogadósor."
+	"tip_extra_passer": "Ebben a forgásban te is fogadsz, hogy a feladó elbújhasson egy első soros játékos mögött, vagy hogy teljes legyen a fogadósor.",
+	"daily_title": "A nap kérdése",
+	"daily_lead": "Ma mindenki ugyanazt az 5:1-es kérdést kapja. Válaszolj minden nap, hogy ne szakadjon meg a sorozatod.",
+	"daily_streak": "{n} napos sorozat",
+	"daily_come_back": "Holnap új kérdés jön.",
+	"daily_more": "További kérdések a kvízben",
+	"share_view": "Nézet megosztása",
+	"share_view_copied": "A linket kimásoltuk: a felfedezőt ennél a pillanatnál, forgásnál és posztnál nyitja meg.",
+	"share_view_copied_custom": "A linket kimásoltuk. A javasolt fogadási felállást mutatja, nem a csapatod saját felállását.",
+	"share_view_failed": "Nem sikerült kimásolni a linket. Lehet, hogy a böngésződ itt nem engedi."
 }
