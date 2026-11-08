@@ -71,6 +71,24 @@ for (const system of SYSTEMS) {
 	});
 }
 
+test('the setter hides out of the passers’ way in serve receive', () => {
+	// Coaches' rule, not the rulebook: a back-row setter waits at the net behind the player in
+	// front of them, or along the right sideline from zone 1, never among the passers.
+	for (const system of SYSTEMS)
+		for (const f of SYSTEM[system].receiveFormations)
+			for (const libero of [true, false])
+				for (const rotation of ROTATIONS) {
+					const placed = formation(
+						{ ...DEFAULT_OPTIONS, system, rotation, libero, formation: f },
+						'receive'
+					);
+					const s = placed.find((p) => p.setter)!;
+					const where = `${system} ${f}-player rotation ${rotation}: setter at ${s.x.toFixed(1)},${s.y.toFixed(1)}`;
+					if ([2, 3, 4].includes(s.zone)) expect(s.y, where).toBeLessThanOrEqual(1.5);
+					else expect(s.y <= 2.5 || s.x >= 8.2, where).toBe(true);
+				}
+});
+
 test('the libero never serves', () => {
 	for (const rotation of ROTATIONS) {
 		const placed = formation({ ...DEFAULT_OPTIONS, rotation, serving: true }, 'serve');

@@ -194,7 +194,13 @@ function passers(
 	formation: ReceiveFormation,
 	system: Situation['system']
 ): OnCourt[] {
-	const others = court.filter((p) => p.role !== setter);
+	// A back-row setter in zone 6 or 5 hides right behind the front-row player in front of them,
+	// at the net, so that player does not pass: if they did, the setter would have to stand
+	// behind them in the middle of the passers. From zone 1 the setter hides along the right
+	// sideline instead, so the zone 2 player can still pass.
+	const setterZone = court.find((p) => p.role === setter)!.zone;
+	const shield = setterZone === 6 ? 3 : setterZone === 5 ? 4 : undefined;
+	const others = court.filter((p) => p.role !== setter && p.zone !== shield);
 	if (formation === 5 || system === '6-6') return others;
 	const core = others.filter((p) => {
 		const kind = ROLE_KIND[p.role];
@@ -224,8 +230,13 @@ function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 
 	const idleWish = (p: OnCourt): { p: Point; weight: number } => {
 		if (p.role === setter) {
-			return isFront(p.zone)
-				? { p: { x: TARGET.x, y: 0.9 }, weight: 0.6 }
+			// A front-row setter is already at the net, so they give way sideways to the passers
+			// they must stay beside.
+			if (isFront(p.zone)) return { p: { x: TARGET.x, y: 0.9 }, weight: 0.25 };
+			// From zone 1, along the right sideline behind the zone 2 player; from 6 or 5, at the
+			// net behind the player shielding them.
+			return p.zone === 1
+				? { p: { x: 8.6, y: 1.6 }, weight: 0.4 }
 				: { p: { x: TARGET.x, y: 1.6 }, weight: 0.4 };
 		}
 		// Non-passing hitters wait at the net (front row) or out of the passers' way (back row).
@@ -254,9 +265,12 @@ function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 			const dy = at[z].y - wish[z].y;
 			cost += (dx * dx + dy * dy) * (weights[z] ?? 1);
 		}
-		// Prefer the libero in the middle of a three-player line, where most serves go.
 		order.forEach((p, i) => {
+			// Prefer the libero in the middle of a three-player line, where most serves go.
 			if (p.role === 'L' && spots.length === 3 && i !== 1) cost += 0.6;
+			// Front-row passers take the short spots and back-row passers the deep ones, so they
+			// stay in their own row's order and front-row hitters are close to their approach.
+			cost += 0.15 * (isFront(p.zone) ? spots[i].y : 9 - spots[i].y);
 		});
 		if (!best || cost < best.cost - 1e-9) best = { cost, at };
 	}

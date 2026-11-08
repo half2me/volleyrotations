@@ -39,7 +39,8 @@ type Body = { zone: Zone; p: Point; weight: number };
 
 /**
  * Moves players the least it can to make a formation legal with a visible gap, so diagrams show
- * the relation clearly. Heavier players move less: a passer stays on their spot while the setter
+ * the relation clearly: `gap` front to back, and a metre side to side so neighbours standing
+ * level at the net do not overlap on the diagram. Heavier players move less: a passer stays on their spot while the setter
  * hiding behind them gives way. Constraints are a few chains, so relaxing them pairwise converges.
  */
 export function makeLegal(
@@ -55,7 +56,7 @@ export function makeLegal(
 	}
 	const live = (z: Zone) => !exempt.includes(z);
 	const push = (lo: Body, hi: Body, axis: 'x' | 'y') => {
-		const deficit = lo.p[axis] + gap - hi.p[axis];
+		const deficit = lo.p[axis] + (axis === 'x' ? Math.max(gap, 1) : gap) - hi.p[axis];
 		if (deficit <= 0) return false;
 		const total = 1 / lo.weight + 1 / hi.weight;
 		lo.p[axis] -= (deficit * (1 / lo.weight)) / total;
