@@ -27,17 +27,17 @@ A fogadás, a feladás, a leütés, a nyitás és a játékolvasás mind átvihe
 
 ## A pálya és a csapat
 
-|                        | Strand                                            | Terem                                                |
-| ---------------------- | ------------------------------------------------- | ---------------------------------------------------- |
-| Játékosok térfelenként | 2                                                 | 6 (plusz cserék és liberó)                           |
-| Térfél mérete          | 8 × 8 m                                           | 9 × 9 m                                              |
-| Játszma hossza         | 21 pont (a harmadik 15)                           | 25 pont (az ötödik 15)                               |
-| Mérkőzés               | két nyert játszmáig                               | FIVB-ben három nyert játszmáig                       |
-| Térfélcsere            | 7 pontonként (a harmadik játszmában 5 pontonként) | játszmánként, és az ötödik játszmában 8 pontnál      |
-| Csere                  | nincs                                             | 6 játszmánként, plusz korlátlan liberó-helyettesítés |
-| Pihenőidő              | 1 játszmánként                                    | 2 játszmánként, egyenként 30 mp                      |
+|                        | Strand                                                                      | Terem                                                  |
+| ---------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Játékosok térfelenként | 2                                                                           | 6 (plusz cserék és liberó)                             |
+| Térfél mérete          | 8 × 8 m                                                                     | 9 × 9 m                                                |
+| Játszma hossza         | 21 pont (a harmadik 15)                                                     | 25 pont (az ötödik 15)                                 |
+| Mérkőzés               | két nyert játszmáig                                                         | FIVB-ben három nyert játszmáig                         |
+| Térfélcsere            | 7 pontonként (a harmadik játszmában 5 pontonként)                           | minden játszma után, és az ötödik játszmában 8 pontnál |
+| Csere                  | nincs                                                                       | 6 játszmánként, plusz korlátlan liberó-helyettesítés   |
+| Pihenőidő              | 1 játszmánként, az 1–2. játszmában 21 pontnál technikai pihenőidő is (FIVB) | 2 játszmánként, egyenként 30 mp                        |
 
-A terempálya nagyobb, de hat játékos osztozik rajta, így mindenkire sokkal kisebb terület jut. A labda nehezebb és keményebb, és szél nélkül gyorsabban is száll.
+A terempálya nagyobb, de hat játékos osztozik rajta, így mindenkire sokkal kisebb terület jut. A labda ugyanolyan súlyú, de keményebbre fújják és kicsit kisebb, ezért keményebb, és szél nélkül gyorsabban is száll.
 
 ## Posztok: egy feladatod van
 
@@ -46,7 +46,7 @@ Strandon mindent te csinálsz. Teremben általában specialista vagy:
 - **Feladó:** minden labdamenetben ő adja a második érintést.
 - **Nyitásfogadó ütő:** fogad, és bal oldalról támad. Strandosoknak gyakran ez a legtermészetesebb, mert fogadás és sokoldalú támadás kell hozzá.
 - **Center:** sáncol, és gyors feladásokat üt.
-- **Feladó átló:** jobbról támad, és az ellenfél legjobb ütőjét sáncolja.
+- **Feladó átló:** jobbról támad, és az ellenfél nyitásfogadó ütőjét sáncolja (általában ő támad a legtöbbet).
 - **Liberó:** hátsó sorköteles fogadó és védő, eltérő színű mezben. A jó strandos védők gyakran jó liberók.
 
 Bővebben: [a röplabda posztjai](/hu/guides/positions).
@@ -62,28 +62,28 @@ Ez a legnagyobb változás. Strandon csak a nyitás sorrendjére kell figyelni. 
 
 ## A liberó
 
-A liberó egy hátsó sorköteles játékos, általában a center helyére áll be, és ez nem számít cserének. Az FIVB-szabályok szerint a liberó nem nyithat, nem sáncolhat, és nem támadhat a háló fölött. Lásd: [a liberó szabályai](/hu/guides/libero).
+A liberó egy hátsó sorköteles játékos – általában a center – helyére áll be, és ez nem számít cserének. Az FIVB-szabályok szerint a liberó nem nyithat, nem sáncolhat, és nem támadhat a háló fölött. Lásd: [a liberó szabályai](/hu/guides/libero).
 
 ## Szabálykülönbségek, amelyek meglepik a strandosokat
 
 **Ejtés.** Teremben szabad ujjbeggyel, nyitott kézzel ejteni. Strandon a nyitott kezes ejtés hiba, ezért megtanultad bütyökkel („kobra”) vagy lassított ütéssel megoldani. Teremben azt használd, ami beválik.
 
-**A sánc nem érintés.** Strandon a sánc a három érintés egyikének számít. Teremben nem ([14. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36), angol nyelvű): sánc után a csapatnak még három érintése van, és a következőt a sáncoló is megadhatja.
+**A sánc nem érintés.** Strandon a sánc a három érintés egyikének számít. Teremben nem ([14.4. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37), angol nyelvű): sánc után a csapatnak még három érintése van, és a következőt a sáncoló meg is játszhatja.
 
 **Feladás.** A strandos játékvezetők szigorúak a kosárérintésnél a pörgésre és a kettős érintésre, és külön szabályok vonatkoznak a hálón át feladott labdára. Teremben a kosárérintést engedékenyebben ítélik meg, és nincs szabály arra, hogy a hálón át csak a vállvonalra merőlegesen lehet feladni. A csapat első érintésénél (nyitásfogadás, védekezés) teremben megengedett, hogy a labda egymás után több testrészt érintsen, ha ez egyetlen mozdulaton belül történik. A felső ujjas fogadás gyakori és szabályos.
 
 **A középvonal.** Strandon nincs középvonal, és átmehetsz az ellenfél oldalára, ha nem zavarod őket. Teremben a háló alatt középvonal van. Az ellenfél térfelét lábbal csak akkor érintheted, ha a lábad egy része a középvonalon vagy közvetlenül fölötte marad. A láb fölötti testrészekkel akkor érintheted az ellenfél térfelét, ha nem zavarod a játékukat. A részletek a [hivatalos szabályokban](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=32) vannak (angol nyelvű).
 
-**A háló.** A strandhoz hasonlóan teremben is hiba, ha labdamenet közben az antennák között a hálóhoz érsz. A gyakorlatban teremben többször fordul elő, mert többen vannak a háló közelében.
+**A háló.** A strandhoz hasonlóan teremben is hiba, ha labdaérintés közben (játékcselekmény közben) az antennák között a hálóhoz érsz. A gyakorlatban teremben többször fordul elő, mert többen vannak a háló közelében.
 
-**A nyitás leütése.** Teremben nem támadhatod meg az ellenfél nyitását, ha a labda az elülső területen, teljesen a háló felső széle fölött van ([13.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)).
+**A nyitás leütése.** A strandhoz hasonlóan teremben sem támadhatod meg az ellenfél nyitását, ha a labda teljesen a háló felső széle fölött van, de teremben ez csak akkor tilos, ha a labda az első zónában van ([13.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)).
 
-**Kommunikáció és edzői segítség.** Teremben az edző a kispadról utasításokat adhat, időt kérhet és cserélhet. Strandon magadra vagy utalva.
+**Kommunikáció és edzői segítség.** Teremben az edző a kispadról utasításokat adhat, pihenőidőt kérhet és cserélhet. Strandon magadra vagy utalva.
 
 ## Hogyan tanuld meg gyorsan a szerepedet?
 
 1. **Tanuld meg a hat forgásodat.** Kérdezd meg az edződet, milyen posztot játszol, aztán lépkedj végig minden forgáson a [Posztkeresőben](/hu/explorer). Tudd, hol állsz fogadáskor, és hová mész a váltás után.
-2. **Tanuld meg a szomszédszabályt.** Minden forgásban tudd, ki áll előtted, mögötted és melletted. Ennyi elég, hogy elkerüld az állásrendi hibát. Gyakorolj a [felállás-gyakorlóban](/hu/overlap).
+2. **Tanuld meg a szomszédszabályt.** Minden forgásban tudd, ki áll előtted, mögötted és melletted. Ennyi elég, hogy elkerüld az állásrendi hibát. Gyakorolj a [állásrend-gyakorlóban](/hu/overlap).
 3. **Bízz a rendszerben.** Strandon minden labdát kergetsz. Teremben maradj a saját területeden, a többit egy társad fedi. Ha beszaladsz más területére, a sajátod üresen marad.
 4. **Beszélj.** Hat játékosnak több szó kell, mint kettőnek: „Enyém!”, „Kint!”, milyen támadást kérsz, ki veszi az ejtést.
 5. **Használd a strandos erősségeidet.** Az ütő olvasása, a mezőnyvédekezés és a rossz helyzetből való feladás ritka képesség teremben. Hozd magaddal.

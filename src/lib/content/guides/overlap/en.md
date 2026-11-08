@@ -15,8 +15,8 @@ description: The positional fault rule in detail, the 2025 FIVB change that only
 
 - At the moment of the serve, players must stand in their rotation order. Breaking it is an **overlap**, officially a **positional fault**, and costs the rally.
 - You only compare each player with their **neighbours**: front with back in the same column (4–5, 3–6, 2–1) and left with right within the same row (4–3–2, 5–6–1).
-- Position is judged by **feet on the floor**. Part of one foot is enough.
-- Under the FIVB rules for 2025–2028, only the **receiving team** has to be in rotation order. The serving team may stand anywhere on its court. Many leagues still check both teams, so ask yours.
+- Position is judged by **feet on the floor**. Being level, or having part of one foot past, is enough.
+- Under the FIVB rules for 2025–2028, only the **receiving team** has to be in rotation order. The serving team may stand anywhere on its court. Some leagues may still check both teams, so ask yours.
 - Once the serve is hit, everyone may go anywhere.
 
 </Callout>
@@ -36,8 +36,8 @@ Breaking either is a positional fault ([rule 7.5](https://www.fivb.com/wp-conten
 
 Rule 7.4.3 says the positions are judged by the players' feet touching the floor:
 
-- **Front to back:** the back-row player must have at least part of one foot further from the centre line than the front foot of the corresponding front-row player.
-- **Side to side:** a right-side player must have at least part of one foot closer to the right sideline than the foot further from that sideline of the other players in the same row. The same works on the left. For the middle player, that simply means being between the two.
+- **Front to back:** the back-row player must be level with, or have at least part of one foot further from the centre line than, the front foot of the corresponding front-row player.
+- **Side to side:** a right-side player must be level with, or have at least part of one foot closer to the right sideline than, the foot further from that sideline of the other players in the same row. The same works on the left. For the middle player, that simply means being between the two.
 
 In practice that means a back-row player can stand almost touching the heels of the player in front, and two neighbours in a row can stand nearly side by side. Hands, arms and leaning do not count: only feet on the floor.
 
@@ -54,11 +54,11 @@ You are only compared with the players next to you in your column and in your ro
 | 6              | 3              |                     | 1       | 5        |
 | 1              | 2              |                     |         | 6        |
 
-So zone 5 and zone 3 are never compared, nor are 4 and 6 or 2 and 6. Zone 4 and zone 2 are only linked through zone 3. A back-row player can legally stand in front of a front-row player who is not in their own column. That is the key to every serve-receive formation.
+So zone 5 and zone 3 are never compared, nor are 4 and 6 or 2 and 6. In practice zone 4 and zone 2 cannot swap as long as each is correct against zone 3. A back-row player can legally stand in front of a front-row player who is not in their own column. That is the key to every serve-receive formation.
 
 ## The 2025 change, and leagues that differ
 
-Older FIVB rules applied rotation order to **both** teams at the serve. Since 2025, FIVB only checks the receiving team, and the serving team can line up however it likes, as long as everyone except the server is on the court.
+Older FIVB rules applied rotation order to **both** teams at the serve. Since 2025, FIVB only checks the receiving team, and the serving team can line up however it likes, as long as everyone except the server is on the court. It still may not screen: players may not wave their arms, jump, move sideways or stand grouped to hide the server or the flight of the ball ([rule 12.5](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34)).
 
 Many competitions have not followed, or follow a different rulebook: for example, US high school and college volleyball and plenty of local and school leagues. Some national federations adopt FIVB changes a season or more later. **Check which rule your league uses.** The [overlap trainer](/overlap) has a switch for the older rule where the serving team is checked too.
 
@@ -76,8 +76,8 @@ To see every rotation laid out, use the [position explorer](/explorer).
 
 ## Common mistakes
 
-- **The setter leaves too early.** In Rotation 1 the setter steps forward before the serve and ends up level with or in front of the zone 2 player. Wait for the contact.
-- **Swapping sides in the front row.** In a rotation where the outside hitter is in zone 2 and the opposite in zone 4, they may not cross before the serve. Stand next to each other, then switch.
+- **The setter leaves too early.** In Rotation 1 the setter steps forward before the serve and ends up closer to the net than the zone 2 player. Wait for the contact.
+- **Swapping sides in the front row.** In a rotation where the outside hitter is in zone 2 and the opposite in zone 4, they may not cross before the serve. Keep the zone 3 player between you at the serve, then switch.
 - **Forgetting the libero.** The libero takes the exact place in the order of the player they replaced. If they replaced the zone 5 player, they must be behind zone 4 and left of zone 6.
 - **Checking the wrong players.** Players often worry about diagonal neighbours, which do not count, and forget the player directly in front.
 - **Judging by the body.** Leaning past a teammate is fine; only the feet count.

@@ -39,9 +39,10 @@ type Body = { zone: Zone; p: Point; weight: number };
 
 /**
  * Moves players the least it can to make a formation legal with a visible gap, so diagrams show
- * the relation clearly: `gap` front to back, and a metre side to side so neighbours standing
- * level at the net do not overlap on the diagram. Heavier players move less: a passer stays on their spot while the setter
- * hiding behind them gives way. Constraints are a few chains, so relaxing them pairwise converges.
+ * the relation clearly: `gap` front to back, and a metre side to side. Any two players are also
+ * kept a metre apart, so no token hides another on the diagram. Heavier players move less: a
+ * passer stays on their spot while the setter hiding behind them gives way. The legal
+ * constraints are relaxed last in every round, so the result is always legal.
  */
 export function makeLegal(
 	positions: Record<Zone, Point>,
@@ -67,8 +68,27 @@ export function makeLegal(
 		b.p.x = Math.min(8.7, Math.max(0.3, b.p.x));
 		b.p.y = Math.min(8.8, Math.max(0.4, b.p.y));
 	};
-	for (let i = 0; i < 200; i++) {
+	const SPACE = 1.05;
+	const separate = (a: Body, b: Body) => {
+		const dx = b.p.x - a.p.x;
+		const dy = b.p.y - a.p.y;
+		const d = Math.hypot(dx, dy);
+		if (d >= SPACE) return false;
+		const [ux, uy] = d > 1e-6 ? [dx / d, dy / d] : [1, 0];
+		const total = 1 / a.weight + 1 / b.weight;
+		const deficit = SPACE - d;
+		a.p.x -= (ux * deficit * (1 / a.weight)) / total;
+		a.p.y -= (uy * deficit * (1 / a.weight)) / total;
+		b.p.x += (ux * deficit * (1 / b.weight)) / total;
+		b.p.y += (uy * deficit * (1 / b.weight)) / total;
+		return true;
+	};
+	const onCourt = [...bodies.values()].filter((b) => live(b.zone));
+	for (let i = 0; i < 400; i++) {
 		let moved = false;
+		for (let a = 0; a < onCourt.length; a++)
+			for (let b = a + 1; b < onCourt.length; b++)
+				moved = separate(onCourt[a], onCourt[b]) || moved;
 		for (const [front, back] of COLUMN_PAIRS) {
 			if (live(front) && live(back))
 				moved = push(bodies.get(front)!, bodies.get(back)!, 'y') || moved;

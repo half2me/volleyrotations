@@ -13,17 +13,17 @@ description: Az állásrendi hiba (átfedés) szabálya részletesen, a 2025-ös
 
 **Röviden**
 
-- A nyitás pillanatában a játékosoknak a forgásrendjük szerint kell állniuk. Ha ezt megsértik, az **állásrendi hiba** (angolul overlap, átfedés), és a csapat elveszíti a labdamenetet.
+- A nyitás pillanatában a játékosoknak szabályos állásrendben kell állniuk. Ha ezt megsértik, az **állásrendi hiba** (angolul overlap, átfedés), és a csapat elveszíti a labdamenetet.
 - Mindenkit csak a **szomszédjaival** kell összevetni: elöl-hátul ugyanabban az oszlopban (4–5, 3–6, 2–1), és oldalirányban ugyanabban a sorban (4–3–2, 5–6–1).
-- A helyzetet a **talajon lévő lábak** alapján ítélik meg. Elég, ha az egyik láb egy része jó helyen van.
-- A 2025–2028-as FIVB-szabályok szerint csak a **fogadó csapatnak** kell sorrendben állnia, a nyitó csapat bárhol állhat a saját térfelén. Sok bajnokság még mindkét csapatot ellenőrzi, kérdezd meg a sajátodat.
+- A helyzetet a **talajon lévő lábak** alapján ítélik meg. Elég, ha egy vonalban áll, vagy ha az egyik láb egy része jó helyen van.
+- A 2025–2028-as FIVB-szabályok szerint csak a **fogadó csapatnak** kell sorrendben állnia, a nyitó csapat bárhol állhat a saját térfelén. Egyes bajnokságok még mindkét csapatot ellenőrizhetik, kérdezd meg a sajátodat.
 - A nyitás után mindenki bárhová mehet.
 
 </Callout>
 
 ## A szabály
 
-Az [FIVB 7.4 szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27) (angol nyelvű, 2025–2028) szerint abban a pillanatban, amikor a nyitó megüti a labdát, mindkét csapatnak a saját térfelén belül kell lennie (a nyitót kivéve). A **fogadó** csapat játékosainak forgásrendben kell állniuk. Az **nyitó** csapat játékosai viszont bármilyen helyet elfoglalhatnak.
+Az [FIVB 7.4 szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27) (angol nyelvű, 2025–2028) szerint abban a pillanatban, amikor a nyitó megüti a labdát, mindkét csapatnak a saját térfelén belül kell lennie (a nyitót kivéve). A **fogadó** csapat játékosainak szabályos állásrendben kell állniuk. A **nyitó** csapat játékosai viszont bármilyen helyet elfoglalhatnak.
 
 A fogadó csapatnál a sorrend két dolgot jelent:
 
@@ -36,8 +36,8 @@ Bármelyik megsértése állásrendi hiba ([7.5](https://www.fivb.com/wp-content
 
 A 7.4.3 szabály szerint a helyzetet a talajt érintő lábak alapján kell megítélni:
 
-- **Elöl-hátul:** a hátsó sorköteles játékos legalább egyik lábának egy része legyen távolabb a középvonaltól, mint az előtte álló első sorköteles játékos elöl lévő lába.
-- **Oldalirányban:** a jobb oldali játékos legalább egyik lábának egy része legyen közelebb a jobb oldalvonalhoz, mint a sor többi játékosának az oldalvonaltól távolabbi lába. Bal oldalon ugyanígy. A középső játékosnak egyszerűen a két szomszédja között kell lennie.
+- **Elöl-hátul:** a hátsó sorköteles játékos lába legyen azonos távolságra, vagy legalább egyik lábának egy része legyen távolabb a középvonaltól, mint az előtte álló első sorköteles játékos elöl lévő lába.
+- **Oldalirányban:** a jobb oldali játékos lába legyen azonos távolságra, vagy legalább egyik lábának egy része legyen közelebb a jobb oldalvonalhoz, mint a sor többi játékosának az oldalvonaltól távolabbi lába. Bal oldalon ugyanígy. A középső játékosnak egyszerűen a két szomszédja között kell lennie.
 
 A gyakorlatban a hátsó sorköteles játékos szinte az előtte álló sarkát érintve állhat, a sor két szomszédja pedig majdnem egymás mellett. A kéz, a kar vagy a dőlés nem számít, csak a talajon lévő láb.
 
@@ -54,15 +54,15 @@ Mindenkit csak az oszlopában és a sorában mellette állókkal kell összevetn
 | 6    | 3             |                | 1           | 5          |
 | 1    | 2             |                |             | 6          |
 
-Az 5-ös és a 3-as helyet tehát soha nem vetik össze, ahogy a 4-est és a 6-ost vagy a 2-est és a 6-ost sem. A 4-es és a 2-es hely csak a 3-ason keresztül kapcsolódik. Egy hátsó sorköteles játékos szabályosan állhat egy olyan első sorköteles játékos előtt, aki nem az ő oszlopában van. Erre épül minden fogadási alakzat.
+Az 5-ös és a 3-as helyet tehát soha nem vetik össze, ahogy a 4-est és a 6-ost vagy a 2-est és a 6-ost sem. A gyakorlatban a 4-es és a 2-es hely nem cserélhet helyet, ha mindkettő jól áll a 3-ashoz képest. Egy hátsó sorköteles játékos szabályosan állhat egy olyan első sorköteles játékos előtt, aki nem az ő oszlopában van. Erre épül minden fogadási alakzat.
 
 ## A 2025-ös változás és az eltérő bajnokságok
 
-A korábbi FIVB-szabályok szerint a nyitáskor **mindkét** csapatnak sorrendben kellett állnia. 2025 óta az FIVB csak a fogadó csapatot ellenőrzi, a nyitó csapat tetszés szerint állhat fel, ha a nyitón kívül mindenki a pályán van.
+A korábbi FIVB-szabályok szerint a nyitáskor **mindkét** csapatnak sorrendben kellett állnia. 2025 óta az FIVB csak a fogadó csapatot ellenőrzi, a nyitó csapat tetszés szerint állhat fel, ha a nyitón kívül mindenki a pályán van. Takarni viszont most sem szabad: a játékosok nem integethetnek, nem ugrálhatnak, nem mozoghatnak oldalra, és nem állhatnak csoportban úgy, hogy eltakarják a nyitót vagy a labda útját ([12.5. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34)).
 
-Sok versenyrendszer ezt nem vette át, vagy más szabálykönyvet használ, például az amerikai középiskolai és egyetemi röplabda, valamint sok helyi és iskolai bajnokság. Egyes nemzeti szövetségek csak egy-két idénnyel később vezetik be az FIVB változásait. **Nézd meg, melyik szabály érvényes a bajnokságodban.** A [felállás-gyakorlóban](/hu/overlap) be lehet kapcsolni a régi szabályt is, amely a nyitó csapatot is ellenőrzi.
+Sok versenyrendszer ezt nem vette át, vagy más szabálykönyvet használ, például az amerikai középiskolai és egyetemi röplabda, valamint sok helyi és iskolai bajnokság. Egyes nemzeti szövetségek csak egy-két idénnyel később vezetik be az FIVB változásait. **Nézd meg, melyik szabály érvényes a bajnokságodban.** A [állásrend-gyakorlóban](/hu/overlap) be lehet kapcsolni a régi szabályt is, amely a nyitó csapatot is ellenőrzi.
 
-## Rejtés és torlódás
+## Rejtés (stacking)
 
 A csapatok a „csak a szomszédok számítanak” elvet arra használják, hogy a játékosok már a nyitás előtt közel álljanak oda, ahol utána lenniük kell. Ezt **rejtésnek** vagy angolul **stackingnek** hívják.
 
@@ -76,16 +76,16 @@ Az összes forgást a [Posztkeresőben](/hu/explorer) nézheted meg.
 
 ## Gyakori hibák
 
-- **A feladó túl korán indul.** Az 1. forgásban a feladó még a nyitás előtt előrelép, és egy vonalba vagy a 2-es helyen álló játékos elé kerül. Várd meg az érintést.
-- **Oldalcsere az első sorban.** Ha a nyitásfogadó ütő a 2-esben, a feladó átló a 4-esben áll, a nyitás előtt nem cserélhetnek helyet. Álljanak egymás közelébe, és utána váltsanak.
-- **A liberó elfelejtése.** A liberó pontosan annak a helyét veszi át a sorrendben, akit váltott. Ha az 5-ös helyen állót váltotta, a 4-es mögött és a 6-ostól balra kell állnia.
+- **A feladó túl korán indul.** Az 1. forgásban a feladó még a nyitás előtt előrelép, és a 2-es helyen álló játékos elé kerül. Várd meg az érintést.
+- **Oldalcsere az első sorban.** Ha a nyitásfogadó ütő a 2-esben, a feladó átló a 4-esben áll, a nyitás előtt nem cserélhetnek helyet. A nyitáskor a 3-as helyen álló játékos legyen köztük, és utána váltsanak.
+- **A liberó elfelejtése.** A liberó pontosan annak a helyét veszi át a sorrendben, akit helyettesít. Ha az 5-ös helyen állót helyettesíti, a 4-es mögött és a 6-ostól balra kell állnia.
 - **Rossz játékoshoz igazodás.** A játékosok gyakran az átlós szomszédjuk miatt aggódnak, ami nem számít, és közben elfelejtik a közvetlenül előttük állót.
 - **Testhelyzet alapján ítélni.** Ha valaki áthajol a csapattársa előtt, az rendben van, csak a láb számít.
 
 ## Állásrendi hiba és forgásrendi hiba
 
-A **állásrendi hiba** azt jelenti, hogy a nyitáskor valaki rossz helyen áll. A **forgásrendi hiba** azt, hogy rossz sorrendben nyitnak ([7.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=28)). Mindkettő a labdamenet elvesztésével jár, de forgásrendi hibánál a hibás sorrendben szerzett pontokat is törölhetik. Lásd: [cserék és szabályok](/hu/guides/substitutions).
+Az **állásrendi hiba** azt jelenti, hogy a nyitáskor valaki rossz helyen áll. A **forgásrendi hiba** azt, hogy rossz sorrendben nyitnak ([7.7](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=28)). Mindkettő a labdamenet elvesztésével jár, de forgásrendi hibánál a hibás sorrendben szerzett pontokat is törölhetik. Lásd: [cserék és szabályok](/hu/guides/substitutions).
 
 ## Gyakorolj
 
-Húzogasd a játékosokat a [felállás-gyakorlóban](/hu/overlap): azonnal megmutatja, szabályos-e a felállás, és melyik pár van átfedésben.
+Húzogasd a játékosokat a [állásrend-gyakorlóban](/hu/overlap): azonnal megmutatja, szabályos-e a felállás, és melyik pár van átfedésben.

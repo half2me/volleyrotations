@@ -56,7 +56,11 @@ export type Options = Situation & {
 
 /** Where the setter sets from: just right of centre, at the net. */
 export const TARGET: Point = { x: 5.8, y: 0.8 };
-export const SERVE_SPOT: Point = { x: 7.6, y: 9.9 };
+/**
+ * Servers may serve from anywhere along the end line. Each serves from in line with the spot they
+ * defend, so their run in after the serve is straight.
+ */
+export const SERVE_DEPTH = 9.9;
 
 const mirror = (p: Point): Point => ({ x: 9 - p.x, y: p.y });
 
@@ -89,7 +93,11 @@ const BASE: Record<DefenseSystem, Record<Slot, Point>> = {
 
 type DefenseSpot = Point & { task: Task };
 
-/** Defense against their outside hitter (hitting at our right) and their middle. */
+/**
+ * Defense against their outside hitter (hitting at our right) and their middle. Their quick
+ * hitter attacks in front of their setter, who sets from their right of centre: our left of
+ * centre, so the block against the middle shades that way.
+ */
 const DEFENSE: Record<DefenseSystem, Record<'outside' | 'middle', Record<Slot, DefenseSpot>>> = {
 	perimeter: {
 		outside: {
@@ -101,7 +109,7 @@ const DEFENSE: Record<DefenseSystem, Record<'outside' | 'middle', Record<Slot, D
 			BL: { x: 1.4, y: 6.2, task: 'dig' }
 		},
 		middle: {
-			FM: { x: 4.5, y: 0.5, task: 'block' },
+			FM: { x: 3.9, y: 0.5, task: 'block' },
 			FL: { x: 1.8, y: 3, task: 'dig' },
 			FR: { x: 7.2, y: 3, task: 'dig' },
 			BL: { x: 1.4, y: 6, task: 'dig' },
@@ -119,7 +127,7 @@ const DEFENSE: Record<DefenseSystem, Record<'outside' | 'middle', Record<Slot, D
 			BL: { x: 3.4, y: 7.7, task: 'dig' }
 		},
 		middle: {
-			FM: { x: 4.5, y: 0.5, task: 'block' },
+			FM: { x: 3.9, y: 0.5, task: 'block' },
 			FL: { x: 1.8, y: 3, task: 'dig' },
 			FR: { x: 7.2, y: 3, task: 'dig' },
 			BL: { x: 1.4, y: 6, task: 'dig' },
@@ -137,8 +145,8 @@ const DEFENSE: Record<DefenseSystem, Record<'outside' | 'middle', Record<Slot, D
 			BL: { x: 1.5, y: 7.2, task: 'dig' }
 		},
 		middle: {
-			FM: { x: 4.5, y: 0.5, task: 'block' },
-			BM: { x: 4.5, y: 3.4, task: 'tip' },
+			FM: { x: 3.9, y: 0.5, task: 'block' },
+			BM: { x: 3.9, y: 3.4, task: 'tip' },
 			FL: { x: 1.5, y: 2.8, task: 'dig' },
 			FR: { x: 7.5, y: 2.8, task: 'dig' },
 			BL: { x: 1.3, y: 6.6, task: 'dig' },
@@ -227,6 +235,7 @@ function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 	const passing = passers(court, setter, o.formation, o.system);
 	const spots = RECEIVE_SPOTS[passing.length as ReceiveFormation] ?? RECEIVE_SPOTS[5];
 	const idle = court.filter((p) => !passing.includes(p));
+	const setterZone = court.find((p) => p.role === setter)!.zone;
 
 	const idleWish = (p: OnCourt): { p: Point; weight: number } => {
 		if (p.role === setter) {
@@ -239,10 +248,16 @@ function receive(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 				? { p: { x: 8.6, y: 1.6 }, weight: 0.4 }
 				: { p: { x: TARGET.x, y: 1.6 }, weight: 0.4 };
 		}
-		// Non-passing hitters wait at the net (front row) or out of the passers' way (back row).
-		return isFront(p.zone)
-			? { p: { x: ZONE_X[p.zone], y: 0.9 }, weight: 1 }
-			: { p: { x: ZONE_X[p.zone], y: 8.5 }, weight: 0.8 };
+		if (isFront(p.zone)) {
+			// Non-passing hitters wait at the net. With the setter in zone 4, the zone 3 player
+			// waits a step off it, so the setter's run along the net to the target is clear.
+			const offNet = p.zone === 3 && setterZone === 4;
+			return { p: { x: ZONE_X[p.zone], y: offNet ? 2 : 0.9 }, weight: 1 };
+		}
+		// Back-row non-passers wait deep, out of the passers' way and their line of sight: in the
+		// right corner, where an opposite attacks from, unless their zone keeps them left.
+		const DEEP_X: Record<number, number> = { 1: 8.3, 6: 7, 5: 1.2 };
+		return { p: { x: DEEP_X[p.zone], y: 8.5 }, weight: 0.8 };
 	};
 
 	let best: { cost: number; at: Record<Zone, Point> } | undefined;
@@ -309,7 +324,9 @@ function serve(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 		: undefined;
 	return placed.map((p) => {
 		if (p === server) {
-			return { ...p, ...SERVE_SPOT, task: 'serve', run: BASE[o.defense][p.slot] };
+			const spot = BASE[o.defense][p.slot];
+			const from = { x: Math.min(8, Math.max(1, spot.x)), y: SERVE_DEPTH };
+			return { ...p, ...from, task: 'serve', run: spot };
 		}
 		if (!legal) return p;
 		const at = legal[p.zone];
@@ -325,11 +342,11 @@ function defense(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 	});
 }
 
-/** Approach starts and where each hitter jumps. */
+/** Approach starts and where each hitter jumps. Wing hitters start from outside the sidelines. */
 const APPROACH: Partial<Record<Slot, { from: Point; to: Point }>> = {
-	FL: { from: { x: 0.5, y: 3.6 }, to: { x: 1, y: 0.9 } },
+	FL: { from: { x: -0.3, y: 3.6 }, to: { x: 1, y: 0.9 } },
 	FM: { from: { x: 4.4, y: 2.8 }, to: { x: 5, y: 0.9 } },
-	FR: { from: { x: 8.6, y: 3.6 }, to: { x: 8, y: 0.9 } },
+	FR: { from: { x: 9.3, y: 3.6 }, to: { x: 8, y: 0.9 } },
 	BM: { from: { x: 4.5, y: 6 }, to: { x: 4.5, y: 3.6 } },
 	BR: { from: { x: 8, y: 6.4 }, to: { x: 7.8, y: 3.7 } }
 };
@@ -338,8 +355,11 @@ function attack(o: Options, court: OnCourt[], setter: RoleId): Placed[] {
 	return court.map((p) => {
 		const isSetter = p.role === setter;
 		if (isSetter) return { ...p, ...TARGET, setter: true, task: 'set' };
-		const restingSetter = ROLE_KIND[p.role] === 'setter' && !isFront(p.zone);
-		if (p.role === 'L' || (o.system !== '6-6' && p.slot === 'BL') || restingSetter) {
+		// A back-row setter who is not setting (4-2) covers from the right back.
+		if (ROLE_KIND[p.role] === 'setter' && !isFront(p.zone)) {
+			return { ...p, x: 7, y: 5.4, setter: false, task: 'cover' };
+		}
+		if (p.role === 'L' || (o.system !== '6-6' && p.slot === 'BL')) {
 			return { ...p, x: 2.6, y: 4.8, setter: false, task: 'cover' };
 		}
 		// A back-row setter's partner on the right, and in 6-6 the whole back row, cover.

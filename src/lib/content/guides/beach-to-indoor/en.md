@@ -27,17 +27,17 @@ Your passing, setting, hitting, serving and reading of the game all carry over. 
 
 ## The court and the team
 
-|                  | Beach                                     | Indoor                                           |
-| ---------------- | ----------------------------------------- | ------------------------------------------------ |
-| Players per side | 2                                         | 6 (plus substitutes and libero)                  |
-| Court per side   | 8 × 8 m                                   | 9 × 9 m                                          |
-| Set length       | 21 points (third set 15)                  | 25 points (fifth set 15)                         |
-| Match            | best of three                             | best of five, in FIVB play                       |
-| Change sides     | every 7 points (every 5 in the third set) | after each set, and at 8 points in the fifth set |
-| Substitutions    | none                                      | 6 per set, plus unlimited libero replacements    |
-| Time-outs        | 1 per set                                 | 2 per set, 30 s each                             |
+|                  | Beach                                                                      | Indoor                                           |
+| ---------------- | -------------------------------------------------------------------------- | ------------------------------------------------ |
+| Players per side | 2                                                                          | 6 (plus substitutes and libero)                  |
+| Court per side   | 8 × 8 m                                                                    | 9 × 9 m                                          |
+| Set length       | 21 points (third set 15)                                                   | 25 points (fifth set 15)                         |
+| Match            | best of three                                                              | best of five, in FIVB play                       |
+| Change sides     | every 7 points (every 5 in the third set)                                  | after each set, and at 8 points in the fifth set |
+| Substitutions    | none                                                                       | 6 per set, plus unlimited libero replacements    |
+| Time-outs        | 1 per set, plus a technical time-out at 21 total points in sets 1–2 (FIVB) | 2 per set, 30 s each                             |
 
-The indoor court is bigger, but it is shared by six players, so each of you covers a much smaller area. The ball is also heavier and harder, and it travels faster indoors with no wind.
+The indoor court is bigger, but it is shared by six players, so each of you covers a much smaller area. The ball weighs the same, but it is pumped harder and is slightly smaller, so it is firmer and travels faster indoors with no wind.
 
 ## Positions: you have one job
 
@@ -46,7 +46,7 @@ On the beach you do everything. Indoors you are usually a specialist:
 - **Setter:** takes the second ball every rally.
 - **Outside hitter:** passes and attacks from the left. Often the easiest fit for beach players, because it needs passing and all-round attacking.
 - **Middle blocker:** blocks and hits quick sets.
-- **Opposite:** attacks from the right, blocks the other team's best hitter.
+- **Opposite:** attacks from the right, and blocks the other team's outside hitter (usually their busiest attacker).
 - **Libero:** back-row passer and defender in a different shirt. Strong beach defenders often make good liberos.
 
 Read [the positions guide](/guides/positions) for more.
@@ -68,7 +68,7 @@ The libero comes on for a back-row player, usually a middle blocker, without usi
 
 **Tipping.** Indoors you may tip with your fingertips, open hand. On the beach, an open-hand tip is a fault, so you learned to use your knuckles ("cobra") or a roll shot. Indoors, use whichever works.
 
-**The block is not a touch.** On the beach a block counts as one of your three contacts. Indoors it does not ([rule 14](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)): after a block, your team still has three touches, and the blocker may also make the next one.
+**The block is not a touch.** On the beach a block counts as one of your three contacts. Indoors it does not ([rule 14.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37)): after a block, your team still has three touches, and the blocker may also make the next one.
 
 **Setting.** Beach referees are strict about spin and double contacts on hand sets, and there are extra rules on setting the ball over the net. Indoors, hand-setting is judged more leniently, and there is no rule about setting square over the net. On the team's first contact (receiving the serve, digging), consecutive contacts are allowed indoors as long as they happen during one action. Overhand passing of the serve is common and legal.
 
@@ -76,7 +76,7 @@ The libero comes on for a back-row player, usually a middle blocker, without usi
 
 **The net.** As on the beach, touching the net between the antennae while playing the ball is a fault. In practice, indoor referees see more of it because more players are near the net.
 
-**Attacking the serve.** Indoors you may not attack the opponent's serve while it is in your front zone and entirely above the net ([rule 13.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)).
+**Attacking the serve.** As on the beach, you may not attack the opponent's serve while it is entirely above the net, but indoors this applies only while the ball is in your front zone ([rule 13.3](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)).
 
 **Communication and coaching.** Indoors a coach can give instructions from the bench, call time-outs and make substitutions. On the beach you are on your own.
 

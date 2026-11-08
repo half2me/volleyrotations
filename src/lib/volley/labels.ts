@@ -6,7 +6,8 @@ import {
 	ROLE_KIND,
 	ROW_ORDER,
 	isFront,
-	setterZoneOf,
+	setterOf,
+	zoneOf,
 	type RoleId,
 	type RotationNo,
 	type Slot,
@@ -53,6 +54,15 @@ export function roleShort(role: RoleId): string {
 	};
 	return short[role]();
 }
+
+/**
+ * A role's name for use inside a sentence. Hungarian role names are common nouns, written in
+ * lower case unless they start the sentence ("a feladó", not "a Feladó").
+ */
+export const roleInSentence = (role: RoleId): string => {
+	const name = roleName(role);
+	return getLocale() === 'hu' ? name.charAt(0).toLowerCase() + name.slice(1) : name;
+};
 
 export function roleName(role: RoleId): string {
 	const letter = LETTERS[role];
@@ -149,21 +159,31 @@ export const attackFromName = (a: AttackFrom) =>
 		opposite: m.attack_from_opposite
 	})[a]();
 
+/** The zone of the player who sets in a rotation: with two setters, the one setting then. */
+export const settingZone = (r: RotationNo, system: SystemId) =>
+	zoneOf(system, r, setterOf(system, r))!;
+
 export const rotationLabel = (r: RotationNo, system: SystemId) =>
 	system === '6-6'
 		? m.rotation_n({ n: r })
-		: m.rotation_setter({ n: r, zone: zoneRef(setterZoneOf(r)) });
+		: m.rotation_setter({ n: r, zone: zoneRef(settingZone(r, system)) });
 
-/** Who must stand where relative to the reader's player at the serve (rule 7.4.2). */
-function overlapNeighbours(you: Placed, everyone: Placed[]): string[] {
+/**
+ * Who must stand where relative to the reader's player at the serve (rule 7.4.2). `exempt`
+ * leaves out the server, whom the rule never compares.
+ */
+function overlapNeighbours(you: Placed, everyone: Placed[], exempt: Zone[] = []): string[] {
 	const at = (z: Zone) => everyone.find((p) => p.zone === z)!;
-	const name = (z: Zone) => m.player_in_zone({ name: roleName(at(z).role), zone: zoneRef(z) });
+	const name = (z: Zone) =>
+		m.player_in_zone({ name: roleInSentence(at(z).role), zone: zoneRef(z) });
 	const out: string[] = [];
 	for (const [front, back] of COLUMN_PAIRS) {
+		if (exempt.includes(front) || exempt.includes(back)) continue;
 		if (you.zone === back) out.push(m.rel_behind({ who: name(front) }));
 		if (you.zone === front) out.push(m.rel_in_front({ who: name(back) }));
 	}
 	for (const [left, right] of ROW_ORDER) {
+		if (exempt.includes(left) || exempt.includes(right)) continue;
 		if (you.zone === right) out.push(m.rel_right_of({ who: name(left) }));
 		if (you.zone === left) out.push(m.rel_left_of({ who: name(right) }));
 	}
@@ -193,24 +213,24 @@ export function explain(
 			const middle = placed.find((p) => ROLE_KIND[p.role] === 'middle' && !isFront(p.zone));
 			return {
 				task: m.off_court(),
-				detail: m.libero_off_serving({ middle: middle ? roleName(middle.role) : '' }),
+				detail: m.libero_off_serving({ middle: middle ? roleInSentence(middle.role) : '' }),
 				tips: [m.tip_libero_rules()]
 			};
 		}
 		const libero = placed.find((p) => p.replaces === role);
 		return {
 			task: m.off_court(),
-			detail: m.middle_off({ zone: zoneRef(libero?.zone ?? 0) }),
+			detail: libero ? m.middle_off({ zone: zoneRef(libero.zone) }) : m.off_court(),
 			tips: [m.tip_libero_rules()]
 		};
 	}
 
 	const tips: string[] = [];
 	const front = isFront(you.zone);
-	tips.push(front ? m.tip_front_row() : m.tip_back_row());
+	tips.push(front ? m.tip_front_row() : you.role === 'L' ? m.tip_libero_back() : m.tip_back_row());
 
 	if (you.role === 'L' && you.replaces) {
-		tips.push(m.tip_libero_replaces({ middle: roleName(you.replaces) }));
+		tips.push(m.tip_libero_replaces({ middle: roleInSentence(you.replaces) }));
 	}
 	if (phase === 'receive') {
 		tips.push(m.tip_overlap({ list: overlapNeighbours(you, placed).join('; ') }));
@@ -224,7 +244,8 @@ export function explain(
 			if (ROLE_KIND[you.role] === 'middle' && o.libero && o.system !== '6-6')
 				tips.push(m.tip_middle_serves());
 		} else if (o.servingOverlap) {
-			tips.push(m.tip_serving_overlap({ list: overlapNeighbours(you, placed).join('; ') }));
+			const list = overlapNeighbours(you, placed, [1]);
+			if (list.length) tips.push(m.tip_serving_overlap({ list: list.join('; ') }));
 			if (you.run) tips.push(m.tip_switch({ slot: slotName(you.slot) }));
 		} else {
 			tips.push(m.tip_serving_free());

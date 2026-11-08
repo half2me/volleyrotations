@@ -17,7 +17,8 @@
 		roleShort,
 		rotationLabel,
 		zoneRef,
-		systemName
+		systemName,
+		roleInSentence
 	} from '#lib/volley/labels.js';
 	import { ZONES, rolesOf, type Zone } from '#lib/volley/model.js';
 	import { overlapFaults } from '#lib/volley/overlap.js';
@@ -87,7 +88,7 @@
 		const rotation = rotationLabel(q.o.rotation, q.o.system);
 		if (q.kind === 'zone')
 			return m.quiz_zone_prompt({
-				role: roleName(q.role),
+				role: roleInSentence(q.role),
 				rotation,
 				system: systemName(q.o.system)
 			});
@@ -100,7 +101,7 @@
 					? m.quiz_moment_receive()
 					: `${phaseName(q.phase)}, ${q.o.serving ? m.we_serve() : m.we_receive()}`;
 		return m.quiz_spot_prompt({
-			role: roleName(q.role),
+			role: roleInSentence(q.role),
 			moment,
 			rotation,
 			system: systemName(q.o.system)
@@ -271,14 +272,14 @@
 								{@const f = faults[0]}
 								{@const name = (z: Zone) => {
 									const p = q.placed.find((pl) => pl.zone === z)!;
-									return m.player_in_zone({ name: roleName(p.role), zone: zoneRef(z) });
+									return m.player_in_zone({ name: roleInSentence(p.role), zone: zoneRef(z) });
 								}}
 								{f.kind === 'depth'
 									? m.fault_depth({ back: name(f.b), front: name(f.a) })
 									: m.fault_side({ left: name(f.a), right: name(f.b) })}
 							{/if}
 						{:else}
-							{m.quiz_zone_explain({ role: roleName(q.role), zone: zoneRef(q.answer) })}
+							{m.quiz_zone_explain({ role: roleInSentence(q.role), zone: zoneRef(q.answer) })}
 						{/if}
 					</p>
 					<button type="button" class="btn-primary mt-5" onclick={next}>

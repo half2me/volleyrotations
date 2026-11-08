@@ -48,14 +48,19 @@ const far = (a: Point, b: Point, d: number) => Math.hypot(a.x - b.x, a.y - b.y) 
  */
 export function makeQuestion(base: Options, role?: RoleId): Question {
 	const rotation = pick(ROTATIONS);
-	const kind = pick(['spot', 'spot', 'spot', 'legal', 'zone'] as const);
+	// The libero has no rotational zone of their own, so they get no zone questions.
+	const kind = pick(
+		role === 'L'
+			? (['spot', 'spot', 'legal'] as const)
+			: (['spot', 'spot', 'spot', 'legal', 'zone'] as const)
+	);
 	const who = role ?? pick(rolesOf(base.system, base.libero));
 
 	if (kind === 'zone') {
 		const o = { ...base, rotation };
-		const answer = zoneOf(o.system, rotation, who === 'L' ? 'OH1' : who);
-		// The libero has no zone of their own, so ask about a regular player instead.
-		return { kind, o, role: who === 'L' ? 'OH1' : who, answer: answer! };
+		// Picked at random, the libero is swapped for a player who has a zone.
+		const asked = who === 'L' ? 'OH1' : who;
+		return { kind, o, role: asked, answer: zoneOf(o.system, rotation, asked)! };
 	}
 
 	if (kind === 'legal') {

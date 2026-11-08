@@ -30,17 +30,17 @@ description: A hátsós (6-os hátul), a forgó és a sarkos (6-os elöl) védek
 
 ## Alapállás
 
-Mielőtt az ellenfél támad, a csapat **alapállásban** vár: a sáncolók a hálónál szétosztva, a hátsó sor a saját területe közepén, mozdulásra készen. Amikor az ellenfél feladója elengedi a labdát, mindenki a támadásnak megfelelő helyére fut. Az alapállás csapatonként eltér; az oldal eszközeiben a szokásos posztváltást követi: a nyitásfogadó ütő balra, a center középre, a feladó vagy a feladó átló jobbra sáncol, hátul a liberó bal hátul, a nyitásfogadó ütő hátsó középen, a feladó vagy a feladó átló jobb hátul áll.
+Mielőtt az ellenfél támad, a csapat **alapállásban** vár: a sáncolók a hálónál szétosztva, a hátsó sor a saját területe közepén, mozdulásra készen. Amikor az ellenfél feladója elengedi a labdát, mindenki a támadásnak megfelelő helyére fut. Az alapállás csapatonként eltér; az oldal eszközeiben a szokásos posztváltást követi: a nyitásfogadó ütő balra, a center középre, a feladó vagy a feladó átló jobbra sáncol, hátul a liberó balra, a nyitásfogadó ütő hátsó középen, a feladó vagy a feladó átló jobb hátul áll.
 
 ## Sáncfeladatok
 
-A szokásos első sorköteles váltással:
+Az első sorban szokásos helycserével:
 
-- A **jobb oldali sáncoló** (feladó vagy feladó átló) az ellenfél nyitásfogadó ütőjét sáncolja, aki az ő bal oldalukról támad.
+- A **jobb oldali sáncoló** (feladó vagy feladó átló) az ellenfél nyitásfogadó ütőjét sáncolja, aki a saját bal oldaláról támad.
 - A **bal oldali sáncoló** (nyitásfogadó ütő) az ellenfél feladó átlóját sáncolja.
 - A **center** az ellenfél centerét sáncolja, majd kimozdul, hogy a szélen kétfős sáncot alkosson.
 
-A szélső sáncoló határozza meg a sánc helyét, a center mellé zár. A csapat dönti el, hogy a sánc az **egyenest** zárja-e (a sáncoló az ütő karjával szemben áll, a védők átlóban játszanak), vagy az **átlót** (a sánc beljebb áll, egy védő veszi az egyenest). Gyengébb ellenfél ellen gyakori, hogy csak a center sáncol, a szélsők pedig védekeznek.
+A szélső sáncoló határozza meg a sánc helyét, a center pedig hozzá zár. A csapat dönti el, hogy a sánc az **egyenest** zárja-e (a sáncoló az ütő karjával szemben áll, a védők átlóban játszanak), vagy az **átlót** (a sánc beljebb áll, egy védő veszi az egyenest). Gyenge vagy lassú támadások ellen sok csapat egyes sánccal vagy sánc nélkül játszik, és többen védekeznek a mezőnyben.
 
 ## Hátsós rendszer: 6-os hátul (perimeter)
 
@@ -49,7 +49,7 @@ Klubszinten ez a leggyakoribb rendszer, és ez az oldal alapbeállítása.
 Ha az ellenfél a saját bal oldaláról (a ti jobb oldalatok felől) támad:
 
 - Két sáncoló: a jobb oldali sáncolótok és a center.
-- **Jobb hátsó (1-es hely):** az egyenest védi a sánc mögött, a hálótól kb. 6–7 méterre, az oldalvonal közelében.
+- **Jobb hátsó (1-es hely):** az egyenest védi közvetlenül az oldalvonalon belül, a sánc árnyékán kívül, a hálótól kb. 5,5–6,5 méterre.
 - **Hátsó középső (6-os hely):** mélyen, az alapvonal közelében, a sánc és az átló közötti rést fedi.
 - **Bal hátsó (5-ös hely):** az átlót védi, mélyen.
 - **Sáncon kívüli (bal első):** a támadóvonal környékére lép vissza a rövid átlóra és a rövid labdákra.
@@ -65,10 +65,10 @@ A hátsó sor a támadás felé **fordul**:
 
 - Az ellenfél bal oldali támadásánál a **jobb hátsó (1-es hely)** a sánc mögé jön az ejtésekre.
 - A **hátsó középső (6-os hely)** átfordul az egyenesre, mélyen.
-- A **bal hátsó (5-ös hely)** a mély átlót veszi.
+- A **bal hátsó (5-ös hely)** a mély közép felé csúszik; a rövid átlót a sáncon kívüli első sorköteles veszi.
 - A **sáncon kívüli** visszalép a rövid átlóra.
 
-Előnye, hogy nagyon jó az ejtések és a lassított ütések ellen, és a sánc mögötti védő korán a helyén van. Hátránya, hogy az egyenes oldali mély sarok nyitva maradhat, és a játékosoknak többet kell mozogniuk.
+Előnye, hogy nagyon jó az ejtések és a lassított ütések ellen, és a sánc mögötti védő korán a helyén van. Hátránya, hogy a mély átlós sarok és a mély közép nyitva maradhat, és a játékosoknak többet kell mozogniuk. Középről érkező támadás ellen ugyanúgy játszik, mint a hátsós rendszer.
 
 ## Sarkos rendszer: 6-os elöl (middle-up)
 

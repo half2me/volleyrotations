@@ -6,7 +6,14 @@
 	import { href } from '#lib/i18n.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { DEFAULT_OPTIONS, byZone, formation } from '#lib/volley/formations.js';
-	import { roleName, roleShort, rotationLabel, zoneRef, systemName } from '#lib/volley/labels.js';
+	import {
+		roleInSentence,
+		roleName,
+		roleShort,
+		rotationLabel,
+		zoneRef,
+		systemName
+	} from '#lib/volley/labels.js';
 	import {
 		COLUMN_PAIRS,
 		ROTATIONS,
@@ -65,7 +72,7 @@
 	const broken = (a: Zone, b: Zone) => faults.some((f) => f.a === a && f.b === b);
 	const who = (z: Zone) => {
 		const p = court.find((c) => c.zone === z)!;
-		return m.player_in_zone({ name: roleName(p.role), zone: zoneRef(z) });
+		return m.player_in_zone({ name: roleInSentence(p.role), zone: zoneRef(z) });
 	};
 
 	// Dragging: pointer coordinates to court metres through the SVG's own transform.

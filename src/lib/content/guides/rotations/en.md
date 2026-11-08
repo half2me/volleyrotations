@@ -53,16 +53,18 @@ Over a set your team goes round and round the same six line-ups.
 
 ## Rotation 1 to 6
 
-Coaches name the six line-ups by where the setter stands at the serve. On this site, and on most teams:
+Coaches name the six line-ups by where the setter stands at the serve. On this site, as in most US coaching, the numbers follow the order of play:
 
-| Name       | Setter in zone | Setter is         |
-| ---------- | -------------- | ----------------- |
-| Rotation 1 | 1              | back row, serving |
-| Rotation 2 | 6              | back row          |
-| Rotation 3 | 5              | back row          |
-| Rotation 4 | 4              | front row         |
-| Rotation 5 | 3              | front row         |
-| Rotation 6 | 2              | front row         |
+| Name       | Setter in zone | Setter is                             |
+| ---------- | -------------- | ------------------------------------- |
+| Rotation 1 | 1              | back row (serves if your team serves) |
+| Rotation 2 | 6              | back row                              |
+| Rotation 3 | 5              | back row                              |
+| Rotation 4 | 4              | front row                             |
+| Rotation 5 | 3              | front row                             |
+| Rotation 6 | 2              | front row                             |
+
+In much of Europe, and in scouting software such as Data Volley, the number is the setter's zone instead (P1, P6, P5 …), so "rotation 6" there means the setter is in zone 6. This site always shows the setter's zone next to the rotation number; check which convention your coach uses.
 
 The numbers follow the order of play: after Rotation 1 the team rotates into Rotation 2, and so on. Some teams count in a different direction or name rotations after the server instead, so check what your coach means.
 
@@ -82,7 +84,7 @@ Before the serve, players stand as close to their target spot as the [overlap ru
 Switching does not change who is front row. At the serve, zones 4, 3 and 2 are front row and zones 5, 6 and 1 are back row, and that holds for the whole rally:
 
 - A back-row player may **not block** or take part in a completed block ([rule 14.6](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=37)).
-- A back-row player may **attack a ball that is entirely above the net** only if they take off from behind the attack line. They may land in front of it ([rule 13.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=35)). From in front of the line they may only play a ball that is at least partly below the top of the net.
+- A back-row player may **attack a ball that is entirely above the net** only if they take off from behind the attack line. They may land in front of it ([rule 13.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=35)). From in front of the line they may only complete an attack hit on a ball that is at least partly below the top of the net; setting or passing there is fine.
 - The libero has stricter limits again: see [the libero guide](/guides/libero).
 
 ## Common questions

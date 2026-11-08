@@ -40,7 +40,7 @@ With the usual front-row switch:
 - The **left-side blocker** (outside hitter) blocks the opponent's opposite.
 - The **middle blocker** blocks the opponent's middle, then moves out to make a two-player block on the pins.
 
-The outside blocker sets the block's position; the middle closes next to them. The team decides whether the block takes **line** (blocker lines up on the hitter's arm, defenders play cross) or **cross** (block sits further in, a defender takes line). Against a weaker team, blocking only the middle and letting the wings defend is common.
+The outside blocker sets the block's position; the middle closes next to them. The team decides whether the block takes **line** (blocker lines up on the hitter's arm, defenders play cross) or **cross** (block sits further in, a defender takes line). Against weak or slow attacks, many teams use a single block, or none, and put more players in defense.
 
 ## Perimeter defense (middle back deep)
 
@@ -49,7 +49,7 @@ The most common system at club level and the default on this site.
 Against an attack from the opponent's left (your right side):
 
 - Two blockers: your right-side blocker and middle blocker.
-- **Right back (zone 1):** line, behind the block, roughly 6 to 7 metres from the net near the sideline.
+- **Right back (zone 1):** line, just inside the sideline and outside the block's shadow, roughly 5.5 to 6.5 metres from the net.
 - **Middle back (zone 6):** deep, near the end line, covering the seam between the block and the cross.
 - **Left back (zone 5):** cross, deep in the diagonal.
 - **Off-blocker (left front):** drops back to around the attack line for the sharp cross and short balls.
@@ -65,10 +65,10 @@ The back row **rotates** towards the attack:
 
 - Against an attack from the opponent's left, **right back (zone 1)** comes up behind the block to take tips.
 - **Middle back (zone 6)** rotates over to defend the line, deep.
-- **Left back (zone 5)** takes the deep cross.
+- **Left back (zone 5)** slides towards the deep middle; the off-blocker takes the sharp cross.
 - The **off-blocker** drops to cover the sharp angle.
 
-It is very good against tips and roll shots, because the defender behind the block is in place early. The downside is that the deep corner on the line side can be open, and players have to move more.
+It is very good against tips and roll shots, because the defender behind the block is in place early. The downside is that the deep cross corner and the deep middle can be open, and players have to move more. Against an attack from the middle it plays like perimeter.
 
 ## Middle-up (6-up)
 

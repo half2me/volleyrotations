@@ -29,7 +29,7 @@ Every formation must be legal at the moment of the serve. Under FIVB rules the r
 
 ## 5-player W
 
-Three players stand in a line across the court, roughly 4 to 5 metres from the net, and two more stand deeper, in the gaps between them. Seen from above it looks like a W. The setter is at the net; in a 6-6 or 4-2 the setter is a front-row player, otherwise the setter comes from the back row.
+Three players stand in a line across the court, roughly 4 to 5 metres from the net, and two more stand deeper, in the gaps between them. Seen from above it looks like a W. The setter is at the net; in a 6-6 or 4-2 the setter is always front row, in a 6-2 always back row, and in a 5-1 back row in Rotations 1–3 and front row in 4–6. A back-row setter's front-row partner usually cannot pass, because they must stay in front of the setter at the serve, so in those rotations a W has four passers.
 
 - **Pros:** easy to learn, covers short serves well, and nobody has to cover a big area.
 - **Cons:** many players means many **seams** (the gaps between passers), and weak passers cannot hide. The front three in the W also have to get ready to attack after passing.
@@ -52,7 +52,7 @@ The libero and the two outside hitters split the court into three lanes. The set
 - A front-row outside hitter is one of the three passers, and must still attack right after passing. Coaches often give that player a smaller lane.
 - **Good for:** a 5-1 or 6-2 with a libero. Most club and higher teams use it.
 
-Some teams use a 2-player receive against weak servers, with the libero and one outside covering the whole court. It is rare outside high-level play.
+Some high-level teams use a 2-player receive against float serves, with the libero and one outside covering the whole court. It is rare outside high-level play.
 
 ## Seams: who takes the ball between two players?
 

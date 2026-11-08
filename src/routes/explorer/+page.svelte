@@ -22,10 +22,12 @@
 		phaseName,
 		roleName,
 		rotationLabel,
+		settingZone,
 		slotName,
 		systemDescription,
 		zoneRef,
-		systemName
+		systemName,
+		roleInSentence
 	} from '#lib/volley/labels.js';
 	import {
 		ROTATIONS,
@@ -62,6 +64,7 @@
 	const previous = $derived(step > 0 ? formation(options, phases[step - 1]) : undefined);
 	const explanation = $derived(explain(options, phase, placed, role));
 	const you = $derived(placed.find((p) => p.role === role));
+	const passerCount = $derived(placed.filter((p) => p.task === 'pass').length);
 	const yourZone = $derived(
 		role === 'L' ? placed.find((p) => p.role === 'L')?.zone : zoneOf(o.system, o.rotation, role)
 	);
@@ -85,7 +88,7 @@
 		m.court_label({
 			phase: phaseName(phase),
 			rotation: rotationLabel(o.rotation, o.system),
-			you: roleName(role)
+			you: roleInSentence(role)
 		})
 	);
 </script>
@@ -131,10 +134,7 @@
 		options={ROTATIONS.map((r) => ({
 			value: r,
 			label: String(r),
-			hint:
-				o.system === '6-6'
-					? undefined
-					: m.setter_zone_short({ zone: zoneOf(o.system, r, o.system === '5-1' ? 'S' : 'S1')! })
+			hint: o.system === '6-6' ? undefined : m.setter_zone_short({ zone: settingZone(r, o.system) })
 		}))}
 		bind:value={() => o.rotation, (rotation: RotationNo) => update({ rotation })}
 	/>
@@ -246,10 +246,19 @@
 					<span class="size-3 rounded-full bg-libero"></span>{m.role_l()}
 				</li>
 				<li class="flex items-center gap-1.5">
+					<svg viewBox="-0.25 -0.25 0.5 0.5" class="size-3" aria-hidden="true">
+						<circle r="0.2" class="fill-paper stroke-ink" stroke-width="0.06" />
+					</svg>{m.legend_setter()}
+				</li>
+				<li class="flex items-center gap-1.5">
 					<span class="h-0 w-4 border-t-2 border-dashed border-ink-soft"></span>{m.legend_run()}
 				</li>
 			</ul>
 		</div>
+
+		{#if phase === 'receive' && passerCount < options.formation && o.system !== '6-6'}
+			<p class="card mt-3 text-sm">{m.passers_fewer({ n: passerCount })}</p>
+		{/if}
 
 		{#if phase === 'defense'}
 			<div class="mt-4" data-pagefind-ignore>
@@ -331,7 +340,7 @@
 						label={m.court_label({
 							phase: phaseName(phase),
 							rotation: rotationLabel(r, o.system),
-							you: roleName(role)
+							you: roleInSentence(role)
 						})}
 					/>
 					<span class="block px-1 pt-1 text-xs text-ink-soft">

@@ -62,8 +62,9 @@ for (const system of SYSTEMS) {
 							);
 							expect(placed.map((p) => p.zone).sort()).toEqual([...ZONES]);
 							for (const p of placed) {
-								expect(p.x).toBeGreaterThanOrEqual(0);
-								expect(p.x).toBeLessThanOrEqual(9);
+								// Wing hitters start their approach just outside the sidelines.
+								expect(p.x).toBeGreaterThanOrEqual(-0.5);
+								expect(p.x).toBeLessThanOrEqual(9.5);
 								expect(p.y).toBeGreaterThanOrEqual(0);
 								expect(p.y).toBeLessThanOrEqual(10.5);
 							}
@@ -87,6 +88,26 @@ test('the setter hides out of the passers’ way in serve receive', () => {
 					if ([2, 3, 4].includes(s.zone)) expect(s.y, where).toBeLessThanOrEqual(1.5);
 					else expect(s.y <= 2.5 || s.x >= 8.2, where).toBe(true);
 				}
+});
+
+test('no two players are drawn on the same spot', () => {
+	for (const system of SYSTEMS)
+		for (const rotation of ROTATIONS)
+			for (const serving of [true, false])
+				for (const phase of PHASES)
+					for (const f of SYSTEM[system].receiveFormations) {
+						const placed = formation(
+							{ ...DEFAULT_OPTIONS, system, rotation, serving, formation: f },
+							phase
+						);
+						for (const a of placed)
+							for (const b of placed)
+								if (a !== b)
+									expect(
+										Math.hypot(a.x - b.x, a.y - b.y),
+										`${system} ${phase} rotation ${rotation}: ${a.role} and ${b.role}`
+									).toBeGreaterThan(0.9);
+					}
 });
 
 test('the libero never serves', () => {

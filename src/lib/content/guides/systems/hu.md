@@ -29,7 +29,7 @@ Minden rendszernél jó kérdés: **hány első sorköteles támadónk van?** H�
 
 ## 6:6: mindenki felad
 
-A 6:6-ban nincs állandó feladó. Aki a **3-as helyre** (első közép) kerül, az ad fel abban a forgásban, a másik két első sorköteles játékos támad.
+A 6:6-ban nincs állandó feladó. Aki a **3-as helyre** (középső első) kerül, az ad fel abban a forgásban, a másik két első sorköteles játékos támad.
 
 - **Első sorköteles támadók:** kettő.
 - **Előnyök:** mindenki minden elemet megtanul, nincs posztváltás, a forgásrend maga a felállás. Kezdőknek, iskolai csapatoknak és vegyes amatőr társaságoknak ideális.
@@ -48,12 +48,12 @@ Két feladó áll egymással szemben a forgásban (három hely távolságra), í
 Itt is két feladó áll egymással szemben, de most **a hátsó sorköteles feladó ad fel**. Az első sorköteles feladó ütőként játszik, általában a jobb oldalon.
 
 - **Első sorköteles támadók:** mindig három.
-- **Előnyök:** minden forgásban három támadó, és két játékos osztozik a feladás terhén. Akkor működik jól, ha a csapatnak van két tisztességes feladója, akik ütni is tudnak.
+- **Előnyök:** minden forgásban három támadó, és két játékos osztozik a feladás terhén. Akkor működik jól, ha a csapatnak van két jó feladója, akik ütni is tudnak.
 - **Hátrányok:** a feladó mindig hátulról érkezik, ezért a fogadásnál többet kell rejteni (lásd: [az állásrendi szabály](/hu/guides/overlap)). A két feladónak hasonló labdát kell adnia, és több csere kell, ha az edző speciális ütőket hoz be a feladók helyett.
 
 ## 5:1: egy feladó
 
-Egyetlen feladó ad fel minden forgásban. A forgásban vele szemben az **feladó átló** áll.
+Egyetlen feladó ad fel minden forgásban. A forgásban vele szemben a **feladó átló** áll.
 
 - **Első sorköteles támadók:** három, amikor a feladó hátul van (1., 2. és 3. forgás: feladó az 1-es, 6-os és 5-ös helyen), kettő, amikor elöl (4., 5. és 6. forgás: 4-es, 3-as és 2-es hely). Első sorban a feladó maga is támadhatja a második labdát, így a sánc nem hagyhatja figyelmen kívül.
 - **Előnyök:** egy feladó, egy ritmus, egy döntéshozó. Az ütők mindig ugyanolyan labdát kapnak. Kevesebb csere kell.
@@ -81,4 +81,4 @@ Minden rendszerben előfordul, hogy a feladónak kell az első labdát megjátsz
 - **Két játékos, aki fel is ad és üt is:** a 6:2 három támadót ad, és senkit sem terhel túl.
 - **Egy egyértelmű feladó:** 5:1.
 
-Bármelyiket is választjátok, állítsátok össze a [felállást](/hu/lineup), nyomtassátok ki a forgási lapokat, és az első meccs előtt menjetek végig mind a hat forgáson.
+Bármelyiket is választjátok, állítsátok össze a [felállást](/hu/lineup), nyomtassátok ki a forgáslapokat, és az első meccs előtt menjetek végig mind a hat forgáson.

@@ -56,7 +56,7 @@ Many leagues play best of three, or a fixed number of sets, or a shorter third s
 
 ## The serve
 
-The serve rules are in [rule 12](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=34):
+The serve rules are in [rule 12](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=33):
 
 - The server must hit the ball **within 8 seconds** of the first referee's whistle.
 - The ball must be **tossed or released** and hit with **one hand or any part of the arm**. Only **one toss** is allowed. Dribbling or moving the ball in your hands beforehand is fine; tossing it up and letting it drop counts as your one toss, so it is a fault.

@@ -27,7 +27,7 @@ The libero lets a team keep its best passer and digger on court in the back row 
 
 ## Who the libero replaces
 
-The libero can replace any back-row player ([rule 19.3.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=45)). Most teams use the libero for the **middle blockers**: middles are tall, built for blocking and quick attacks, and usually weaker passers. When a middle rotates into the back row, the libero comes on; when that middle would rotate to the front row again, the libero goes off and the middle comes back.
+The libero can replace any back-row player ([rule 19.3.2](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=45)). Most teams use the libero for the **middle blockers**: middles are tall, built for blocking and quick attacks, and usually weaker passers. When a middle rotates into the back row (after serving from zone 1, once the team loses the serve), the libero comes on; when that middle would rotate to the front row again, the libero goes off and the middle comes back.
 
 The libero takes the exact place of the replaced player in the rotation order, including for the [overlap rule](/guides/overlap).
 
@@ -61,14 +61,14 @@ Libero replacements ([rule 19.3.2](https://www.fivb.com/wp-content/uploads/2025/
 - are **not counted** as substitutions and are **unlimited**;
 - must be separated by a **completed rally**: the libero cannot go off and come back on, or swap for another player, between the same two serves;
 - may only be made while the ball is out of play and **before the whistle for the serve**;
-- are made in the **libero replacement zone**: the part of the sideline next to the team's bench, between the attack line and the end line;
+- are made in the **libero replacement zone**: the part of the free zone on the team's bench side, between the extension of the attack line and the end line;
 - bring back only the player the libero replaced (or the second libero): the libero cannot be swapped out for someone else.
 
 A libero replacement made after the whistle but before the serve is hit is not refused, but the team is told it is not allowed, and later late replacements can be sanctioned as a delay.
 
 ## Two liberos
 
-A team may name **up to two liberos** in its list of players ([rule 19.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)). Only one may be on court at a time. Each may replace the other. In FIVB competitions, a team with more than 12 players on the score sheet must name two liberos. If a libero is injured or sent off, the coach can bring in the second libero, or re-designate a new libero from players not on court at that moment.
+A team may name **up to two liberos** in its list of players ([rule 19.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)). Only one may be on court at a time. Each may replace the other. In FIVB competitions, a team with more than 12 players on the score sheet must name two liberos. If one of two liberos can no longer play, the team carries on with the other. A new libero may be re-designated only when the team has no libero left who can play ([rule 19.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=46)); the new libero comes from the players not on court at that moment, and may not be the player the libero was replacing.
 
 ## Leagues that differ
 

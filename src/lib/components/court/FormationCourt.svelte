@@ -56,11 +56,10 @@
 			stroke-width="0.06"
 		/>
 	{/if}
-	{#if runs}
-		{#each placed as p (p.role)}
-			{#if p.run && p.role !== you}<Arrow from={p} to={p.run} dashed />{/if}
-		{/each}
-	{/if}
+	<!-- The setter's run is always drawn, even on diagrams that leave out the other runs. -->
+	{#each placed as p (p.role)}
+		{#if p.run && p.role !== you && (runs || p.setter)}<Arrow from={p} to={p.run} dashed />{/if}
+	{/each}
 	{#if mine && before && (before.x !== mine.x || before.y !== mine.y)}
 		<Arrow from={before} to={mine} strong />
 	{/if}
@@ -73,6 +72,7 @@
 			title={roleName(p.role)}
 			kind={p.role === 'L' ? 'libero' : 'team'}
 			you={p.role === you}
+			setter={p.setter}
 		/>
 	{/each}
 </Court>
