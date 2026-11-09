@@ -45,6 +45,7 @@ export const pageLabel: Record<PagePath, () => string> = {
 	'/beach': m.beach_title,
 	'/beach/quiz': m.beach_quiz_title,
 	'/equipment': m.equipment_title,
+	'/settings': m.nav_settings,
 	'/guides': m.nav_guides,
 	'/guides/positions': guideLabel.positions,
 	'/guides/rotations': guideLabel.rotations,

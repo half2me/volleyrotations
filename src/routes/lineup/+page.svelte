@@ -150,6 +150,10 @@
 <div class="print:hidden">
 	<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.lineup_title()}</h1>
 	<p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.lineup_lead()}</p>
+	<p class="mt-1 text-ink-soft">
+		{m.settings_lineup_note()}
+		<a class="text-accent underline" href={href('/settings')}>{m.settings_footer_link()}</a>
+	</p>
 	<IndoorOnlyNotice />
 	<div aria-live="polite" data-pagefind-ignore>
 		{#if incoming}

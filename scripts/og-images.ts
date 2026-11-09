@@ -39,6 +39,7 @@ const KEYS: Record<string, [string, string]> = {
 	'/lineup': ['lineup_title', 'lineup_description'],
 	'/match': ['match_title', 'match_description'],
 	'/guides': ['nav_guides', 'guides_description'],
+	'/settings': ['settings_title', 'settings_description'],
 	'/search': ['nav_search', 'search_description']
 };
 
@@ -66,7 +67,7 @@ function textFor(path: string, locale: string) {
 	if (guide) return { ...frontmatter(guide, locale), eyebrow: EYEBROW[locale].guide };
 	const [t, d] = KEYS[path];
 	const eyebrow =
-		path === '/' || path === '/guides' || path === '/search'
+		path === '/' || path === '/guides' || path === '/search' || path === '/settings'
 			? ''
 			: path === '/learn' ||
 				  path === '/drills' ||

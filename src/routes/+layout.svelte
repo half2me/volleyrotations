@@ -65,6 +65,12 @@
 					{m.footer_accuracy()}
 					<ReportLink />
 				</p>
+				<p>
+					<a
+						class="inline-flex min-h-11 items-center underline hover:text-accent"
+						href={href('/settings')}>{m.settings_footer_link()}</a
+					>
+				</p>
 			</div>
 			<LanguageSwitcher />
 		</div>

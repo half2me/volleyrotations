@@ -19,7 +19,9 @@ static, built from the static-site template; the README covers the stack.
 - Receive formations are computed, not hand-drawn. Every one must pass the overlap test in
   `tests/engine.spec.ts`; check a change to `formations.ts` visually in the explorer too.
 - Reader data lives in `localStorage` through `Persisted` (`src/lib/persisted.svelte.ts`): keys
-  `vr:explorer`, `vr:quiz`, `vr:teams`, `vr:match`, `vr:learn`, `vr:daily`, `vr:matches`, `vr:practice`. There is no server.
+  `vr:explorer`, `vr:quiz`, `vr:teams`, `vr:match`, `vr:learn`, `vr:daily`, `vr:matches`, `vr:practice`. There is no server. `/settings`
+  backs them all up to one file and restores them (`src/lib/backup.ts`); a new key goes in its
+  `BACKUP_KEYS`, with a name on that page.
 
 ## Commands (pnpm only, never npm or npx)
 
