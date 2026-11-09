@@ -16,6 +16,7 @@ export const guideLabel: Record<GuideSlug, () => string> = {
 	scoring: m.guide_scoring,
 	sitting: m.guide_sitting,
 	'beach-to-indoor': m.guide_beach_to_indoor,
+	'indoor-to-beach': m.guide_indoor_to_beach,
 	glossary: m.guide_glossary
 };
 
@@ -57,6 +58,7 @@ export const pageLabel: Record<PagePath, () => string> = {
 	'/guides/scoring': guideLabel.scoring,
 	'/guides/sitting': guideLabel.sitting,
 	'/guides/beach-to-indoor': guideLabel['beach-to-indoor'],
+	'/guides/indoor-to-beach': guideLabel['indoor-to-beach'],
 	'/guides/glossary': guideLabel.glossary,
 	'/positions/setter': positionLabel.setter,
 	'/positions/outside-hitter': positionLabel['outside-hitter'],

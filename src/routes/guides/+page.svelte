@@ -21,6 +21,7 @@
 		scoring: m.guide_scoring_summary,
 		sitting: m.guide_sitting_summary,
 		'beach-to-indoor': m.guide_beach_to_indoor_summary,
+		'indoor-to-beach': m.guide_indoor_to_beach_summary,
 		glossary: m.guide_glossary_summary
 	};
 </script>

@@ -438,5 +438,5 @@ test('detailed stats count each player’s points, errors and passes', () => {
 	expect(stats.get('L')).toMatchObject({ passes: 2, passTotal: 4 });
 	// A rally without detail stays plain, and the CSV keeps a column for each detail.
 	expect(s.log[1].detail).toEqual({ how: 'ace', by: 'OH1' });
-	expect(logCsv(s.log).split('\n')[1]).toBe('1,1,1,0,1,1,0,kill,OH1,L,3');
+	expect(logCsv(s.log).split('\n')[1]).toBe('1,1,1,0,1,1,0,kill,OH1,L,3,');
 });

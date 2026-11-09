@@ -22,6 +22,7 @@ export const guides = [
 	'scoring',
 	'sitting',
 	'beach-to-indoor',
+	'indoor-to-beach',
 	'glossary'
 ] as const;
 

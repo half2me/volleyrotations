@@ -25,12 +25,12 @@ export const DIFFERENCES: Difference[] = [
 		id: 'players',
 		topic: { en: 'Players', hu: 'Játékosok' },
 		indoor: {
-			en: 'Six on court, up to 12 on the score sheet (14 at senior FIVB events), and a libero.',
-			hu: 'Hatan a pályán, a jegyzőkönyvben legfeljebb 12 játékos (felnőtt FIVB-eseményen 14), és libero.'
+			en: 'Six on court, and up to 12 players on the score sheet (14 at senior FIVB events), up to two of them liberos.',
+			hu: 'Hatan vannak a pályán, a jegyzőkönyvben legfeljebb 12 játékos szerepelhet (felnőtt FIVB-eseményen 14), köztük legfeljebb két liberó.'
 		},
 		beach: {
 			en: 'Two players, and only two: no substitutes and no libero.',
-			hu: 'Két játékos, és csak kettő: nincs cserejátékos és nincs libero.'
+			hu: 'Két játékos, és csak kettő: nincs cserejátékos és nincs liberó.'
 		},
 		indoorRule: { rule: '4.1.1', page: 19 },
 		beachRule: { rule: '4.1.1', page: 18 }
@@ -47,7 +47,7 @@ export const DIFFERENCES: Difference[] = [
 			hu: '16 × 8 m, legalább 40 cm mély homokon (FIVB-eseményen), középvonal és támadóvonal nélkül.'
 		},
 		indoorRule: { rule: '1.1', page: 14 },
-		beachRule: { rule: '1.1, 1.3', page: 14 }
+		beachRule: { rule: '1.1–1.3', page: 14 }
 	},
 	{
 		id: 'ball',
@@ -68,11 +68,11 @@ export const DIFFERENCES: Difference[] = [
 		topic: { en: 'Scoring', hu: 'Pontozás' },
 		indoor: {
 			en: 'Best of five sets: sets to 25, the fifth to 15, each won by two points.',
-			hu: 'Három nyert szettig: a szettek 25 pontig, az ötödik 15-ig tart, két pont különbséggel.'
+			hu: 'Három nyert játszmáig: a játszmák 25 pontig, az ötödik 15-ig tart, mindegyik két pont különbséggel.'
 		},
 		beach: {
 			en: 'Best of three sets: sets to 21, the third to 15, each won by two points.',
-			hu: 'Két nyert szettig: a szettek 21 pontig, a harmadik 15-ig tart, két pont különbséggel.'
+			hu: 'Két nyert játszmáig: a játszmák 21 pontig, a harmadik 15-ig tart, mindegyik két pont különbséggel.'
 		},
 		indoorRule: { rule: '6.2–6.3', page: 24 },
 		beachRule: { rule: '6.2–6.3', page: 22 }
@@ -81,47 +81,47 @@ export const DIFFERENCES: Difference[] = [
 		id: 'sides',
 		topic: { en: 'Changing sides', hu: 'Térfélcsere' },
 		indoor: {
-			en: 'After each set, and in the deciding set once the leading team reaches 8 points.',
-			hu: 'Minden szett után, a döntő szettben pedig, amikor a vezető csapat eléri a 8 pontot.'
+			en: 'After each set except before the deciding set (a new toss decides the sides), and in the deciding set once the leading team reaches 8 points.',
+			hu: 'Minden játszma után, kivéve a döntő játszma előtt (ott új sorsolás dönt), a döntő játszmában pedig akkor, amikor a vezető csapat eléri a 8 pontot.'
 		},
 		beach: {
-			en: 'Every 7 points played in sets 1 and 2, every 5 in set 3, because of wind and sun.',
-			hu: 'Az 1. és 2. szettben minden 7 lejátszott pont után, a 3. szettben 5 után, a szél és a nap miatt.'
+			en: 'Every 7 points played in sets 1 and 2, and every 5 in set 3, so that both teams share the wind and sun.',
+			hu: 'Az első két játszmában minden hét lejátszott pont után, a harmadikban minden öt után, hogy a szél és a nap mindkét csapatot egyformán érje.'
 		},
 		indoorRule: { rule: '18.2', page: 43 },
 		beachRule: { rule: '18.2.1', page: 35 }
 	},
 	{
 		id: 'timeouts',
-		topic: { en: 'Time-outs', hu: 'Időkérések' },
+		topic: { en: 'Time-outs', hu: 'Pihenőidők' },
 		indoor: {
 			en: 'Two per team per set, 30 seconds each.',
-			hu: 'Szettenként csapatonként kettő, egyenként 30 másodperc.'
+			hu: 'Csapatonként és játszmánként kettő, egyenként 30 másodperc.'
 		},
 		beach: {
-			en: 'One per team per set, 30 seconds. At FIVB World and Official competitions, also a 30-second technical time-out when the points played in set 1 or 2 add up to 21.',
-			hu: 'Szettenként csapatonként egy, 30 másodperc. FIVB világ- és hivatalos versenyeken az 1. és 2. szettben ezen felül 30 másodperces technikai időkérés, amikor a lejátszott pontok összege 21.'
+			en: 'One per team per set, 30 seconds. At FIVB World and Official competitions there is also a 30-second technical time-out in sets 1 and 2, when the two teams’ points add up to 21.',
+			hu: 'Csapatonként és játszmánként egy, 30 másodperc. FIVB világ- és hivatalos versenyeken az első két játszmában ezen felül 30 másodperces technikai pihenőidő is jár, amikor a két csapat pontjainak összege 21.'
 		},
 		indoorRule: { rule: '15.1, 15.4.1', page: 38 },
-		beachRule: { rule: '15.4', page: 32 }
+		beachRule: { rule: '15.1, 15.4', page: 32 }
 	},
 	{
 		id: 'positions',
 		topic: { en: 'Positions and rotation', hu: 'Posztok és forgás' },
 		indoor: {
-			en: 'Players rotate and must stand in rotational order when the ball is served: the overlap rule.',
-			hu: 'A játékosok forognak, és az adogatás pillanatában a forgási sorrendben kell állniuk (felállási hiba).'
+			en: 'Players rotate, and the receiving team must stand in rotational order when the ball is served: the overlap rule. The serving team may stand anywhere in its own court.',
+			hu: 'A játékosok forognak, és a fogadó csapatnak a nyitás pillanatában a forgási sorrendben kell állnia, különben állásrendi hibát vét. A nyitó csapat a saját térfelén bárhol állhat.'
 		},
 		beach: {
 			en: 'No fixed positions and no overlap faults. Only the serve order is fixed: when the team wins the serve back, the player who did not serve last time serves.',
-			hu: 'Nincsenek kötött helyek és nincs felállási hiba. Csak az adogatási sorrend kötött: amikor a csapat visszaszerzi az adogatást, az a játékos adogat, aki legutóbb nem.'
+			hu: 'Nincsenek kötött helyek és nincs állásrendi hiba. Csak a nyitási sorrend kötött: amikor a csapat visszaszerzi a nyitásjogot, az a játékos nyit, aki legutóbb nem nyitott.'
 		},
 		indoorRule: { rule: '7.4', page: 27 },
 		beachRule: { rule: '7.4–7.6, 12.2', page: 23 }
 	},
 	{
 		id: 'serve',
-		topic: { en: 'Serve time', hu: 'Adogatási idő' },
+		topic: { en: 'Serve time', hu: 'Nyitási idő' },
 		indoor: {
 			en: '8 seconds after the whistle.',
 			hu: 'A sípszó után 8 másodperc.'
@@ -155,8 +155,8 @@ export const DIFFERENCES: Difference[] = [
 			hu: 'A nyitott kezes ejtés a háló fölött szabályos.'
 		},
 		beach: {
-			en: 'An attack with open fingers is a fault. Players poke with rigid, closed fingertips, or roll the ball with the palm or knuckles.',
-			hu: 'Nyitott ujjakkal támadni hiba. A játékosok merev, zárt ujjhegyekkel bökik meg a labdát, vagy tenyérrel, ököllel gurítják át.'
+			en: 'Completing an attack with an open-handed finger action is a fault; fingertips must be rigid and held together. Players tip with stiff fingertips or with their knuckles instead.',
+			hu: 'Hiba, ha a játékos nyitott kézzel, ujjakkal irányítva fejezi be a támadást; az ujjhegyeknek merevnek és összezártnak kell lenniük. Ejteni ezért merev ujjhegyekkel vagy behajlított ujjakkal, ujjpercekkel szokás.'
 		},
 		beachRule: { rule: '13.2.3', page: 30 }
 	},
@@ -165,11 +165,11 @@ export const DIFFERENCES: Difference[] = [
 		topic: { en: 'Setting over the net', hu: 'Kosárérintés a hálón át' },
 		indoor: {
 			en: 'Players may set the ball over the net in any direction.',
-			hu: 'A labdát bármely irányba át lehet kosarazni a hálón.'
+			hu: 'Kosárérintéssel bármely irányba át lehet játszani a labdát a hálón.'
 		},
 		beach: {
-			en: 'An overhand pass over the net must travel straight out from the line of the shoulders, unless the player was setting their partner.',
-			hu: 'A hálón át kosárérintéssel csak a vállak vonalára merőlegesen lehet játszani, hacsak a játékos nem a társának emelt.'
+			en: 'An overhand pass sent over the net as an attack must travel at right angles to the line of the shoulders, unless the player was trying to set their partner.',
+			hu: 'Kosárérintéssel a hálón át csak a vállak vonalára merőlegesen lehet támadni, kivéve, ha a játékos a társának akart feladni.'
 		},
 		beachRule: { rule: '13.2.5', page: 30 }
 	},
@@ -181,8 +181,8 @@ export const DIFFERENCES: Difference[] = [
 			hu: 'A csapat első érintésénél az egy mozdulaton belüli egymás utáni érintések megengedettek, bárhogyan játsszák meg a labdát.'
 		},
 		beach: {
-			en: 'Consecutive contacts in one action are allowed on the first hit, but not when it is played overhand with the fingers. Against a hard-driven ball, an overhand finger contact may last a moment longer.',
-			hu: 'Az első érintésnél az egy mozdulaton belüli egymás utáni érintések megengedettek, de kosárérintésnél nem. Erős ütésből érkező labdánál a kosárérintés egy pillanatig tovább tarthat.'
+			en: 'Consecutive contacts in one action are allowed on the first hit, but not when it is played overhand with the fingers. When digging a hard-driven ball, an overhand finger contact may last a moment longer.',
+			hu: 'Az első érintésnél az egy mozdulaton belüli egymás utáni érintések megengedettek, de kosárérintésnél nem. Erősen ütött labda védésekor a kosárérintés egy pillanatig tovább tarthat.'
 		},
 		indoorRule: { rule: '9.2.3.2', page: 31 },
 		beachRule: { rule: '9.2.2.2, 9.2.2.4', page: 26 }
@@ -196,7 +196,7 @@ export const DIFFERENCES: Difference[] = [
 		},
 		beach: {
 			en: 'There is no centre line: a player may cross into the opponent’s court as long as they do not interfere with play.',
-			hu: 'Nincs középvonal: a játékos átléphet az ellenfél térfelére, ha nem zavarja a játékot.'
+			hu: 'Nincs középvonal: a játékos átmehet az ellenfél térfelére, ha nem zavarja az ellenfél játékát.'
 		},
 		indoorRule: { rule: '11.2.2', page: 32 },
 		beachRule: { rule: '11.2.1', page: 27 }
@@ -206,7 +206,7 @@ export const DIFFERENCES: Difference[] = [
 		topic: { en: 'Coaching', hu: 'Edzői irányítás' },
 		indoor: {
 			en: 'The coach directs the team from the bench and calls time-outs and substitutions.',
-			hu: 'Az edző a kispadról irányít, ő kér időt és cserét.'
+			hu: 'Az edző a kispadról irányít, ő kér pihenőidőt és cserét.'
 		},
 		beach: {
 			en: 'No coaching during FIVB World and Official matches: the players decide everything themselves. Age-group events may allow it.',
@@ -218,7 +218,7 @@ export const DIFFERENCES: Difference[] = [
 ];
 
 /**
- * Net heights by age group, from the beach rules (2.1.2). The indoor rules give only the senior
+ * Net heights by age group, from the beach rules (2.1.1). The indoor rules give only the senior
  * heights; age-group indoor nets are set by each federation.
  */
 export const NET_HEIGHTS = [

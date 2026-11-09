@@ -170,6 +170,12 @@
 			<p class="mt-1 text-sm">{m.beach_tool_equipment()}</p>
 		</li>
 		<li class="card">
+			<a class="font-bold text-accent underline" href={href('/guides/indoor-to-beach')}
+				>{m.guide_indoor_to_beach()}</a
+			>
+			<p class="mt-1 text-sm">{m.guide_indoor_to_beach_summary()}</p>
+		</li>
+		<li class="card">
 			<a class="font-bold text-accent underline" href={href('/guides/beach-to-indoor')}
 				>{m.guide_beach_to_indoor()}</a
 			>

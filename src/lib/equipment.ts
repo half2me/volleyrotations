@@ -49,7 +49,7 @@ export const SPECS: Record<Sport, Spec> = {
 					rule: { rule: '1.1', page: 14 }
 				},
 				{
-					label: t('Free zone', 'Szabad terület'),
+					label: t('Free zone', 'Kifutó'),
 					value: t(
 						'At least 3 m on every side. FIVB World and Official competitions: 5 m from the side lines, 6.5 m from the end lines.',
 						'Minden oldalon legalább 3 m. FIVB világ- és hivatalos versenyeken az oldalvonalaktól 5 m, az alapvonalaktól 6,5 m.'
@@ -73,10 +73,10 @@ export const SPECS: Record<Sport, Spec> = {
 					rule: { rule: '1.3', page: 15 }
 				},
 				{
-					label: t('Service zone', 'Adogatási terület'),
+					label: t('Service zone', 'Nyitási zóna'),
 					value: t(
 						'9 m wide behind each end line, as deep as the free zone',
-						'9 m széles az alapvonalak mögött, a szabad terület végéig'
+						'9 m széles sáv az alapvonalak mögött, a kifutó széléig'
 					),
 					rule: { rule: '1.4.2', page: 15 }
 				}
@@ -167,7 +167,7 @@ export const SPECS: Record<Sport, Spec> = {
 					rule: { rule: '1.1', page: 14 }
 				},
 				{
-					label: t('Free zone', 'Szabad terület'),
+					label: t('Free zone', 'Kifutó'),
 					value: t(
 						'At least 3 m on every side. FIVB World and Official competitions: 5–6 m.',
 						'Minden oldalon legalább 3 m. FIVB világ- és hivatalos versenyeken 5–6 m.'
@@ -185,16 +185,16 @@ export const SPECS: Record<Sport, Spec> = {
 				{
 					label: t('Lines', 'Vonalak'),
 					value: t(
-						'5 cm wide ribbons. No centre line and no attack line.',
-						'5 cm széles szalagok. Nincs középvonal és nincs támadóvonal.'
+						'5 cm wide, preferably ribbons of a resistant material. No centre line and no attack line.',
+						'5 cm szélesek, lehetőleg tartós anyagú szalagból. Nincs középvonal és nincs támadóvonal.'
 					),
 					rule: { rule: '1.3', page: 15 }
 				},
 				{
-					label: t('Service zone', 'Adogatási terület'),
+					label: t('Service zone', 'Nyitási zóna'),
 					value: t(
 						'8 m wide behind each end line, as deep as the free zone',
-						'8 m széles az alapvonalak mögött, a szabad terület végéig'
+						'8 m széles sáv az alapvonalak mögött, a kifutó széléig'
 					),
 					rule: { rule: '1.4.1', page: 15 }
 				}
@@ -204,7 +204,7 @@ export const SPECS: Record<Sport, Spec> = {
 					label: t('Height', 'Magasság'),
 					value: t(
 						'Men 2.43 m, women 2.24 m. Age groups, for both sexes: 16 and under 2.24 m, 14 and under 2.12 m, 12 and under 2.00 m.',
-						'Férfiak 2,43 m, nők 2,24 m. Korosztályok, mindkét nemnek: 16 év alatt 2,24 m, 14 év alatt 2,12 m, 12 év alatt 2,00 m.'
+						'Férfiak 2,43 m, nők 2,24 m. Korosztályonként, mindkét nemnek: 16 éves korig 2,24 m, 14 éves korig 2,12 m, 12 éves korig 2,00 m.'
 					),
 					rule: { rule: '2.1', page: 15 }
 				},
@@ -255,8 +255,8 @@ export const SPECS: Record<Sport, Spec> = {
 				{
 					label: t('Cover', 'Borítás'),
 					value: t(
-						'Flexible leather, synthetic leather or similar that does not soak up moisture, for outdoor play; one light colour or a combination of colours',
-						'Rugalmas bőr, műbőr vagy hasonló anyag, amely nem szívja magába a nedvességet, a szabadtéri játékhoz; egy világos szín vagy színek kombinációja'
+						'Flexible leather, synthetic leather or similar that does not soak up moisture, since matches can be played in the rain; one light colour or a combination of colours',
+						'Rugalmas bőr, műbőr vagy hasonló anyag, amely nem szívja magába a nedvességet, mert szabadtéren, esőben is játszanak; egy világos szín vagy színek kombinációja'
 					),
 					rule: { rule: '3.1', page: 17 }
 				}
@@ -265,7 +265,7 @@ export const SPECS: Record<Sport, Spec> = {
 	}
 };
 
-/** Net heights the net diagram can show; the age groups are from the beach rules (2.1.2). */
+/** Net heights the net diagram can show; the age groups are from the beach rules (2.1.1). */
 export const NET_CATEGORIES = [
 	{ id: 'men', height: 2.43, beachOnly: false },
 	{ id: 'women', height: 2.24, beachOnly: false },
