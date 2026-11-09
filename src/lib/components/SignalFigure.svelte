@@ -1,42 +1,54 @@
 <script lang="ts">
-	import type { Arm, Signal } from '#lib/signals.js';
+	import type { Arm, Hand, Signal } from '#lib/signals.js';
 	import { cubicInOut } from 'svelte/easing';
 	import { prefersReducedMotion, Tween } from 'svelte/motion';
 
 	/**
-	 * A simple sketch of a referee showing a signal, facing the reader. The referee's right arm is
-	 * on the reader's left. The written gesture is the authority; this only helps picture it.
+	 * A referee's upper body, facing the reader, acting out a signal: arms with sleeves, hands with
+	 * fingers, and the whistle on its lanyard. The referee's right arm is on the reader's left.
+	 * Poses come from `signals.ts`; the written gesture there is the authority.
+	 *
+	 * Skin, hair, cards and flags keep their real colours in both themes; the shirt and outlines use
+	 * theme tokens so the figure reads on light and dark backgrounds.
 	 */
 	let { signal }: { signal: Signal } = $props();
 
-	// Cards and flags keep their real colours in both themes: a red card is red on any background.
-	const UPPER = 17;
-	const FORE = 16;
+	const UPPER = 46;
+	const FORE = 42;
+	const SKIN = '#e8b48e';
+	const SKIN_SHADE = '#cf946c';
+	const HAIR = '#4a3324';
+	const YELLOW = '#f5c400';
+	const RED = '#d7263d';
 	const rad = (deg: number) => (deg * Math.PI) / 180;
 
-	/** Joint positions for an arm from a shoulder; `side` is -1 for the reader's left, 1 for right. */
-	function arm(shoulder: { x: number; y: number }, a: Arm, side: -1 | 1) {
+	type Point = { x: number; y: number };
+
+	/** Elbow and wrist from a shoulder; `side` is -1 for the reader's left arm, 1 for the right. */
+	function arm(shoulder: Point, a: Arm, side: -1 | 1) {
 		const elbow = {
 			x: shoulder.x + side * UPPER * Math.sin(rad(a.upper)),
 			y: shoulder.y + UPPER * Math.cos(rad(a.upper))
 		};
-		const hand = {
+		const wrist = {
 			x: elbow.x + side * FORE * Math.sin(rad(a.fore)),
 			y: elbow.y + FORE * Math.cos(rad(a.fore))
 		};
-		return { elbow, hand };
+		// The hand's own axis: its fingers carry on along the forearm.
+		const angle = (Math.atan2(wrist.y - elbow.y, wrist.x - elbow.x) * 180) / Math.PI - 90;
+		return { elbow, wrist, angle };
 	}
 
-	const REST: Arm = { upper: 8, fore: 8 };
+	const REST: Arm = { upper: 6, fore: 4 };
 	const mix = (a: Arm, b: Arm, t: number): Arm => ({
 		upper: a.upper + (b.upper - a.upper) * t,
 		fore: a.fore + (b.fore - a.fore) * t
 	});
 
 	/**
-	 * How far through the movement the figure is: 0 is the starting pose, 1 the signal. The figure
-	 * raises its arms into the signal, holds it, and lowers them again; a repeated movement swings
-	 * back and forth. Still for readers who prefer less motion, and while off screen.
+	 * How far through the movement the figure is: 0 is the starting pose, 1 the signal. The referee
+	 * raises the arms into the signal, holds it and lowers them; a repeated movement swings back and
+	 * forth. Still for readers who prefer less motion, and while off screen.
 	 */
 	const t = new Tween(1, { easing: cubicInOut });
 	let figure: SVGSVGElement | undefined = $state();
@@ -60,14 +72,14 @@
 			await t.set(0, { duration: 0 });
 			while (!stopped) {
 				if (signal.repeat) {
-					await t.set(1, { duration: 650 });
-					if (stopped) break;
-					await t.set(0, { duration: 650 });
-				} else {
 					await t.set(1, { duration: 700 });
+					if (stopped) break;
+					await t.set(0, { duration: 700 });
+				} else {
+					await t.set(1, { duration: 750 });
 					await wait(1800);
 					if (stopped) break;
-					await t.set(0, { duration: 500 });
+					await t.set(0, { duration: 550 });
 					await wait(500);
 				}
 			}
@@ -77,161 +89,362 @@
 		};
 	});
 
-	const sR = { x: 43, y: 38 };
-	const sL = { x: 57, y: 38 };
-	const right = $derived(arm(sR, mix(signal.from?.right ?? REST, signal.right, t.current), -1));
-	const left = $derived(arm(sL, mix(signal.from?.left ?? REST, signal.left, t.current), 1));
+	const SR = { x: 90, y: 122 };
+	const SL = { x: 150, y: 122 };
+	const right = $derived(arm(SR, mix(signal.from?.right ?? REST, signal.right, t.current), -1));
+	const left = $derived(arm(SL, mix(signal.from?.left ?? REST, signal.left, t.current), 1));
 	const extras = $derived(signal.props ?? []);
-	const raised = $derived(right.hand.y < left.hand.y ? right.hand : left.hand);
+	const handRight: Hand = $derived(signal.hands?.right ?? 'open');
+	const handLeft: Hand = $derived(signal.hands?.left ?? 'open');
+	const flagDown = $derived(extras.includes('flag-down'));
+	/** The net, drawn at the height of the hand that points to it. */
+	const netY = $derived(right.wrist.y + 4);
+	const id = $props.id();
+	/** A hand turns from in line with the forearm to its own angle as the signal forms. */
+	const handAngle = (forearm: number, tilt: number | undefined) =>
+		tilt === undefined ? forearm : forearm + (tilt - forearm) * t.current;
 </script>
 
-<svg bind:this={figure} viewBox="0 -24 100 134" class="h-auto w-full" aria-hidden="true">
-	{#if extras.includes('net')}
+<!-- One finger as a rounded capsule from the palm's top edge, in hand coordinates. -->
+{#snippet finger(x: number, length: number, tilt = 0, width = 5.4)}
+	<g transform="translate({x} 13) rotate({tilt})">
+		<rect
+			x={-width / 2}
+			y={-2}
+			{width}
+			height={length + 2}
+			rx={width / 2}
+			fill={SKIN}
+			class="stroke-ink"
+			stroke-width="1.1"
+		/>
 		<line
-			x1="0"
-			y1="34"
-			x2="100"
-			y2="34"
-			class="stroke-ink-soft"
-			stroke-width="1.5"
-			stroke-dasharray="3 2"
+			x1={-width / 2 + 1}
+			y1={length * 0.45}
+			x2={width / 2 - 1}
+			y2={length * 0.45}
+			stroke={SKIN_SHADE}
+			stroke-width="0.8"
 		/>
-	{/if}
-	{#if extras.includes('line')}
-		<line x1="5" y1="104" x2="95" y2="104" class="stroke-accent" stroke-width="2" />
-	{/if}
-	<g class="fill-none stroke-ink" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-		<!-- Body and legs -->
-		<line x1="50" y1="34" x2="50" y2="68" />
-		<line x1="43" y1="38" x2="57" y2="38" />
-		<line x1="50" y1="68" x2="42" y2="100" />
-		<line x1="50" y1="68" x2="58" y2="100" />
-		<!-- Arms -->
-		<polyline
-			points="{sR.x},{sR.y} {right.elbow.x},{right.elbow.y} {right.hand.x},{right.hand.y}"
-		/>
-		<polyline points="{sL.x},{sL.y} {left.elbow.x},{left.elbow.y} {left.hand.x},{left.hand.y}" />
 	</g>
-	<circle cx="50" cy="24" r="8" class="fill-paper stroke-ink" stroke-width="3" />
-	<circle cx={right.hand.x} cy={right.hand.y} r="2.6" class="fill-accent" />
-	<circle cx={left.hand.x} cy={left.hand.y} r="2.6" class="fill-accent" />
+{/snippet}
 
-	{#if extras.includes('yellow') || extras.includes('both-cards')}
+<!--
+	A hand at a wrist, its fingers carrying on along the forearm. Local coordinates: the wrist at
+	the origin and the fingers pointing towards +y; `thumb` is the side the thumb is on.
+-->
+{#snippet hand(at: Point, angle: number, kind: Hand, thumb: -1 | 1)}
+	<g transform="translate({at.x} {at.y}) rotate({angle}) scale(1.15)">
+		{#if kind === 'flag'}
+			{@const pole = flagDown ? 1 : -1}
+			<g transform="rotate({-angle + (flagDown ? 30 * thumb : 0)})">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2={pole * 46}
+					class="stroke-ink"
+					stroke-width="2.6"
+					stroke-linecap="round"
+				/>
+				<rect
+					x={flagDown ? -18 : 0}
+					y={flagDown ? 30 : -46}
+					width="18"
+					height="14"
+					fill={RED}
+					class="stroke-ink"
+					stroke-width="1"
+				/>
+				<rect x={flagDown ? -18 : 0} y={flagDown ? 30 : -46} width="9" height="7" fill={YELLOW} />
+				<rect x={flagDown ? -9 : 9} y={flagDown ? 37 : -39} width="9" height="7" fill={YELLOW} />
+			</g>
+		{/if}
+		{#if kind === 'yellow' || kind === 'red' || kind === 'both-cards'}
+			<g transform="rotate({-angle})">
+				{#if kind === 'both-cards'}
+					<rect
+						x="-4"
+						y="-34"
+						width="18"
+						height="25"
+						rx="2"
+						fill={RED}
+						class="stroke-ink"
+						stroke-width="1.1"
+						transform="rotate(12)"
+					/>
+				{/if}
+				<rect
+					x="-11"
+					y="-34"
+					width="18"
+					height="25"
+					rx="2"
+					fill={kind === 'red' ? RED : YELLOW}
+					class="stroke-ink"
+					stroke-width="1.1"
+				/>
+			</g>
+		{/if}
+		<!-- Palm -->
 		<rect
-			x={right.hand.x - 4}
-			y={right.hand.y - 12}
-			width="8"
-			height="11"
-			rx="1"
-			fill="#f5c400"
+			x="-8"
+			y="-1"
+			width="16"
+			height="16"
+			rx="6"
+			fill={SKIN}
 			class="stroke-ink"
-			stroke-width="0.8"
+			stroke-width="1.2"
 		/>
-	{/if}
-	{#if extras.includes('red') && !extras.includes('yellow')}
-		<rect
-			x={right.hand.x - 4}
-			y={right.hand.y - 12}
-			width="8"
-			height="11"
-			rx="1"
-			fill="#d7263d"
+		{#if kind === 'open'}
+			{@render finger(-5.4, 12, -6)}
+			{@render finger(-1.8, 14, -2)}
+			{@render finger(1.8, 14, 2)}
+			{@render finger(5.4, 11, 6)}
+		{:else if kind === 'point'}
+			{@render finger(-3, 16, 0)}
+			<path d="M -2 13 q 4 4 8 0" fill="none" class="stroke-ink" stroke-width="1" />
+		{:else if kind === 'two'}
+			{@render finger(-3.2, 15, -14)}
+			{@render finger(2.4, 15, 14)}
+		{:else if kind === 'four'}
+			{@render finger(-6, 12, -18)}
+			{@render finger(-2, 14, -6)}
+			{@render finger(2, 14, 6)}
+			{@render finger(6, 11, 18)}
+		{:else}
+			<!-- Curled fingers: knuckles along the palm's top. -->
+			<path d="M -7 14 q 3.5 4 7 0 q 3.5 4 7 0" fill={SKIN} class="stroke-ink" stroke-width="1" />
+		{/if}
+		<!-- Thumb: out to the side, or straight up for a thumbs-up whatever the hand's angle. -->
+		{#if kind === 'thumb'}
+			<!-- Thumbs up: from the top of the fist, pointing straight up whatever the forearm's angle. -->
+			<g transform="translate({thumb * 2} 14) rotate({-angle + 180})">
+				<rect
+					x="-3.2"
+					y="-2"
+					width="6.4"
+					height="17"
+					rx="3.2"
+					fill={SKIN}
+					class="stroke-ink"
+					stroke-width="1.2"
+				/>
+				<path d="M -2 11 q 2 2 4 0" fill="none" stroke={SKIN_SHADE} stroke-width="0.9" />
+			</g>
+		{:else if kind === 'four'}
+			<path
+				d="M {thumb * 7} 6 q {thumb * 3} 4 {thumb * 1} 8"
+				fill="none"
+				class="stroke-ink"
+				stroke-width="1.1"
+			/>
+		{:else}
+			<g transform="translate({thumb * 7.5} 4) rotate({thumb * -40})">
+				<rect
+					x="-2.8"
+					y="-1"
+					width="5.6"
+					height="12"
+					rx="2.8"
+					fill={SKIN}
+					class="stroke-ink"
+					stroke-width="1.1"
+				/>
+			</g>
+		{/if}
+	</g>
+{/snippet}
+
+<!-- An arm: a short sleeve at the shoulder, then skin to the wrist, with a darker outline. -->
+{#snippet limb(shoulder: Point, a: { elbow: Point; wrist: Point })}
+	<g stroke-linecap="round" stroke-linejoin="round" fill="none">
+		<polyline
+			points="{shoulder.x},{shoulder.y} {a.elbow.x},{a.elbow.y} {a.wrist.x},{a.wrist.y}"
 			class="stroke-ink"
-			stroke-width="0.8"
+			stroke-width="17"
 		/>
-	{/if}
-	{#if extras.includes('red') && extras.includes('yellow')}
-		<rect
-			x={left.hand.x - 4}
-			y={left.hand.y - 12}
-			width="8"
-			height="11"
-			rx="1"
-			fill="#d7263d"
-			class="stroke-ink"
-			stroke-width="0.8"
+		<polyline
+			points="{shoulder.x},{shoulder.y} {a.elbow.x},{a.elbow.y} {a.wrist.x},{a.wrist.y}"
+			stroke={SKIN}
+			stroke-width="14"
 		/>
-	{/if}
-	{#if extras.includes('both-cards')}
-		<rect
-			x={right.hand.x - 1}
-			y={right.hand.y - 14}
-			width="8"
-			height="11"
-			rx="1"
-			fill="#d7263d"
-			class="stroke-ink"
-			stroke-width="0.8"
-		/>
-	{/if}
-	{#if extras.includes('flag-up') || extras.includes('flag-wave')}
+		<!-- Sleeve: the first part of the upper arm. -->
 		<line
-			x1={right.hand.x}
-			y1={right.hand.y}
-			x2={right.hand.x}
-			y2={right.hand.y - 16}
+			x1={shoulder.x}
+			y1={shoulder.y}
+			x2={shoulder.x + (a.elbow.x - shoulder.x) * 0.5}
+			y2={shoulder.y + (a.elbow.y - shoulder.y) * 0.5}
 			class="stroke-ink"
-			stroke-width="1.5"
+			stroke-width="22"
 		/>
-		<rect x={right.hand.x} y={right.hand.y - 16} width="9" height="7" fill="#d7263d" />
-	{/if}
-	{#if extras.includes('flag-down')}
 		<line
-			x1={right.hand.x}
-			y1={right.hand.y}
-			x2={right.hand.x - 6}
-			y2={right.hand.y + 12}
-			class="stroke-ink"
-			stroke-width="1.5"
+			x1={shoulder.x}
+			y1={shoulder.y}
+			x2={shoulder.x + (a.elbow.x - shoulder.x) * 0.5}
+			y2={shoulder.y + (a.elbow.y - shoulder.y) * 0.5}
+			class="stroke-team"
+			stroke-width="19"
 		/>
-		<rect x={right.hand.x - 13} y={right.hand.y + 6} width="9" height="7" fill="#d7263d" />
-	{/if}
-	{#if signal.fingers}
-		<text
-			x={raised.x}
-			y={raised.y - 6}
-			text-anchor="middle"
-			font-size="9"
-			font-weight="700"
-			class="fill-accent">{signal.fingers}</text
+	</g>
+{/snippet}
+
+<svg bind:this={figure} viewBox="-30 -44 300 312" class="h-auto w-full" aria-hidden="true">
+	<defs>
+		<clipPath id="{id}-frame"><rect x="-30" y="-44" width="300" height="312" /></clipPath>
+		<marker
+			id="{id}-arrow"
+			viewBox="0 0 6 6"
+			refX="3"
+			refY="3"
+			markerWidth="5"
+			markerHeight="5"
+			orient="auto"
 		>
-	{/if}
+			<path d="M0,0 L6,3 L0,6 z" class="fill-accent" />
+		</marker>
+	</defs>
+	<g clip-path="url(#{id}-frame)">
+		{#if extras.includes('net')}
+			<!-- The net, its tape at the height of the hand. -->
+			<rect
+				x="-4"
+				y={netY}
+				width="122"
+				height="40"
+				class="fill-none stroke-ink-soft"
+				stroke-width="1"
+			/>
+			<pattern id="{id}-mesh" width="8" height="8" patternUnits="userSpaceOnUse">
+				<path d="M 8 0 L 0 0 0 8" class="fill-none stroke-ink-soft" stroke-width="0.6" />
+			</pattern>
+			<rect x="-4" y={netY} width="122" height="40" fill="url(#{id}-mesh)" />
+			<rect
+				x="-4"
+				y={netY - 3}
+				width="122"
+				height="6"
+				class="fill-paper stroke-ink"
+				stroke-width="1"
+			/>
+		{/if}
 
-	{#if signal.motion}
-		<g class="fill-none stroke-accent" stroke-width="1.6" stroke-linecap="round">
-			{#if signal.motion === 'sweep'}
-				<path d="M 50 50 Q 35 40 22 40" marker-end="url(#arrow-{signal.id})" />
-			{:else if signal.motion === 'spin' || signal.motion === 'circle'}
-				<ellipse cx="50" cy="52" rx="15" ry="5" stroke-dasharray="3 2" />
-			{:else if signal.motion === 'up'}
-				<path
-					d="M {right.hand.x - 7} {right.hand.y + 10} L {right.hand.x - 7} {right.hand.y - 4}"
-					marker-end="url(#arrow-{signal.id})"
-				/>
-			{:else if signal.motion === 'down'}
-				<path
-					d="M {right.hand.x - 7} {right.hand.y - 2} L {right.hand.x - 7} {right.hand.y + 16}"
-					marker-end="url(#arrow-{signal.id})"
-				/>
-			{:else if signal.motion === 'brush'}
-				<path
-					d="M {right.hand.x - 2} {right.hand.y - 8} L {right.hand.x + 8} {right.hand.y - 14}"
-					marker-end="url(#arrow-{signal.id})"
-				/>
-			{/if}
+		<!-- Torso and shirt -->
+		<path
+			d="M 80 116 Q 120 104 160 116 Q 172 122 172 140 L 166 268 L 74 268 L 68 140 Q 68 122 80 116 Z"
+			class="fill-team stroke-ink"
+			stroke-width="2"
+		/>
+		<!-- Neck and collar -->
+		<rect
+			x="110"
+			y="86"
+			width="20"
+			height="26"
+			rx="6"
+			fill={SKIN}
+			class="stroke-ink"
+			stroke-width="1.5"
+		/>
+		<path d="M 104 108 L 120 124 L 136 108" class="fill-paper stroke-ink" stroke-width="1.8" />
+		<!-- Lanyard and whistle -->
+		<path
+			d="M 108 110 Q 112 150 122 158 Q 130 150 132 110"
+			fill="none"
+			class="stroke-accent"
+			stroke-width="2"
+		/>
+		<g transform="translate(122 158)">
+			<rect
+				x="-5"
+				y="0"
+				width="18"
+				height="10"
+				rx="4"
+				class="fill-ink-soft stroke-ink"
+				stroke-width="1.2"
+			/>
+			<circle cx="0" cy="5" r="6" class="fill-ink-soft stroke-ink" stroke-width="1.2" />
+			<circle cx="0" cy="5" r="2" class="fill-paper" />
 		</g>
-		<defs>
-			<marker
-				id="arrow-{signal.id}"
-				viewBox="0 0 6 6"
-				refX="3"
-				refY="3"
-				markerWidth="5"
-				markerHeight="5"
-				orient="auto"
+		<!-- Head -->
+		<ellipse cx="96" cy="64" rx="5" ry="8" fill={SKIN} class="stroke-ink" stroke-width="1.4" />
+		<ellipse cx="144" cy="64" rx="5" ry="8" fill={SKIN} class="stroke-ink" stroke-width="1.4" />
+		<ellipse cx="120" cy="60" rx="24" ry="29" fill={SKIN} class="stroke-ink" stroke-width="2" />
+		<path d="M 96 56 Q 96 28 120 28 Q 146 28 144 56 Q 138 40 120 40 Q 104 40 96 56 Z" fill={HAIR} />
+		<path
+			d="M 106 54 q 5 -3 10 0 M 124 54 q 5 -3 10 0"
+			class="fill-none stroke-ink"
+			stroke-width="1.6"
+			stroke-linecap="round"
+		/>
+		<circle cx="111" cy="61" r="2.4" class="fill-ink" />
+		<circle cx="129" cy="61" r="2.4" class="fill-ink" />
+		<path
+			d="M 120 63 q -2 7 1 9"
+			fill="none"
+			stroke={SKIN_SHADE}
+			stroke-width="1.6"
+			stroke-linecap="round"
+		/>
+		<path
+			d="M 112 77 q 8 4 16 0"
+			fill="none"
+			class="stroke-ink"
+			stroke-width="1.6"
+			stroke-linecap="round"
+		/>
+
+		<!-- Arms, then hands on top -->
+		{@render limb(SR, right)}
+		{@render limb(SL, left)}
+		{@render hand(right.wrist, handAngle(right.angle, signal.tilt?.right), handRight, -1)}
+		{@render hand(left.wrist, handAngle(left.angle, signal.tilt?.left), handLeft, 1)}
+
+		{#if signal.fingers && prefersReducedMotion.current}
+			<text
+				x="120"
+				y="-30"
+				text-anchor="middle"
+				font-size="16"
+				font-weight="700"
+				class="fill-accent">{signal.fingers}</text
 			>
-				<path d="M0,0 L6,3 L0,6 z" class="fill-accent" />
-			</marker>
-		</defs>
-	{/if}
+		{/if}
+		{#if extras.includes('line')}
+			<line
+				x1={right.wrist.x - 34}
+				y1="240"
+				x2={right.wrist.x + 34}
+				y2="240"
+				class="stroke-accent"
+				stroke-width="4"
+			/>
+		{/if}
+		{#if signal.motion && prefersReducedMotion.current}
+			<!-- Without animation, an arrow shows the movement. -->
+			<g class="fill-none stroke-accent" stroke-width="3" stroke-linecap="round">
+				{#if signal.motion === 'spin' || signal.motion === 'circle'}
+					<ellipse cx="120" cy="170" rx="44" ry="12" stroke-dasharray="6 4" />
+				{:else if signal.motion === 'up' || signal.motion === 'sweep'}
+					<path
+						d="M {right.wrist.x - 20} {right.wrist.y + 30} L {right.wrist.x - 20} {right.wrist.y}"
+						marker-end="url(#{id}-arrow)"
+					/>
+				{:else if signal.motion === 'down'}
+					<path
+						d="M {right.wrist.x - 20} {right.wrist.y - 30} L {right.wrist.x - 20} {right.wrist.y}"
+						marker-end="url(#{id}-arrow)"
+					/>
+				{:else if signal.motion === 'brush'}
+					<path
+						d="M {left.wrist.x + 18} {left.wrist.y - 6} L {left.wrist.x - 6} {left.wrist.y - 16}"
+						marker-end="url(#{id}-arrow)"
+					/>
+				{/if}
+			</g>
+		{/if}
+	</g>
 </svg>

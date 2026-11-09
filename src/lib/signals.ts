@@ -13,6 +13,10 @@ export type Prop =
 	'yellow' | 'red' | 'both-cards' | 'net' | 'flag-down' | 'flag-up' | 'flag-wave' | 'line';
 export type Motion = 'sweep' | 'spin' | 'circle' | 'up' | 'down' | 'brush';
 
+/** What a hand does: open palm, pointing finger, fist, thumb up, fingers counted, or holding something. */
+export type Hand =
+	'open' | 'point' | 'fist' | 'thumb' | 'two' | 'four' | 'yellow' | 'red' | 'both-cards' | 'flag';
+
 export type Signal = {
 	id: string;
 	name: Text;
@@ -32,6 +36,13 @@ export type Signal = {
 	from?: { left?: Arm; right?: Arm };
 	/** Keep repeating the movement rather than showing the signal once and holding it. */
 	repeat?: boolean;
+	/** The hands, open palms when left out. */
+	hands?: { left?: Hand; right?: Hand };
+	/**
+	 * A hand held at its own angle rather than in line with the forearm, in degrees: 0 fingers
+	 * down, 180 up, 90 pointing to the reader's left. For a palm laid flat on the other hand.
+	 */
+	tilt?: { left?: number; right?: number };
 	props?: Prop[];
 	motion?: Motion;
 	/** Fingers shown on the raised hand(s), drawn as a number. */
@@ -102,8 +113,9 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['15.4.1'],
 		page: 75,
 		who: 'both',
-		left: { upper: -10, fore: -150 },
-		right: { upper: -10, fore: 180 }
+		tilt: { left: 90, right: 180 },
+		left: { upper: 137, fore: -79 },
+		right: { upper: -1, fore: -162 }
 	},
 	{
 		id: 'substitution',
@@ -118,6 +130,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		who: 'both',
 		from: { left: { upper: 25, fore: -100 }, right: { upper: 25, fore: -70 } },
 		repeat: true,
+		hands: { left: 'fist', right: 'fist' },
 		left: { upper: 25, fore: -70 },
 		right: { upper: 25, fore: -100 },
 		motion: 'circle'
@@ -133,6 +146,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['21.1', '21.6'],
 		page: 76,
 		who: 'first',
+		hands: { right: 'yellow' },
 		left: DOWN,
 		right: { upper: 170, fore: 170 },
 		props: ['yellow']
@@ -148,6 +162,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['21.3.1'],
 		page: 76,
 		who: 'first',
+		hands: { right: 'red' },
 		left: DOWN,
 		right: { upper: 170, fore: 170 },
 		props: ['red']
@@ -166,6 +181,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['21.3.2'],
 		page: 76,
 		who: 'first',
+		hands: { right: 'both-cards' },
 		left: DOWN,
 		right: { upper: 170, fore: 170 },
 		props: ['both-cards']
@@ -184,6 +200,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['21.3.3'],
 		page: 77,
 		who: 'first',
+		hands: { left: 'red', right: 'yellow' },
 		left: { upper: 160, fore: 165 },
 		right: { upper: 160, fore: 165 },
 		props: ['yellow', 'red']
@@ -235,6 +252,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['12.4.4'],
 		page: 77,
 		who: 'first',
+		hands: { left: 'four', right: 'four' },
 		left: { upper: 120, fore: 170 },
 		right: { upper: 120, fore: 170 },
 		fingers: '4 + 4'
@@ -272,6 +290,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		who: 'both',
 		from: { right: { upper: 25, fore: -20 } },
 		repeat: true,
+		hands: { right: 'point' },
 		left: DOWN,
 		right: { upper: 20, fore: -60 },
 		motion: 'circle'
@@ -341,6 +360,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['9.3.4'],
 		page: 79,
 		who: 'first',
+		hands: { right: 'two' },
 		left: DOWN,
 		right: { upper: 150, fore: 170 },
 		fingers: '2'
@@ -359,6 +379,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['9.3.1'],
 		page: 79,
 		who: 'first',
+		hands: { right: 'four' },
 		left: DOWN,
 		right: { upper: 150, fore: 170 },
 		fingers: '4'
@@ -438,6 +459,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['8.4.5', '11.2.2', '12.4.3'],
 		page: 80,
 		who: 'both',
+		hands: { right: 'point' },
 		left: DOWN,
 		right: { upper: 25, fore: 20 },
 		props: ['line']
@@ -456,6 +478,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['6.1.2.2', '17.2'],
 		page: 80,
 		who: 'first',
+		hands: { left: 'thumb', right: 'thumb' },
 		left: { upper: 40, fore: 170 },
 		right: { upper: 40, fore: 170 }
 	},
@@ -473,10 +496,11 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['24.2.2'],
 		page: 81,
 		who: 'first',
-		from: { left: { upper: -5, fore: -120 } },
+		from: { left: { upper: 140, fore: -50 } },
 		repeat: true,
-		left: { upper: -10, fore: -150 },
-		right: { upper: -10, fore: 180 },
+		tilt: { left: 90, right: 180 },
+		left: { upper: 137, fore: -79 },
+		right: { upper: -1, fore: -162 },
 		motion: 'brush'
 	},
 	{
@@ -493,6 +517,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['16.2'],
 		page: 81,
 		who: 'first',
+		hands: { left: 'fist', right: 'yellow' },
 		left: { upper: 30, fore: -60 },
 		right: { upper: 30, fore: -100 },
 		props: ['yellow']
@@ -508,6 +533,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		rules: ['8.3'],
 		page: 82,
 		who: 'line',
+		hands: { right: 'flag' },
 		left: DOWN,
 		right: { upper: 30, fore: 25 },
 		props: ['flag-down']
@@ -520,6 +546,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		rules: ['8.4.1'],
 		page: 82,
 		who: 'line',
+		hands: { right: 'flag' },
 		left: DOWN,
 		right: { upper: 170, fore: 170 },
 		props: ['flag-up']
@@ -538,8 +565,10 @@ export const FLAG_SIGNALS: Signal[] = [
 		rules: ['29.2.1.2'],
 		page: 82,
 		who: 'line',
-		left: { upper: -175, fore: -90 },
-		right: { upper: 20, fore: -150 },
+		hands: { right: 'flag' },
+		tilt: { left: 90 },
+		left: { upper: -85, fore: -145 },
+		right: { upper: -8, fore: 115 },
 		props: ['flag-up']
 	},
 	{
@@ -561,6 +590,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		who: 'line',
 		from: { right: { upper: 150, fore: 200 } },
 		repeat: true,
+		hands: { right: 'flag' },
 		left: DOWN,
 		right: { upper: 170, fore: 170 },
 		props: ['flag-wave']

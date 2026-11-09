@@ -28,8 +28,10 @@
 </p>
 
 {#snippet card(s: Signal, n: number)}
-	<li class="card flex gap-4">
-		<div class="w-24 shrink-0 sm:w-28"><SignalFigure signal={s} /></div>
+	<li class="card flex flex-col gap-4 sm:flex-row">
+		<div class="mx-auto w-full max-w-60 shrink-0 sm:mx-0 sm:w-48">
+			<SignalFigure signal={s} />
+		</div>
 		<div class="min-w-0">
 			<p class="eyebrow">{n}. · {who(s)}</p>
 			<h3 class="mt-1 font-bold">{s.name[lang]}</h3>
