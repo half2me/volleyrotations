@@ -1,5 +1,13 @@
 import { leagueOf, type LeagueId } from './leagues.js';
-import { rolesOf, type RoleId, type RotationNo, type SystemId } from './model.js';
+import {
+	isFront,
+	rolesOf,
+	setterZoneOf,
+	zoneOf,
+	type RoleId,
+	type RotationNo,
+	type SystemId
+} from './model.js';
 
 /**
  * A match as the tracker keeps it. Indoor scoring follows FIVB rules 6.1–6.3: rally point, sets
@@ -44,6 +52,11 @@ export type MatchState = {
 	 * of the beach rules: when we win the serve back, the player who did not serve last time serves.
 	 */
 	beach?: { first: 0 | 1; last?: 0 | 1 };
+	/**
+	 * The opponents' rotation, numbered like ours from the zone the coach saw their setter in and
+	 * advanced on their sideouts. Absent when the coach has not entered it, as in older saved matches.
+	 */
+	oppRotation?: RotationNo;
 };
 
 /** One rally: the set it was in, our rotation, whether we served, and whether we won it. */
@@ -125,10 +138,13 @@ export function newMatch(o: {
 	sport?: Sport;
 	/** Beach: which of our two players serves first. */
 	firstServer?: 0 | 1;
+	/** The rotation the opponents start in, when the coach knows where their setter stands. */
+	oppRotation?: RotationNo;
 }): MatchState {
-	const { firstServer, ...rest } = o;
+	const { firstServer, oppRotation, ...rest } = o;
 	return {
 		...rest,
+		...(oppRotation !== undefined && o.sport !== 'beach' ? { oppRotation } : {}),
 		...(o.sport === 'beach'
 			? { beach: { first: firstServer ?? 0, last: o.serving ? (firstServer ?? 0) : undefined } }
 			: {}),
@@ -202,7 +218,7 @@ export function beachServer(state: MatchState): 0 | 1 {
 
 /**
  * Scores one rally. Winning the opponent's serve (a sideout) rotates us one place clockwise
- * before we serve (rule 7.6.2).
+ * before we serve (rule 7.6.2); the opponents rotate the same way when they win our serve.
  */
 export function rally(state: MatchState, winner: 'us' | 'them', detail?: RallyDetail): MatchState {
 	if (state.finished || setOver(state)) return state;
@@ -210,6 +226,7 @@ export function rally(state: MatchState, winner: 'us' | 'them', detail?: RallyDe
 		i === state.sets.length - 1 ? { ...s, [winner]: s[winner] + 1 } : s
 	);
 	const sideout = winner === 'us' && !state.serving;
+	const theirSideout = winner === 'them' && state.serving;
 	const beach = state.sport === 'beach';
 	const record: RallyRecord = {
 		set: state.sets.length,
@@ -225,6 +242,9 @@ export function rally(state: MatchState, winner: 'us' | 'them', detail?: RallyDe
 		sets,
 		serving: winner === 'us',
 		rotation: sideout && !beach ? nextRotation(state.rotation) : state.rotation,
+		...(theirSideout && !beach && state.oppRotation !== undefined
+			? { oppRotation: nextRotation(state.oppRotation) }
+			: {}),
 		...(beach && sideout ? { beach: { ...state.beach!, last: beachServer(state) } } : {})
 	};
 	const won = setsWon(next);
@@ -234,16 +254,20 @@ export function rally(state: MatchState, winner: 'us' | 'them', detail?: RallyDe
 
 /**
  * Starts the next set, from the coach's chosen rotation (or, on the beach, first server: the
- * service order may change between sets). Substitutions and time-outs reset.
+ * service order may change between sets). Substitutions and time-outs reset, and the opponents'
+ * rotation is unknown again until the coach enters where their setter starts.
  */
 export function startSet(
 	state: MatchState,
 	rotation: RotationNo,
 	serving: boolean,
-	firstServer: 0 | 1 = 0
+	firstServer: 0 | 1 = 0,
+	oppRotation?: RotationNo
 ): MatchState {
+	const { oppRotation: _previous, ...rest } = state;
 	return {
-		...state,
+		...rest,
+		...(oppRotation !== undefined && state.sport !== 'beach' ? { oppRotation } : {}),
 		...(state.sport === 'beach'
 			? { beach: { first: firstServer, last: serving ? firstServer : undefined } }
 			: {}),
@@ -257,6 +281,16 @@ export function startSet(
 		subCount: 0
 	};
 }
+
+/** Records where the opponents are, from the zone the coach sees their setter in, or forgets it. */
+export function setOpponentRotation(state: MatchState, oppRotation?: RotationNo): MatchState {
+	const { oppRotation: _previous, ...rest } = state;
+	return oppRotation === undefined ? rest : { ...rest, oppRotation };
+}
+
+/** The zone the opponents' setter stands in, when their rotation is known. */
+export const oppSetterZone = (state: Pick<MatchState, 'oppRotation'>) =>
+	state.oppRotation === undefined ? undefined : setterZoneOf(state.oppRotation);
 
 /**
  * Who serves first in the next set: indoors, in sets 2–4 the team that did not serve first in
@@ -321,6 +355,140 @@ export function substitute(state: MatchState, role: RoleId, option: SubOption): 
 
 /** The roles that start on court: everyone but the libero. */
 export const courtRoles = (state: MatchState) => rolesOf(state.system, false);
+
+/**
+ * A double switch, 5-1 only: when the setter reaches the front row, a hitter comes on for the
+ * setter and a second setter for the opposite, so three hitters attack with a back-row setter.
+ * The starters return three rotations later, when the setter's spot is back in the back row.
+ */
+export type DoubleSwitchPlan = {
+	/** The rotation it happens in: one with the setter in the front row (4, 5 or 6). */
+	rotation: RotationNo;
+	/** Bench index of the hitter who comes on for the setter. */
+	forSetter: number;
+	/** Bench index of the setter who comes on for the opposite. */
+	forOpposite: number;
+};
+
+/** A back-row specialist who plays a starter's back-row rotations, then gives the spot back. */
+export type SpecialistPlan = {
+	for: RoleId;
+	/** Bench index of the specialist. */
+	bench: number;
+	rotations: RotationNo[];
+};
+
+export type SubPlan = {
+	doubleSwitch?: DoubleSwitchPlan;
+	specialists: SpecialistPlan[];
+};
+
+export const EMPTY_PLAN: SubPlan = { specialists: [] };
+
+export type PlanFault =
+	| 'double-switch-system'
+	| 'double-switch-row'
+	| 'same-bench'
+	| 'missing-bench'
+	| 'no-rotations'
+	| 'not-contiguous'
+	| 'starter-twice'
+	| 'bench-twice'
+	| 'too-many';
+
+/** Substitutions the plan uses in a set: each switch costs the entry and the return. */
+export const planSubCount = (plan: SubPlan) =>
+	(plan.doubleSwitch ? 4 : 0) + plan.specialists.length * 2;
+
+/** Whether the rotations form one unbroken run in play order, so one entry and one return cover them. */
+function contiguous(rotations: readonly RotationNo[]): boolean {
+	const set = new Set(rotations);
+	if (set.size === 0 || set.size === 6) return false;
+	// One run around the ring has exactly one member whose successor lies outside the set.
+	return [...set].filter((r) => !set.has(nextRotation(r))).length === 1;
+}
+
+/**
+ * Why a plan could not be carried out under the team's rules. Rule 15.6 lets a starter leave and
+ * return once and a substitute enter once per set, which limits each player to one switch and
+ * keeps a specialist's rotations in one run; leagues with freer re-entry only count the total.
+ */
+export function planFaults(
+	plan: SubPlan,
+	team: { system: SystemId; benchSize: number; league?: LeagueId }
+): PlanFault[] {
+	const faults = new Set<PlanFault>();
+	const onBench = (b: number) => Number.isInteger(b) && b >= 0 && b < team.benchSize;
+	const starters: RoleId[] = [];
+	const bench: number[] = [];
+	const ds = plan.doubleSwitch;
+	if (ds) {
+		if (team.system !== '5-1') faults.add('double-switch-system');
+		else if (!isFront(zoneOf('5-1', ds.rotation, 'S')!)) faults.add('double-switch-row');
+		if (ds.forSetter === ds.forOpposite) faults.add('same-bench');
+		if (!onBench(ds.forSetter) || !onBench(ds.forOpposite)) faults.add('missing-bench');
+		starters.push('S', 'OPP');
+		bench.push(ds.forSetter, ds.forOpposite);
+	}
+	for (const sp of plan.specialists) {
+		if (!onBench(sp.bench)) faults.add('missing-bench');
+		if (sp.rotations.length === 0) faults.add('no-rotations');
+		else if (!contiguous(sp.rotations)) faults.add('not-contiguous');
+		starters.push(sp.for);
+		bench.push(sp.bench);
+	}
+	const rules = leagueOf(team.league);
+	if (rules.fivbReentry) {
+		if (new Set(starters).size < starters.length) faults.add('starter-twice');
+		if (new Set(bench).size < bench.length) faults.add('bench-twice');
+	}
+	if (planSubCount(plan) > rules.subsPerSet) faults.add('too-many');
+	return [...faults];
+}
+
+export type PlannedSub = {
+	role: RoleId;
+	option: SubOption;
+	/** Whether a bench player comes on as planned or a starter takes their spot back. */
+	kind: 'double-switch' | 'specialist' | 'return';
+};
+
+const sameOption = (a: SubOption, b: SubOption) =>
+	a.kind === b.kind && (a.kind !== 'bench' || b.kind !== 'bench' || a.bench === b.bench);
+
+/**
+ * The substitutions the plan calls for in the current rotation that are still to be made and
+ * that the rules allow now: a double switch in its rotation and its reversal once the setter's
+ * spot is back in the back row, a specialist on in their rotations and off outside them.
+ */
+export function plannedSubs(state: MatchState, plan: SubPlan, benchSize: number): PlannedSub[] {
+	if (state.sport === 'beach' || state.finished || setOver(state)) return [];
+	const out: PlannedSub[] = [];
+	const onCourt = (role: RoleId) => state.subs[role]?.sub;
+	const push = (role: RoleId, option: SubOption, kind: PlannedSub['kind']) => {
+		if (subOptions(state, role, benchSize).some((o) => sameOption(o, option)))
+			out.push({ role, option, kind });
+	};
+	const ds = plan.doubleSwitch;
+	if (ds && state.system === '5-1') {
+		const setterFront = isFront(zoneOf('5-1', state.rotation, 'S')!);
+		for (const [role, bench] of [
+			['S', ds.forSetter],
+			['OPP', ds.forOpposite]
+		] as const) {
+			if (state.rotation === ds.rotation && onCourt(role) === undefined)
+				push(role, { kind: 'bench', bench }, 'double-switch');
+			else if (!setterFront && onCourt(role) === bench) push(role, { kind: 'starter' }, 'return');
+		}
+	}
+	for (const sp of plan.specialists) {
+		const due = sp.rotations.includes(state.rotation);
+		if (due && onCourt(sp.for) === undefined)
+			push(sp.for, { kind: 'bench', bench: sp.bench }, 'specialist');
+		else if (!due && onCourt(sp.for) === sp.bench) push(sp.for, { kind: 'starter' }, 'return');
+	}
+	return out;
+}
 
 export type RotationStats = {
 	rotation: RotationNo;

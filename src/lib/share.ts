@@ -1,5 +1,7 @@
 import type { Team } from '#lib/teams.svelte.js';
 import { LEAGUE_IDS } from '#lib/volley/leagues.js';
+import type { DoubleSwitchPlan, SpecialistPlan } from '#lib/volley/match.js';
+import type { RotationNo } from '#lib/volley/model.js';
 
 /**
  * Teams travel in the URL fragment (`#team=…`), which never reaches the server: the static site
@@ -43,6 +45,7 @@ export function teamFromFragment(hash: string): Team | undefined {
 			order: one(data.order, ['oh-first', 'mb-first'] as const, 'oh-first'),
 			liberoZone: one(data.liberoZone, [5, 6] as const, 5),
 			custom: cleanCustom(data.custom),
+			plan: cleanPlan(data.plan),
 			id: Math.random().toString(36).slice(2, 10)
 		} as Team;
 	} catch {
@@ -51,6 +54,35 @@ export function teamFromFragment(hash: string): Team | undefined {
 }
 
 const onCourt = (v: unknown) => typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 9;
+
+const isRotation = (v: unknown): v is RotationNo => [1, 2, 3, 4, 5, 6].includes(v as number);
+const isIndex = (v: unknown): v is number => Number.isInteger(v) && (v as number) >= 0;
+
+/** Keeps only well-formed planned substitutions; the planner then reports what the rules allow. */
+function cleanPlan(plan: unknown): Team['plan'] {
+	if (!plan || typeof plan !== 'object') return undefined;
+	const p = plan as { doubleSwitch?: unknown; specialists?: unknown };
+	const ds = p.doubleSwitch as Partial<DoubleSwitchPlan> | undefined;
+	const doubleSwitch =
+		ds &&
+		typeof ds === 'object' &&
+		isRotation(ds.rotation) &&
+		isIndex(ds.forSetter) &&
+		isIndex(ds.forOpposite)
+			? { rotation: ds.rotation, forSetter: ds.forSetter, forOpposite: ds.forOpposite }
+			: undefined;
+	const specialists: SpecialistPlan[] = [];
+	if (Array.isArray(p.specialists))
+		for (const sp of p.specialists as Partial<SpecialistPlan>[]) {
+			if (!sp || typeof sp !== 'object' || typeof sp.for !== 'string' || !isIndex(sp.bench))
+				continue;
+			const rotations = Array.isArray(sp.rotations) ? sp.rotations.filter(isRotation) : [];
+			specialists.push({ for: sp.for, bench: sp.bench, rotations });
+		}
+	return doubleSwitch || specialists.length
+		? { ...(doubleSwitch ? { doubleSwitch } : {}), specialists }
+		: undefined;
+}
 
 /** Keeps only complete, numeric receive positions: anything else falls back to the computed ones. */
 function cleanCustom(custom: unknown): Team['custom'] {

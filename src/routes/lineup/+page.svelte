@@ -4,6 +4,8 @@
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
 	import PlayerCard from '#lib/components/PlayerCard.svelte';
 	import PlaybookEditor from '#lib/components/PlaybookEditor.svelte';
+	import SubPlanner from '#lib/components/SubPlanner.svelte';
+	import SubPlanSheet from '#lib/components/SubPlanSheet.svelte';
 	import { shareFragment, teamFromFragment } from '#lib/share.js';
 	import { page } from '$app/state';
 	import { replaceState } from '$app/navigation';
@@ -328,6 +330,8 @@
 
 		<PlaybookEditor {team} {save} names={tokens} />
 
+		<SubPlanner {team} {save} />
+
 		<section class="card" aria-labelledby="share-heading">
 			<h2 id="share-heading" class="text-xl font-bold">{m.share_title()}</h2>
 			<p class="mt-1 text-sm text-ink-soft">{m.share_help()}</p>
@@ -422,6 +426,8 @@
 			</li>
 		{/each}
 	</ol>
+
+	<SubPlanSheet {team} />
 
 	{#if printDefense}
 		<h3 class="mt-6 break-before-page font-semibold">
