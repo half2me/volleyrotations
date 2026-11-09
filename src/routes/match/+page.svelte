@@ -62,6 +62,10 @@
 		type SystemId
 	} from '#lib/volley/model.js';
 	import MatchReport from '#lib/components/MatchReport.svelte';
+	import Matchup from '#lib/components/Matchup.svelte';
+	import PlannedSubs from '#lib/components/PlannedSubs.svelte';
+	import { setOpponentRotation } from '#lib/volley/match.js';
+	import { rotationWithSetterIn, type Zone } from '#lib/volley/model.js';
 	import { Dialog } from 'bits-ui';
 	import { untrack } from 'svelte';
 	import IconArrowLeftRight from '~icons/lucide/arrow-left-right';
@@ -82,6 +86,8 @@
 		detailed?: boolean;
 		/** Beach: our two players' names, which the stats key as `p0` and `p1`. */
 		pair?: [string, string];
+		/** The opponents' players in service order, setter first, when the coach names them. */
+		oppNames?: string[];
 	};
 	const saved = new Persisted<Saved>('vr:match', { history: [], opponent: '' });
 
@@ -182,7 +188,8 @@
 				libero: t ? t.libero && t.system !== '6-6' : looseSystem !== '6-6',
 				rotation: startRotation,
 				serving: firstServe,
-				league: setupLeague
+				league: setupLeague,
+				oppRotation: oppRotationFrom(oppZone)
 			})
 		});
 	}
@@ -428,6 +435,23 @@
 		subOpen = false;
 		subRole = undefined;
 	}
+
+	// Opponent tracking: the zone their setter starts in, chosen before a set (0 = unknown), and
+	// the matchup panel's corrections during it.
+	let oppZone: 0 | Zone = $state(0);
+	let nextOppZone: 0 | Zone = $state(0);
+	const oppRotationFrom = (zone: 0 | Zone) => (zone ? rotationWithSetterIn(zone) : undefined);
+	const ourCourt = $derived(
+		placed.map((p) => ({
+			zone: p.zone,
+			label: tokens[p.role] ?? roleShort(p.role),
+			setter: p.setter
+		}))
+	);
+	const OPP_ZONES = [
+		{ value: 0, label: m.opp_unknown() },
+		...([1, 2, 3, 4, 5, 6] as Zone[]).map((z) => ({ value: z, label: String(z) }))
+	];
 </script>
 
 <Seo
@@ -529,6 +553,10 @@
 				options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
 				bind:value={startRotation}
 			/>
+			<div>
+				<ChipGroup legend={m.opp_setter_zone()} options={OPP_ZONES} bind:value={oppZone} />
+				<p class="mt-2 text-sm text-ink-soft">{m.opp_setter_zone_help()}</p>
+			</div>
 		{/if}
 		<div>
 			<ChipGroup
@@ -699,6 +727,7 @@
 							options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
 							bind:value={nextRotation}
 						/>
+						<ChipGroup legend={m.opp_setter_zone()} options={OPP_ZONES} bind:value={nextOppZone} />
 					{/if}
 					<div class="flex flex-wrap gap-2">
 						<button type="button" class="btn-secondary" onclick={undo}>
@@ -707,7 +736,18 @@
 						<button
 							type="button"
 							class="btn-primary"
-							onclick={() => apply(startSet(match, nextRotation, nextServing, nextFirstServer))}
+							onclick={() => {
+								apply(
+									startSet(
+										match,
+										nextRotation,
+										nextServing,
+										nextFirstServer,
+										oppRotationFrom(nextOppZone)
+									)
+								);
+								nextOppZone = 0;
+							}}
 						>
 							{m.match_next_set({ n: setIndex + 2 })}
 						</button>
@@ -754,6 +794,17 @@
 							</p>
 						{/if}
 					</div>
+				{/if}
+				{#if !beach && team.plan}
+					<PlannedSubs
+						{match}
+						plan={team.plan}
+						benchSize={team.bench.length}
+						occupant={label}
+						starter={(role) => memberLabel(team.players[role], roleName(role))}
+						bench={(i) => memberLabel(team.bench[i], m.match_bench_n({ n: i + 1 }))}
+						onSub={(role, option) => apply(substitute(match, role, option))}
+					/>
 				{/if}
 				{#if saved.current.detailed && !match.serving}
 					<div class="mt-3" aria-live="polite">
@@ -919,6 +970,13 @@
 						</li>
 					{/each}
 				</ul>
+				<Matchup
+					{match}
+					ours={ourCourt}
+					names={saved.current.oppNames ?? []}
+					onRotation={(r) => apply(setOpponentRotation(match, r))}
+					onNames={(oppNames) => saved.set({ ...saved.current, oppNames })}
+				/>
 			</section>
 		{/if}
 	</div>
