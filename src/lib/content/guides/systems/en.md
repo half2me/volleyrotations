@@ -5,6 +5,7 @@ description: The 6-6, 4-2, 6-2 and 5-1 systems compared, with who sets in each r
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # Volleyball offensive systems
@@ -31,6 +32,8 @@ A useful question for any system: **how many front-row attackers do we have?** T
 
 In a 6-6 there is no fixed setter. Whoever rotates into **zone 3** (middle front) sets that rotation; the two other front-row players attack.
 
+<RotationFigure system="6-6" rotation={1} formation={5} caption="6-6, Rotation 1: the player in zone 3 (C) sets, the other five pass in a W." />
+
 - **Front-row attackers:** two.
 - **Pros:** everyone learns every skill, nobody needs to switch, and the rotation is the line-up. Ideal for beginners, school teams and mixed recreational groups.
 - **Cons:** the quality of the set changes every rotation, and only two attackers are available. Some variants let the player in zone 2 set instead, so check your group's habit.
@@ -39,6 +42,8 @@ In a 6-6 there is no fixed setter. Whoever rotates into **zone 3** (middle front
 
 Two setters stand opposite each other in the rotation (three places apart), so exactly one is always in the front row. **The front-row setter sets**, usually from right front or middle front, and the four hitters attack.
 
+<RotationFigure system="4-2" rotation={1} you="S2" caption="4-2, Rotation 1: the front-row setter (S2, zone 4) sets from the net, the back-row setter (S1, zone 1) hides and plays as a back-row player." />
+
 - **Front-row attackers:** two (the setter uses one of the three front-row spots).
 - **Pros:** simple. The setter is already at the net, so there is no running from the back row, and serve receive is easy to organise. A good step up from 6-6.
 - **Cons:** only two attackers, so the block can focus on them.
@@ -46,6 +51,8 @@ Two setters stand opposite each other in the rotation (three places apart), so e
 ## 6-2: back-row setter
 
 Again two setters opposite each other, but now **the back-row setter sets**. The front-row setter plays as an attacker, usually on the right.
+
+<RotationFigure system="6-2" rotation={1} you="S1" caption="6-2, Rotation 1: the back-row setter (S1, zone 1) runs in to set, the front-row setter (S2, zone 4) stays at the net as the third attacker." />
 
 - **Front-row attackers:** always three.
 - **Pros:** three attackers in every rotation, and two players share the setting load. Works well when a team has two decent setters who can also hit.
@@ -59,6 +66,8 @@ One setter sets in every rotation. Opposite the setter in the rotation stands th
 - **Pros:** one setter means one rhythm and one decision-maker. The hitters get the same setter every time. Fewer substitutions are needed.
 - **Cons:** the team depends heavily on one player. Half the rotations have only two front-row hitters.
 - A typical 5-1 Rotation 1: setter in 1, outside hitter in 2, middle blocker in 3, opposite in 4, outside hitter in 5, middle blocker in 6. Every player has their partner directly opposite: setter and opposite, the two outsides, the two middles.
+
+<RotationFigure rotation={1} you="S" caption="5-1, Rotation 1: the setter (S) in zone 1 and the opposite (OPP) in zone 4 stand opposite each other, as do the two outsides and the two middles; the libero (L) is in for the back-row middle." />
 
 Most club, college and international teams use a 5-1. The [position explorer](/explorer) shows all six rotations of a 5-1, step by step.
 

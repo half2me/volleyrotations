@@ -5,6 +5,7 @@ description: A 6:6, 4:2, 6:2 és 5:1 rendszer összehasonlítva – ki ad fel me
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # Játékrendszerek a röplabdában
@@ -31,6 +32,8 @@ Minden rendszernél jó kérdés: **hány első sorköteles támadónk van?** H�
 
 A 6:6-ban nincs állandó feladó. Aki a **3-as helyre** (középső első) kerül, az ad fel abban a forgásban, a másik két első sorköteles játékos támad.
 
+<RotationFigure system="6-6" rotation={1} formation={5} caption="6:6, 1. forgás: a 3-as helyen álló játékos (C) ad fel, a másik öt W alakban fogad." />
+
 - **Első sorköteles támadók:** kettő.
 - **Előnyök:** mindenki minden elemet megtanul, nincs posztváltás, a forgásrend maga a felállás. Kezdőknek, iskolai csapatoknak és vegyes amatőr társaságoknak ideális.
 - **Hátrányok:** a feladás minősége forgásonként változik, és csak két támadó van. Egyes változatokban a 2-es helyen álló játékos ad fel, ezért érdemes tisztázni, nálatok mi a szokás.
@@ -39,6 +42,8 @@ A 6:6-ban nincs állandó feladó. Aki a **3-as helyre** (középső első) ker�
 
 Két feladó áll egymással szemben a forgásban (három hely távolságra), így mindig pontosan egyikük van az első sorban. **Az első sorköteles feladó ad fel**, általában jobb elölről vagy középről, a négy ütő pedig támad.
 
+<RotationFigure system="4-2" rotation={1} you="S2" caption="4:2, 1. forgás: az első sorköteles feladó (F2, 4-es hely) a hálótól ad fel, a hátsó sorköteles feladó (F1, 1-es hely) rejtőzik, és hátsó soros játékosként játszik." />
+
 - **Első sorköteles támadók:** kettő (az első sor három helyéből egyet a feladó foglal el).
 - **Előnyök:** egyszerű. A feladó eleve a hálónál van, nem kell a hátsó sorból előrefutnia, és a fogadás könnyen megszervezhető. Jó lépcső a 6:6 után.
 - **Hátrányok:** csak két támadó van, így a sánc rájuk koncentrálhat.
@@ -46,6 +51,8 @@ Két feladó áll egymással szemben a forgásban (három hely távolságra), í
 ## 6:2: hátsó sorköteles feladó
 
 Itt is két feladó áll egymással szemben, de most **a hátsó sorköteles feladó ad fel**. Az első sorköteles feladó ütőként játszik, általában a jobb oldalon.
+
+<RotationFigure system="6-2" rotation={1} you="S1" caption="6:2, 1. forgás: a hátsó sorköteles feladó (F1, 1-es hely) fut be feladni, az első sorköteles feladó (F2, 4-es hely) a hálónál marad harmadik támadónak." />
 
 - **Első sorköteles támadók:** mindig három.
 - **Előnyök:** minden forgásban három támadó, és két játékos osztozik a feladás terhén. Akkor működik jól, ha a csapatnak van két jó feladója, akik ütni is tudnak.
@@ -59,6 +66,8 @@ Egyetlen feladó ad fel minden forgásban. A forgásban vele szemben a **feladó
 - **Előnyök:** egy feladó, egy ritmus, egy döntéshozó. Az ütők mindig ugyanattól a feladótól kapják a labdát. Kevesebb csere kell.
 - **Hátrányok:** a csapat nagyon függ egy játékostól. A forgások felében csak két első sorköteles ütő van.
 - Egy jellemző 5:1-es 1. forgás: feladó az 1-esben, nyitásfogadó ütő a 2-esben, center a 3-asban, feladó átló a 4-esben, nyitásfogadó ütő az 5-ösben, center a 6-osban. Mindenkinek a párja áll vele szemben: feladó és feladó átló, a két nyitásfogadó ütő, a két center.
+
+<RotationFigure rotation={1} you="S" caption="5:1, 1. forgás: a feladó (F) az 1-es és a feladó átló (Á) a 4-es helyen egymással szemben áll, ahogy a két nyitásfogadó ütő és a két center is; a liberó (L) a hátsó soros center helyén van." />
 
 A legtöbb klub-, egyetemi és nemzetközi csapat 5:1-et játszik. A [Posztkereső](/hu/explorer) lépésről lépésre mutatja az 5:1 mind a hat forgását.
 

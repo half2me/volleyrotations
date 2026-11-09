@@ -5,6 +5,7 @@ description: Mit tehet és mit nem a liberó az FIVB-szabályok szerint, hogyan 
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # A liberó szabályai
@@ -29,9 +30,13 @@ A liberóval a csapat cserék nélkül tarthatja pályán a legjobb fogadóját 
 
 A liberó bármelyik hátsó sorköteles játékost helyettesítheti ([19.3.1.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)). A legtöbb csapat a **centerek** helyére hozza be: a centerek magasak, sáncra és gyors támadásra épülnek, és általában gyengébben fogadnak. Amikor a center a hátsó sorba kerül (miután az 1-es helyről nyitott, és a csapat elvesztette a nyitásjogot), a liberó beáll; amikor a center újra az első sorba kerülne, a liberó lejön, és a center visszamegy.
 
+<RotationFigure rotation={3} you="L" caption="3. forgás, fogadás: a liberó (L) az 1. center helyére állt be az 1-es helyen, és jobb oldalon fogad. A 2. center első sorköteles a 4-es helyen, így egyszerre mindig csak az egyik center van lent." />
+
 A liberó pontosan a helyettesített játékos helyét veszi át a forgásrendben, az [állásrendi szabály](/hu/guides/overlap) szempontjából is.
 
 **Nyitás:** FIVB-szabály szerint a liberó nem nyithat. Ezért amikor a center az 1-es helyre ér, és a csapat nyit, a center nyit. Amint a csapat elveszíti a nyitást, a liberó visszaállhat helyette. Egyes csapatok ebben a forgásban a liberóval egy másik játékost váltanak, ami szabályos, ha a két liberó-helyettesítés között legalább egy befejezett labdamenet van (lásd lent).
+
+<RotationFigure rotation={3} phase="serve" you="MB1" caption="3. forgás, saját nyitás: az 1. center (C1) az 1-es helyre ért, és ő nyit, ezért a liberó addig nincs a pályán, amíg a csapat el nem veszíti a nyitást." />
 
 ## Mit nem tehet a liberó?
 

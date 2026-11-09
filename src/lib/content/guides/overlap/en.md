@@ -5,6 +5,7 @@ description: The positional fault rule in detail, the 2025 FIVB change that only
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import OverlapFigure from '#lib/components/guide/OverlapFigure.svelte';
 </script>
 
 # The overlap rule in volleyball
@@ -68,7 +69,11 @@ Teams use the neighbours-only rule to put players close to where they want to be
 
 **Example: Rotation 5 in a 5-1** (setter in zone 3, middle blocker in zone 2, opposite in zone 6). The setter wants to be at the target on the right. The setter only has to stay left of the zone 2 player and in front of the zone 6 player. So the middle blocker stands right up against the right sideline at the net, the setter stands just to their left, also at the net, and the opposite stays back. When the serve is hit, the setter takes one step to the target and the middle runs in to attack.
 
+<OverlapFigure rotation={5} you="S" caption="Rotation 5: the middle (MB2, zone 2) stands on the right sideline at the net, the setter (S, zone 3) just to their left, and the opposite (OPP, zone 6) stays behind the setter. Every relation the referee checks holds: green." />
+
 **Example: Rotation 1** (setter in zone 1). The setter must be behind the zone 2 player and right of the zone 6 player. The setter usually stands deep on the right, behind the zone 2 player, and runs forward to the target as the ball is served. Nobody needs the setter to pass, so the other receivers cover the court in front.
+
+<OverlapFigure rotation={1} you="S" caption="Rotation 1: the setter (S, zone 1) stays behind the zone 2 passer and right of the zone 6 passer, deep on the right, then runs to the target. The zone 6 passer only has to be behind the middle at the net." />
 
 **Example: hiding a front-row player.** A middle blocker in zone 3 who should not pass can stand right at the net. The zone 6 player then only has to be slightly deeper than that, so the back-row passers can spread across the court.
 
@@ -81,6 +86,8 @@ To see every rotation laid out, use the [position explorer](/explorer).
 - **Forgetting the libero.** The libero takes the exact place in the order of the player they replaced. If they replaced the zone 5 player, they must be behind zone 4 and left of zone 6.
 - **Checking the wrong players.** Players often worry about diagonal neighbours, which do not count, and forget the player directly in front.
 - **Judging by the body.** Leaning past a teammate is fine; only the feet count.
+
+<OverlapFigure rotation={1} you="S" moves={{ 1: { x: 8.6, y: 4.8 } }} caption="The setter leaves too early in Rotation 1: at the serve they are closer to the net than the zone 2 passer, so the 2–1 relation is broken (red) and the team loses the rally." />
 
 ## Positional versus rotational fault
 

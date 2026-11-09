@@ -5,6 +5,7 @@ description: Az állásrendi hiba (átfedés) szabálya részletesen, a 2025-ös
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import OverlapFigure from '#lib/components/guide/OverlapFigure.svelte';
 </script>
 
 # Az állásrendi hiba szabálya
@@ -68,7 +69,11 @@ A csapatok a „csak a szomszédok számítanak” elvet arra használják, hogy
 
 **Példa: 5:1-es rendszer, 5. forgás** (feladó a 3-asban, center a 2-esben, feladó átló a 6-osban). A feladó jobbra, a feladóhelyre szeretne kerülni. Csak annyi a dolga, hogy a 2-es helyen álló játékostól balra és a 6-os helyen álló játékos előtt álljon. A center tehát a hálónál, a jobb oldalvonal mellé áll, a feladó közvetlenül tőle balra, szintén a hálónál, a feladó átló pedig hátul marad. A nyitáskor a feladó egy lépéssel a helyén van, a center pedig befut középre támadni.
 
+<OverlapFigure rotation={5} you="S" caption="5. forgás: a center (C2, 2-es hely) a jobb oldalvonalnál áll a hálónál, a feladó (F, 3-as hely) közvetlenül tőle balra, a feladó átló (Á, 6-os hely) a feladó mögött marad. Minden ellenőrzött viszony rendben van: zöld." />
+
 **Példa: 1. forgás** (feladó az 1-esben). A feladónak a 2-es helyen álló játékos mögött és a 6-os helyen álló játékostól jobbra kell állnia. Általában jobb oldalt, mélyen áll a 2-es mögött, és a nyitás pillanatában előre fut a feladóhelyre. A feladónak nem kell fogadnia, így a többi fogadó lefedi az előtte lévő területet.
+
+<OverlapFigure rotation={1} you="S" caption="1. forgás: a feladó (F, 1-es hely) a 2-es helyen fogadó társa mögött és a 6-os helyen fogadó társától jobbra, mélyen jobb oldalt áll, majd a feladóhelyre fut. A 6-os helyen fogadónak elég a hálónál lévő center mögött lennie." />
 
 **Példa: első sorköteles játékos elrejtése.** A 3-as helyen álló center, akinek nem kell fogadnia, a hálóhoz állhat. A 6-os helyen álló játékosnak elég csak kicsit mögötte lennie, így a hátsó sorköteles fogadók szétterülhetnek a pályán.
 
@@ -81,6 +86,8 @@ Az összes forgást a [Posztkeresőben](/hu/explorer) nézheted meg.
 - **A liberó elfelejtése.** A liberó pontosan annak a helyét veszi át a sorrendben, akit helyettesít. Ha az 5-ös helyen állót helyettesíti, a 4-es mögött és a 6-ostól balra kell állnia.
 - **Rossz játékoshoz igazodás.** A játékosok gyakran az átlós szomszédjuk miatt aggódnak, ami nem számít, és közben elfelejtik a közvetlenül előttük állót.
 - **Testhelyzet alapján ítélni.** Ha valaki áthajol a csapattársa előtt, az rendben van, csak a láb számít.
+
+<OverlapFigure rotation={1} you="S" moves={{ 1: { x: 8.6, y: 4.8 } }} caption="A feladó túl korán indul az 1. forgásban: a nyitás pillanatában közelebb van a hálóhoz, mint a 2-es helyen fogadó társa, így a 2–1 viszony sérül (piros), és a csapat elveszíti a labdamenetet." />
 
 ## Állásrendi hiba és forgásrendi hiba
 
