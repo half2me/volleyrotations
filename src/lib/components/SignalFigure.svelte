@@ -95,10 +95,44 @@
 		};
 	});
 
+	/**
+	 * An arm whose hand moves in a straight line between the two poses: the wrist is placed on the
+	 * line and the elbow found from it, bending the way the joint-angle pose at that moment does.
+	 */
+	function armOnLine(shoulder: Point, from: Arm, to: Arm, at: number, side: -1 | 1) {
+		const a = arm(shoulder, from, side).wrist;
+		const b = arm(shoulder, to, side).wrist;
+		const target = { x: a.x + (b.x - a.x) * at, y: a.y + (b.y - a.y) * at };
+		const dx = target.x - shoulder.x;
+		const dy = target.y - shoulder.y;
+		const d = Math.min(
+			UPPER + FORE - 0.5,
+			Math.max(Math.abs(UPPER - FORE) + 1, Math.hypot(dx, dy))
+		);
+		const base = Math.atan2(dy, dx);
+		const bend = Math.acos((UPPER * UPPER + d * d - FORE * FORE) / (2 * UPPER * d));
+		const guide = arm(shoulder, mix(from, to, at), side).elbow;
+		const elbow = [base + bend, base - bend]
+			.map((th) => ({ x: shoulder.x + UPPER * Math.cos(th), y: shoulder.y + UPPER * Math.sin(th) }))
+			.sort(
+				(p, q) =>
+					Math.hypot(p.x - guide.x, p.y - guide.y) - Math.hypot(q.x - guide.x, q.y - guide.y)
+			)[0];
+		const ux = (dx / Math.hypot(dx, dy)) * d;
+		const uy = (dy / Math.hypot(dx, dy)) * d;
+		const wrist = { x: shoulder.x + ux, y: shoulder.y + uy };
+		const angle = (Math.atan2(wrist.y - elbow.y, wrist.x - elbow.x) * 180) / Math.PI - 90;
+		return { elbow, wrist, angle };
+	}
+
 	const SR = { x: 90, y: 122 };
 	const SL = { x: 150, y: 122 };
-	const right = $derived(arm(SR, mix(signal.from?.right ?? REST, signal.right, t.current), -1));
-	const left = $derived(arm(SL, mix(signal.from?.left ?? REST, signal.left, t.current), 1));
+	const pose = (shoulder: Point, from: Arm | undefined, to: Arm, side: -1 | 1) =>
+		signal.path === 'line'
+			? armOnLine(shoulder, from ?? REST, to, t.current, side)
+			: arm(shoulder, mix(from ?? REST, to, t.current), side);
+	const right = $derived(pose(SR, signal.from?.right, signal.right, -1));
+	const left = $derived(pose(SL, signal.from?.left, signal.left, 1));
 	const extras = $derived(signal.props ?? []);
 	const handRight: Hand = $derived(signal.hands?.right ?? 'open');
 	const handLeft: Hand = $derived(signal.hands?.left ?? 'open');
@@ -106,6 +140,11 @@
 	/** The net, drawn at the height of the hand that points to it. */
 	const netY = $derived(right.wrist.y + 4);
 	const id = $props.id();
+	/** The thumb's side, rolling from the starting pose's to the signal's as the forearm turns. */
+	const thumbSide = (from: number | undefined, to: number | undefined, rest: number) =>
+		(from ?? rest) + ((to ?? rest) - (from ?? rest)) * t.current;
+	const thumbRight = $derived(thumbSide(signal.thumbsFrom?.right, signal.thumbs?.right, -1));
+	const thumbLeft = $derived(thumbSide(signal.thumbsFrom?.left, signal.thumbs?.left, 1));
 	/** A hand turns from in line with the forearm to its own angle as the signal forms. */
 	const handAngle = (forearm: number, tilt: number | undefined) =>
 		tilt === undefined ? forearm : forearm + (tilt - forearm) * t.current;
@@ -139,7 +178,7 @@
 	A hand at a wrist, its fingers carrying on along the forearm. Local coordinates: the wrist at
 	the origin and the fingers pointing towards +y; `thumb` is the side the thumb is on.
 -->
-{#snippet hand(at: Point, angle: number, kind: Hand, thumb: -1 | 1)}
+{#snippet hand(at: Point, angle: number, kind: Hand, thumb: number)}
 	<g transform="translate({at.x} {at.y}) rotate({angle}) scale(1.5)">
 		{#if kind === 'flag'}
 			{@const pole = flagDown ? 1 : -1}
@@ -153,8 +192,9 @@
 					stroke-width="2.6"
 					stroke-linecap="round"
 				/>
+				<!-- The cloth flies on the outer side of the pole, clear of the other hand. -->
 				<rect
-					x={flagDown ? -18 : 0}
+					x="-18"
 					y={flagDown ? 30 : -46}
 					width="18"
 					height="14"
@@ -162,8 +202,8 @@
 					class="stroke-ink"
 					stroke-width="1"
 				/>
-				<rect x={flagDown ? -18 : 0} y={flagDown ? 30 : -46} width="9" height="7" fill={YELLOW} />
-				<rect x={flagDown ? -9 : 9} y={flagDown ? 37 : -39} width="9" height="7" fill={YELLOW} />
+				<rect x="-18" y={flagDown ? 30 : -46} width="9" height="7" fill={YELLOW} />
+				<rect x="-9" y={flagDown ? 37 : -39} width="9" height="7" fill={YELLOW} />
 			</g>
 		{/if}
 		{#if kind === 'yellow' || kind === 'red' || kind === 'both-cards'}
@@ -445,8 +485,8 @@
 		<!-- Arms, then hands on top -->
 		{@render limb(SR, right)}
 		{@render limb(SL, left)}
-		{@render hand(right.wrist, handAngle(right.angle, signal.tilt?.right), handRight, -1)}
-		{@render hand(left.wrist, handAngle(left.angle, signal.tilt?.left), handLeft, 1)}
+		{@render hand(right.wrist, handAngle(right.angle, signal.tilt?.right), handRight, thumbRight)}
+		{@render hand(left.wrist, handAngle(left.angle, signal.tilt?.left), handLeft, thumbLeft)}
 
 		{#if signal.fingers && prefersReducedMotion.current}
 			<text
@@ -473,7 +513,12 @@
 			<g class="fill-none stroke-accent" stroke-width="3" stroke-linecap="round">
 				{#if signal.motion === 'spin' || signal.motion === 'circle'}
 					<ellipse cx="120" cy="170" rx="44" ry="12" stroke-dasharray="6 4" />
-				{:else if signal.motion === 'up' || signal.motion === 'sweep'}
+				{:else if signal.motion === 'sweep'}
+					<path
+						d="M {SL.x - 10} {right.wrist.y - 18} L {right.wrist.x + 22} {right.wrist.y - 18}"
+						marker-end="url(#{id}-arrow)"
+					/>
+				{:else if signal.motion === 'up'}
 					<path
 						d="M {right.wrist.x - 20} {right.wrist.y + 30} L {right.wrist.x - 20} {right.wrist.y}"
 						marker-end="url(#{id}-arrow)"

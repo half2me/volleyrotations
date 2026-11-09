@@ -9,6 +9,7 @@
 type Text = { en: string; hu: string };
 
 export type Arm = { upper: number; fore: number };
+export type Side = -1 | 1;
 export type Prop =
 	'yellow' | 'red' | 'both-cards' | 'net' | 'flag-down' | 'flag-up' | 'flag-wave' | 'line';
 export type Motion = 'sweep' | 'spin' | 'circle' | 'up' | 'down' | 'brush';
@@ -46,6 +47,21 @@ export type Signal = {
 	from?: { left?: Arm; right?: Arm };
 	/** Keep repeating the movement rather than showing the signal once and holding it. */
 	repeat?: boolean;
+	/**
+	 * How the hands travel from the starting pose: along an arc of the joints (the default, as when
+	 * raising an arm), or in a straight line, for a hand that sweeps across at one height. Joint
+	 * arcs would drop such a hand towards the hip halfway through.
+	 */
+	path?: 'arc' | 'line';
+	/**
+	 * Which side of the hand the thumb is on, as the reader sees the hand with its fingers pointing
+	 * down: -1 the reader's left, 1 the right. Left out, each hand is drawn palm to the reader, so
+	 * the thumb is away from the body (the referee's right hand: -1, left hand: 1). A palm facing
+	 * up or towards the body, or a forearm turned across the chest, puts it on the other side.
+	 * `thumbsFrom` is the starting pose's; the thumb rolls across as the forearm turns.
+	 */
+	thumbs?: { left?: Side; right?: Side };
+	thumbsFrom?: { left?: Side; right?: Side };
 	/** The hands, open palms when left out. */
 	hands?: { left?: Hand; right?: Hand };
 	/**
@@ -73,7 +89,9 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['12.3'],
 		page: 75,
 		who: 'first',
-		from: { right: { upper: 25, fore: -70 } },
+		from: { right: { upper: 40, fore: -95 } },
+		path: 'line',
+		thumbsFrom: { right: 1 },
 		left: DOWN,
 		right: { upper: 80, fore: 90 },
 		motion: 'sweep'
@@ -106,8 +124,10 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['18.2'],
 		page: 75,
 		who: 'first',
+		path: 'line',
 		from: { left: { upper: 20, fore: 60 }, right: { upper: 20, fore: 60 } },
 		repeat: true,
+		thumbs: { right: 1, left: -1 },
 		left: { upper: 20, fore: -80 },
 		right: { upper: 20, fore: -80 },
 		motion: 'spin'
@@ -141,6 +161,8 @@ export const REFEREE_SIGNALS: Signal[] = [
 		from: { left: { upper: 25, fore: -100 }, right: { upper: 25, fore: -70 } },
 		repeat: true,
 		hands: { left: 'fist', right: 'fist' },
+		thumbs: { right: 1, left: -1 },
+		thumbsFrom: { right: 1, left: -1 },
 		left: { upper: 25, fore: -70 },
 		right: { upper: 25, fore: -100 },
 		motion: 'circle'
@@ -244,6 +266,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		page: 77,
 		who: 'first',
 		from: { right: { upper: 20, fore: 30 } },
+		thumbs: { right: 1 },
 		left: DOWN,
 		right: { upper: 60, fore: 120 },
 		motion: 'up'
@@ -334,6 +357,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['8.4'],
 		page: 78,
 		who: 'both',
+		thumbs: { right: 1, left: -1 },
 		left: { upper: 35, fore: 175 },
 		right: { upper: 35, fore: 175 }
 	},
@@ -352,6 +376,8 @@ export const REFEREE_SIGNALS: Signal[] = [
 		page: 79,
 		who: 'first',
 		from: { right: { upper: 15, fore: 40 } },
+		thumbs: { right: 1 },
+		thumbsFrom: { right: 1 },
 		left: DOWN,
 		right: { upper: 15, fore: 110 },
 		motion: 'up'
@@ -576,6 +602,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		page: 82,
 		who: 'line',
 		hands: { right: 'flag' },
+		path: 'line',
 		tilt: { left: 90 },
 		left: { upper: -85, fore: -145 },
 		right: { upper: -8, fore: 115 },
