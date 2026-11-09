@@ -70,6 +70,11 @@
 	path="/positions/{data.slug}"
 	type="article"
 	schema="Article"
+	breadcrumbs={[
+		{ name: m.nav_home(), path: '/' },
+		{ name: m.guide_positions(), path: '/guides/positions' },
+		{ name: positionLabel[data.slug](), path: `/positions/${data.slug}` }
+	]}
 />
 
 <a href={href('/guides/positions')} class="btn-ghost mb-4 -ml-3" data-pagefind-ignore>

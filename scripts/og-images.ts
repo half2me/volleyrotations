@@ -13,6 +13,8 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import settings from '../project.inlang/settings.json' with { type: 'json' };
 import { ogImagePath, pages } from '../src/lib/pages.ts';
+import { setterOf, zoneOf, type RotationNo, type SystemId } from '../src/lib/volley/model.ts';
+import { systemNameIn, zoneRefIn } from '../src/lib/volley/names.ts';
 
 const root = resolve(import.meta.dirname, '..');
 const messages: Record<string, Record<string, string>> = Object.fromEntries(
@@ -41,13 +43,37 @@ const KEYS: Record<string, [string, string]> = {
 	'/match': ['match_title', 'match_description'],
 	'/guides': ['nav_guides', 'guides_description'],
 	'/settings': ['settings_title', 'settings_description'],
+	'/rotations': ['rotations_title', 'rotations_description'],
 	'/search': ['nav_search', 'search_description']
 };
 
-const EYEBROW: Record<string, { guide: string; tool: string }> = {
-	en: { guide: 'Guide', tool: 'Interactive tool' },
-	hu: { guide: 'Útmutató', tool: 'Interaktív eszköz' }
+const EYEBROW: Record<string, { guide: string; tool: string; rotation: string }> = {
+	en: { guide: 'Guide', tool: 'Interactive tool', rotation: 'Rotation' },
+	hu: { guide: 'Útmutató', tool: 'Interaktív eszköz', rotation: 'Forgás' }
 };
+
+/** A message with its `{name}` placeholders filled, as Paraglide would. */
+const fill = (template: string, params: Record<string, string | number>) =>
+	template.replace(/\{(\w+)\}/g, (_, key: string) => String(params[key] ?? ''));
+
+/** The title and lead of a rotation page, built as `rotationPageLabel` and the page build them. */
+function rotationText(system: SystemId, rotation: RotationNo, locale: string) {
+	const t = messages[locale];
+	const zone = zoneOf(system, rotation, setterOf(system, rotation))!;
+	const label =
+		system === '6-6'
+			? fill(t.rotation_n, { n: rotation })
+			: fill(t.rotation_setter, { n: rotation, zone: zoneRefIn(zone, locale) });
+	const description =
+		system === '6-6'
+			? t.rotation_lead_66
+			: fill(t.rotation_lead, { n: 3, defense: t.defense_perimeter });
+	return {
+		title: `${systemNameIn(system, locale)} · ${label}`,
+		description,
+		eyebrow: EYEBROW[locale].rotation
+	};
+}
 
 function frontmatter(slug: string, locale: string, folder = 'guides') {
 	const md = readFileSync(join(root, `src/lib/content/${folder}/${slug}/${locale}.md`), 'utf8');
@@ -61,6 +87,9 @@ function frontmatter(slug: string, locale: string, folder = 'guides') {
 }
 
 function textFor(path: string, locale: string) {
+	const rotation = path.match(/^\/rotations\/([^/]+)\/(\d)$/);
+	if (rotation)
+		return rotationText(rotation[1] as SystemId, Number(rotation[2]) as RotationNo, locale);
 	const position = path.match(/^\/positions\/(.+)$/)?.[1];
 	if (position)
 		return { ...frontmatter(position, locale, 'positions'), eyebrow: EYEBROW[locale].guide };
@@ -68,7 +97,11 @@ function textFor(path: string, locale: string) {
 	if (guide) return { ...frontmatter(guide, locale), eyebrow: EYEBROW[locale].guide };
 	const [t, d] = KEYS[path];
 	const eyebrow =
-		path === '/' || path === '/guides' || path === '/search' || path === '/settings'
+		path === '/' ||
+		path === '/guides' ||
+		path === '/rotations' ||
+		path === '/search' ||
+		path === '/settings'
 			? ''
 			: path === '/learn' ||
 				  path === '/drills' ||

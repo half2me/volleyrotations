@@ -23,6 +23,7 @@ import {
 	type SystemId,
 	type Zone
 } from './model.js';
+import { systemNameIn, zoneRefIn } from './names.js';
 
 const LETTERS: Partial<Record<RoleId, string>> = {
 	P1: 'A',
@@ -33,18 +34,11 @@ const LETTERS: Partial<Record<RoleId, string>> = {
 	P6: 'F'
 };
 
-const HU_SUFFIX: Record<number, string> = { 1: 'es', 2: 'es', 3: 'as', 4: 'es', 5: 'ös', 6: 'os' };
+/** `zoneRefIn` for the current locale. */
+export const zoneRef = (zone: number): string => zoneRefIn(zone, getLocale());
 
-/**
- * A zone number as it reads inside a sentence. Hungarian attaches a suffix that depends on the
- * number ("3-as zóna", "5-ös zóna"), which a message template cannot pick by itself.
- */
-export const zoneRef = (zone: number): string =>
-	getLocale() === 'hu' ? `${zone}-${HU_SUFFIX[zone] ?? 'es'}` : String(zone);
-
-/** A system's name as the locale writes it: "5-1" in English, "5:1" in Hungarian. */
-export const systemName = (system: SystemId): string =>
-	getLocale() === 'hu' ? system.replace('-', ':') : system;
+/** `systemNameIn` for the current locale. */
+export const systemName = (system: SystemId): string => systemNameIn(system, getLocale());
 
 /** The few characters drawn on a player token. */
 export function roleShort(role: RoleId): string {

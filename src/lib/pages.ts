@@ -6,6 +6,7 @@
  * Kept free of Paraglide imports: those compile to Vite virtual modules, which Playwright cannot
  * load.
  */
+import type { RotationNo, SystemId } from './volley/model.js';
 
 /** Guide slugs, in reading order. Each has `src/lib/content/guides/<slug>/<locale>.md`. */
 export const guides = [
@@ -39,6 +40,26 @@ export const positionPages = [
 
 export type PositionSlug = (typeof positionPages)[number];
 
+/**
+ * The systems and rotations with a page each, at `/rotations/<system>/<n>`. Spelled out rather
+ * than imported from the model, because plain Node (the og script) does not map a `.js` import
+ * to a `.ts` file; `satisfies` keeps them within what the model knows.
+ */
+export const rotationSystems = ['5-1', '6-2', '4-2', '6-6'] as const satisfies readonly SystemId[];
+export const rotationNumbers = [1, 2, 3, 4, 5, 6] as const satisfies readonly RotationNo[];
+
+export type RotationPath =
+	`/rotations/${(typeof rotationSystems)[number]}/${(typeof rotationNumbers)[number]}`;
+
+export const rotationPath = (
+	system: (typeof rotationSystems)[number],
+	rotation: (typeof rotationNumbers)[number]
+): RotationPath => `/rotations/${system}/${rotation}`;
+
+export const rotationPages: readonly RotationPath[] = rotationSystems.flatMap((system) =>
+	rotationNumbers.map((n) => rotationPath(system, n))
+);
+
 export const pages = [
 	{ path: '/', inNav: false },
 	{ path: '/learn', inNav: true },
@@ -59,6 +80,8 @@ export const pages = [
 	{ path: '/guides', inNav: true },
 	...guides.map((slug) => ({ path: `/guides/${slug}` as const, inNav: false })),
 	...positionPages.map((slug) => ({ path: `/positions/${slug}` as const, inNav: false })),
+	{ path: '/rotations', inNav: false },
+	...rotationPages.map((path) => ({ path, inNav: false })),
 	// Search results are not content of their own, so the page is kept out of search engines.
 	{ path: '/search', inNav: false, noindex: true }
 ] as const;

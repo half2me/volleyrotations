@@ -70,6 +70,8 @@ A számok a játék sorrendjét követik: az 1. forgás után jön a 2., és íg
 
 [5:1-es rendszerben](/hu/guides/systems) az 1. forgás jellemzően így néz ki: feladó az 1-esben, nyitásfogadó ütő a 2-esben, center a 3-asban, feladó átló a 4-esben, a másik nyitásfogadó ütő az 5-ösben, a másik center a 6-osban.
 
+Minden rendszer minden forgásának [saját oldala van](/hu/rotations), pályarajzzal a nyitásfogadásról, a nyitásról, az alapállásról, a védekezésről és a támadásról, és azzal, hogy ki mit csinál: például [5:1, 1. forgás](/hu/rotations/5-1/1).
+
 ## Posztváltás a nyitás után
 
 Az állásrend csak a nyitás pillanatára vonatkozik. Amint a nyitó megüti a labdát, mindenki bárhová mehet a saját térfelén ([7.4.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)). A csapatok ezt arra használják, hogy mindenki oda kerüljön, ahol a legerősebb:
@@ -97,6 +99,6 @@ A váltás nem változtat azon, ki első sorköteles. A nyitás pillanatában a 
 
 ## Gyakorolj
 
-- Lépkedj végig mind a hat forgáson a saját posztodban a [Posztkeresőben](/hu/explorer).
+- Lépkedj végig mind a hat forgáson a saját posztodban a [Posztkeresőben](/hu/explorer), vagy olvasd el őket egyenként a [forgásoldalakon](/hu/rotations).
 - Teszteld magad a [forgáskvízzel](/hu/quiz).
 - Állítsd össze a csapatod felállását, és nyomtass forgáslapot a [Felállás-készítővel](/hu/lineup).
