@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { BackupError, clearAll, exportBackup, importBackup } from '../src/lib/backup.ts';
 import { ballPath } from '../src/lib/volley/ball.ts';
 import {
 	ATTACKS_FROM,
@@ -512,4 +513,76 @@ test('the reader gets the ball when their task allows it', () => {
 	const other = ballPath(o, 'receive', placed, setter.role);
 	expect(other[0].to).not.toEqual({ x: setter.x, y: setter.y });
 	expect(other[1].to).toEqual(setter.run ?? { x: setter.x, y: setter.y });
+});
+
+/** A `Storage` stand-in backed by a map, as the backup functions accept. */
+function memoryStorage(entries: Record<string, string> = {}) {
+	const map = new Map(Object.entries(entries));
+	return {
+		get length() {
+			return map.size;
+		},
+		key: (i: number) => [...map.keys()][i] ?? null,
+		getItem: (k: string) => map.get(k) ?? null,
+		setItem: (k: string, v: string) => void map.set(k, v),
+		removeItem: (k: string) => void map.delete(k),
+		map
+	};
+}
+
+test('a backup restores every saved key into empty storage', () => {
+	const from = memoryStorage({
+		'vr:teams': JSON.stringify({ list: [{ id: 'a', name: 'Lions' }], active: 'a' }),
+		'vr:quiz': JSON.stringify({ right: 3, total: 5 }),
+		'vr:future': JSON.stringify({ kept: true }),
+		'site:theme': 'dark'
+	});
+	const backup = exportBackup(from, new Date('2026-11-09T10:00:00Z'));
+	expect(backup).toMatchObject({
+		app: 'volleyrotations',
+		version: 1,
+		exported: '2026-11-09T10:00:00.000Z'
+	});
+	// Every site key goes out, known or not; other keys stay behind.
+	expect(Object.keys(backup.data).sort()).toEqual(['vr:future', 'vr:quiz', 'vr:teams']);
+
+	const to = memoryStorage({ 'vr:learn': JSON.stringify({ done: ['x'] }) });
+	const restored = importBackup(JSON.stringify(backup), 'replace', to);
+	expect(restored).toEqual(['vr:teams', 'vr:quiz']);
+	expect(JSON.parse(to.getItem('vr:teams')!)).toEqual(backup.data['vr:teams']);
+	// Replace drops what the backup lacks, and an unknown key is never written.
+	expect(to.getItem('vr:learn')).toBeNull();
+	expect(to.getItem('vr:future')).toBeNull();
+});
+
+test('a merge restore keeps keys the backup lacks', () => {
+	const to = memoryStorage({ 'vr:learn': '{"done":["x"]}', 'vr:quiz': '{"right":0}' });
+	const json = {
+		app: 'volleyrotations',
+		version: 1,
+		exported: '',
+		data: { 'vr:quiz': '{"right":9}' }
+	};
+	expect(importBackup(json, 'merge', to)).toEqual(['vr:quiz']);
+	expect(to.getItem('vr:learn')).toBe('{"done":["x"]}');
+	expect(to.getItem('vr:quiz')).toBe('{"right":9}');
+});
+
+test('anything but a backup is refused without touching storage', () => {
+	const to = memoryStorage({ 'vr:quiz': '{"right":1}' });
+	const reason = (json: unknown) => {
+		try {
+			importBackup(json, 'replace', to);
+		} catch (e) {
+			return e instanceof BackupError ? e.reason : 'other';
+		}
+	};
+	expect(reason('not json')).toBe('json');
+	expect(reason('[]')).toBe('shape');
+	expect(reason({ app: 'other', version: 1, data: {} })).toBe('shape');
+	expect(reason({ app: 'volleyrotations', version: 2, data: {} })).toBe('shape');
+	expect(reason({ app: 'volleyrotations', version: 1, data: [] })).toBe('shape');
+	expect(reason({ app: 'volleyrotations', version: 1, data: { 'vr:other': {} } })).toBe('empty');
+	expect(to.map.size).toBe(1);
+	expect(clearAll(memoryStorage({ 'vr:a': '1', other: '2' }))).toBe(1);
 });

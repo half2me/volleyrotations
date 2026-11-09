@@ -55,6 +55,7 @@ export const pages = [
 	{ path: '/beach', inNav: false },
 	{ path: '/beach/quiz', inNav: false },
 	{ path: '/equipment', inNav: false },
+	{ path: '/settings', inNav: false },
 	{ path: '/guides', inNav: true },
 	...guides.map((slug) => ({ path: `/guides/${slug}` as const, inNav: false })),
 	...positionPages.map((slug) => ({ path: `/positions/${slug}` as const, inNav: false })),
