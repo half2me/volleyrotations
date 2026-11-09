@@ -13,8 +13,11 @@ export type Spec = {
 	court: { length: number; width: number };
 	/** Free zone: the minimum, and at FIVB World and Official competitions. */
 	freeZone: { min: number; fivb: Text };
-	/** Senior net heights in metres. */
-	net: { men: number; women: number; length: Text; bands: Text };
+	/**
+	 * Senior net heights in metres, and the net's length: the shortest and longest the rules allow,
+	 * in metres, with the same as text.
+	 */
+	net: { men: number; women: number; span: [number, number]; length: Text; bands: Text };
 	/** How far outside the side lines the posts stand, in metres. */
 	posts: [number, number];
 	ball: { circumference: [number, number]; weight: [number, number]; pressure: [number, number] };
@@ -36,6 +39,7 @@ export const SPECS: Record<Sport, Spec> = {
 		net: {
 			men: 2.43,
 			women: 2.24,
+			span: [9.5, 10],
 			length: t('9.50–10 m', '9,50–10 m'),
 			bands: t('top band 7 cm, bottom band 5 cm', 'felső szalag 7 cm, alsó szalag 5 cm')
 		},
@@ -154,6 +158,7 @@ export const SPECS: Record<Sport, Spec> = {
 		net: {
 			men: 2.43,
 			women: 2.24,
+			span: [8, 8.5],
 			length: t('8.5 m (8 m allowed at FIVB events)', '8,5 m (FIVB-eseményen 8 m is lehet)'),
 			bands: t('top and bottom bands 7–10 cm', 'felső és alsó szalag 7–10 cm')
 		},

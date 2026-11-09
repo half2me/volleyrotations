@@ -14,7 +14,7 @@
 	} from '#lib/prefs.svelte.js';
 	import { numberOf, teams } from '#lib/teams.svelte.js';
 	import { ballPath } from '#lib/volley/ball.js';
-	import { LEAGUE_IDS, leagueOf } from '#lib/volley/leagues.js';
+	import { leagueOf } from '#lib/volley/leagues.js';
 	import ReportLink from '#lib/components/ReportLink.svelte';
 	import PlayerCard from '#lib/components/PlayerCard.svelte';
 	import {
@@ -60,6 +60,7 @@
 	import IconChevronRight from '~icons/lucide/chevron-right';
 	import IconPause from '~icons/lucide/pause';
 	import IconPlay from '~icons/lucide/play';
+	import IconRepeat from '~icons/lucide/repeat';
 	import IconSettings from '~icons/lucide/settings-2';
 	import IconPrinter from '~icons/lucide/printer';
 	import IconLink from '~icons/lucide/link';
@@ -75,7 +76,11 @@
 		if (view) untrack(() => openView(view));
 	});
 
-	const update = (patch: Partial<ExplorerPrefs>) => prefs.set({ ...prefs.current, ...patch });
+	/** A choice the reader makes by hand, which also stops the rotations playing. */
+	const update = (patch: Partial<ExplorerPrefs>) => {
+		cycling = false;
+		prefs.set({ ...prefs.current, ...patch });
+	};
 
 	const team = $derived(teams.current.list.find((t) => t.id === prefs.current.team));
 	/** Everything the diagrams follow: the chosen team's playbook, or the reader's settings. */
@@ -163,7 +168,58 @@
 
 	function go(delta: number) {
 		playing = false;
+		cycling = false;
 		step = Math.max(0, Math.min(phases.length - 1, step + delta));
+	}
+
+	function togglePlay() {
+		cycling = false;
+		if (!playing && step === phases.length - 1) step = 0;
+		playing = !playing;
+	}
+
+	/**
+	 * Rotations 1 to 6 in turn on the same moment of the rally, so the reader sees the team shift
+	 * one place clockwise each time. The tokens glide unless the reader prefers less motion.
+	 */
+	let cycling = $state(false);
+	$effect(() => {
+		if (!cycling) return;
+		const timer = setInterval(() => {
+			const rotation = prefs.current.rotation;
+			if (rotation < 6) prefs.set({ ...prefs.current, rotation: (rotation + 1) as RotationNo });
+			else cycling = false;
+		}, 2500);
+		return () => clearInterval(timer);
+	});
+
+	function toggleCycle() {
+		playing = false;
+		if (cycling) {
+			cycling = false;
+			return;
+		}
+		if (prefs.current.rotation !== 1) prefs.set({ ...prefs.current, rotation: 1 });
+		cycling = true;
+	}
+
+	const nextRotation = (delta: number) => ((((o.rotation - 1 + delta) % 6) + 6) % 6) + 1;
+
+	/** Shortcuts for the phase and rotation, left alone while the reader types or works a control. */
+	function onkeydown(e: KeyboardEvent) {
+		if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+		const target = e.target instanceof Element ? e.target : undefined;
+		if (target?.closest('input, textarea, select, [contenteditable]')) return;
+		// Space presses a focused button or link; it toggles play only when nothing else takes it.
+		if (e.key === ' ' && target?.closest('button, a, summary, [role="button"]')) return;
+		if (e.key === 'ArrowLeft') go(-1);
+		else if (e.key === 'ArrowRight') go(1);
+		else if (e.key === 'ArrowUp') update({ rotation: nextRotation(1) as RotationNo });
+		else if (e.key === 'ArrowDown') update({ rotation: nextRotation(-1) as RotationNo });
+		else if (/^[1-6]$/.test(e.key)) update({ rotation: Number(e.key) as RotationNo });
+		else if (e.key === ' ') togglePlay();
+		else return;
+		e.preventDefault();
 	}
 
 	const courtLabel = $derived(
@@ -181,6 +237,8 @@
 	path="/explorer"
 	schema="WebApplication"
 />
+
+<svelte:window {onkeydown} />
 
 <div class="print:hidden">
 	<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.explorer_title()}</h1>
@@ -352,6 +410,7 @@
 								aria-pressed={i === step}
 								onclick={() => {
 									playing = false;
+									cycling = false;
 									step = i;
 								}}>{phaseName(p)}</button
 							>
@@ -372,18 +431,18 @@
 			<FormationCourt {placed} {previous} {names} you={role} area label={courtLabel} {ball} />
 
 			<div class="mt-3 flex flex-wrap items-center justify-between gap-2" data-pagefind-ignore>
-				<button
-					type="button"
-					class="btn-secondary"
-					onclick={() => {
-						if (!playing && step === phases.length - 1) step = 0;
-						playing = !playing;
-					}}
-				>
+				<button type="button" class="btn-secondary" onclick={togglePlay}>
 					{#if playing}
 						<IconPause class="size-4" aria-hidden="true" />{m.pause()}
 					{:else}
 						<IconPlay class="size-4" aria-hidden="true" />{m.play()}
+					{/if}
+				</button>
+				<button type="button" class="btn-secondary" aria-pressed={cycling} onclick={toggleCycle}>
+					{#if cycling}
+						<IconPause class="size-4" aria-hidden="true" />{m.stop_rotations()}
+					{:else}
+						<IconRepeat class="size-4" aria-hidden="true" />{m.play_rotations()}
 					{/if}
 				</button>
 				<button type="button" class="btn-secondary" onclick={() => print()}>
@@ -409,6 +468,18 @@
 					</li>
 				</ul>
 			</div>
+			<!-- Only where there is a keyboard to press them: a touch-only screen has no fine pointer. -->
+			<p class="mt-2 hidden text-sm text-ink-soft any-pointer-fine:block">
+				{m.shortcuts_label()}
+				<kbd class="kbd">←</kbd><kbd class="kbd">→</kbd>
+				{m.shortcut_phase()} ·
+				<kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd>
+				{m.shortcut_or()}
+				<kbd class="kbd">1</kbd>–<kbd class="kbd">6</kbd>
+				{m.shortcut_rotation()} ·
+				<kbd class="kbd">{m.key_space()}</kbd>
+				{m.shortcut_play()}
+			</p>
 			<p class="mt-2 text-sm" aria-live="polite">
 				{shared === 'yes'
 					? team?.custom
