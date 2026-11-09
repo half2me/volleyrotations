@@ -157,7 +157,7 @@ export function createFigure({ width, height }) {
 		const fx = [0.15, 0.05, -0.05, -0.15];
 		const fl = [0.82, 0.92, 0.85, 0.68];
 		for (let i = 0; i < 4; i++) {
-			const base = pivot(hand, [side * -fx[i], -0.43, 0]);
+			const base = pivot(hand, [side * fx[i], -0.43, 0]);
 			const lens = [0.17, 0.12, 0.1].map((l) => l * fl[i]);
 			let p = base;
 			const joints = [];
@@ -326,7 +326,8 @@ export function createFigure({ width, height }) {
 			curl(A.fingers[i], amount);
 			A.fingers[i][0].rotation.z = deg(splay) * s * spread;
 		};
-		const splay = [-14, -4, 4, 14];
+		// Fingers spread away from the middle: the index towards the thumb, the little finger away.
+		const splay = [14, 4, -4, -14];
 		switch (kind) {
 			case 'open':
 				[0, 1, 2, 3].forEach((i) => out(i, 6, splay[i] * 0.5));
@@ -344,8 +345,8 @@ export function createFigure({ width, height }) {
 				A.thumb[1].rotation.set(deg(50), 0, 0);
 				break;
 			case 'two':
-				out(0, 0, -16);
-				out(1, 0, 10);
+				out(0, 0, 16);
+				out(1, 0, -10);
 				out(2, 100, 0);
 				out(3, 100, 0);
 				A.thumb[0].rotation.set(deg(60), deg(s * 20), s * -1.3);
