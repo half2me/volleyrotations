@@ -25,6 +25,13 @@ export type Signal = {
 	who: 'first' | 'both' | 'line';
 	left: Arm;
 	right: Arm;
+	/**
+	 * Where the arms start when the figure acts the signal out; arms hanging down when left out.
+	 * A signal with a repeated movement, such as rolling the forearms, swings between the two.
+	 */
+	from?: { left?: Arm; right?: Arm };
+	/** Keep repeating the movement rather than showing the signal once and holding it. */
+	repeat?: boolean;
 	props?: Prop[];
 	motion?: Motion;
 	/** Fingers shown on the raised hand(s), drawn as a number. */
@@ -36,7 +43,7 @@ const DOWN: Arm = { upper: 8, fore: 8 };
 export const REFEREE_SIGNALS: Signal[] = [
 	{
 		id: 'authorise-serve',
-		name: { en: 'Authorisation to serve', hu: 'Nyitásengedélyezés' },
+		name: { en: 'Authorisation to serve', hu: 'A nyitás engedélyezése' },
 		gesture: {
 			en: 'One arm starts across the chest and sweeps out to the side, showing the direction of the serve.',
 			hu: 'Az egyik kar a mellkas előtt indul, és oldalra lendül, a nyitás irányát mutatva.'
@@ -45,6 +52,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['12.3'],
 		page: 75,
 		who: 'first',
+		from: { right: { upper: 25, fore: -70 } },
 		left: DOWN,
 		right: { upper: 80, fore: 90 },
 		motion: 'sweep'
@@ -77,6 +85,8 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['18.2'],
 		page: 75,
 		who: 'first',
+		from: { left: { upper: 20, fore: 60 }, right: { upper: 20, fore: 60 } },
+		repeat: true,
 		left: { upper: 20, fore: -80 },
 		right: { upper: 20, fore: -80 },
 		motion: 'spin'
@@ -92,12 +102,12 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['15.4.1'],
 		page: 75,
 		who: 'both',
-		left: { upper: 25, fore: 170 },
-		right: { upper: 30, fore: -80 }
+		left: { upper: -10, fore: -150 },
+		right: { upper: -10, fore: 180 }
 	},
 	{
 		id: 'substitution',
-		name: { en: 'Substitution', hu: 'Csere' },
+		name: { en: 'Substitution', hu: 'Játékoscsere' },
 		gesture: {
 			en: 'Forearms rolled around each other in front of the chest.',
 			hu: 'Az alkarok egymás körül forgatva a mellkas előtt.'
@@ -106,13 +116,15 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['15.5'],
 		page: 76,
 		who: 'both',
+		from: { left: { upper: 25, fore: -100 }, right: { upper: 25, fore: -70 } },
+		repeat: true,
 		left: { upper: 25, fore: -70 },
 		right: { upper: 25, fore: -100 },
 		motion: 'circle'
 	},
 	{
 		id: 'warning',
-		name: { en: 'Misconduct warning', hu: 'Figyelmeztetés modortalanságért' },
+		name: { en: 'Misconduct warning', hu: 'Figyelmeztetés sportszerűtlenségért' },
 		gesture: { en: 'A yellow card raised overhead.', hu: 'Sárga lap a fej fölé emelve.' },
 		means: {
 			en: 'A team member is warned; no penalty yet.',
@@ -127,7 +139,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 	},
 	{
 		id: 'penalty',
-		name: { en: 'Misconduct penalty', hu: 'Büntetés modortalanságért' },
+		name: { en: 'Misconduct penalty', hu: 'Büntetés sportszerűtlenségért' },
 		gesture: { en: 'A red card raised overhead.', hu: 'Piros lap a fej fölé emelve.' },
 		means: {
 			en: 'Point and serve to the opponents.',
@@ -187,12 +199,12 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['6.2', '6.3'],
 		page: 77,
 		who: 'both',
-		left: { upper: 20, fore: -140 },
-		right: { upper: 20, fore: -140 }
+		left: { upper: 20, fore: -112 },
+		right: { upper: 20, fore: -112 }
 	},
 	{
 		id: 'not-tossed',
-		name: { en: 'Ball not tossed or released', hu: 'A labda nincs feldobva vagy elengedve' },
+		name: { en: 'Ball not tossed or released', hu: 'Fel nem dobott vagy el nem engedett labda' },
 		gesture: {
 			en: 'An arm stretched forward and lifted, palm up.',
 			hu: 'Az egyik kar előrenyújtva és felemelve, tenyérrel felfelé.'
@@ -204,6 +216,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['12.4.1'],
 		page: 77,
 		who: 'first',
+		from: { right: { upper: 20, fore: 30 } },
 		left: DOWN,
 		right: { upper: 60, fore: 120 },
 		motion: 'up'
@@ -251,12 +264,14 @@ export const REFEREE_SIGNALS: Signal[] = [
 			hu: 'A mutatóujj kört rajzol derékmagasságban.'
 		},
 		means: {
-			en: 'A team was out of rotational order at the serve, or the wrong player served.',
-			hu: 'Egy csapat nyitáskor nem állt állásrendben, vagy nem a soron következő játékos nyitott.'
+			en: 'The receiving team was out of rotational order at the serve, or the wrong player served.',
+			hu: 'A fogadó csapat nyitáskor nem állt állásrendben, vagy nem a soron következő játékos nyitott.'
 		},
 		rules: ['7.5', '7.7'],
 		page: 78,
 		who: 'both',
+		from: { right: { upper: 25, fore: -20 } },
+		repeat: true,
 		left: DOWN,
 		right: { upper: 20, fore: -60 },
 		motion: 'circle'
@@ -271,7 +286,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		means: { en: 'The ball landed in the court.', hu: 'A labda a pályán belül ért földet.' },
 		rules: ['8.3'],
 		page: 78,
-		who: 'both',
+		who: 'first',
 		left: DOWN,
 		right: { upper: 45, fore: 45 },
 		props: ['line']
@@ -295,7 +310,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 	},
 	{
 		id: 'catch',
-		name: { en: 'Catch', hu: 'Labdafogás' },
+		name: { en: 'Catch', hu: 'Megfogott labda' },
 		gesture: {
 			en: 'A forearm lifted slowly, palm up.',
 			hu: 'Az alkar lassan felemelve, tenyérrel felfelé.'
@@ -307,6 +322,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['9.2.2', '9.3.3'],
 		page: 79,
 		who: 'first',
+		from: { right: { upper: 15, fore: 40 } },
 		left: DOWN,
 		right: { upper: 15, fore: 110 },
 		motion: 'up'
@@ -355,7 +371,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		gesture: {
 			en: 'The hand on the side of the fault points to, or touches, the top of the net.',
-			hu: 'A hibázó oldali kéz a háló tetejére mutat vagy megérinti.'
+			hu: 'A hibázó csapat felőli kézzel a háló tetejére mutat vagy megérinti.'
 		},
 		means: {
 			en: 'A player touched the net while playing the ball, or the serve did not get over.',
@@ -394,21 +410,22 @@ export const REFEREE_SIGNALS: Signal[] = [
 			hu: 'Az alkar felemelve, majd nyitott kézzel lefelé mozdítva.'
 		},
 		means: {
-			en: 'An illegal attack: by a back-row player from the front zone, by the libero, on the opponents’ serve, or on a libero’s finger set.',
-			hu: 'Szabálytalan támadás: hátsó soros játékos az első zónából, a liberó, az ellenfél nyitásán, vagy a liberó kosárérintéses feladásán.'
+			en: 'An illegal attack on a ball entirely above the net: by a back-row player from the front zone, by the libero, on the opponents’ serve in the front zone, or on a libero’s finger set from the front zone.',
+			hu: 'Szabálytalan támadóérintés: hátsó sorköteles játékos az első zónából vagy a liberó támad, támadás az ellenfél nyitására, vagy a liberó első zónában kosárérintéssel adott feladásának megtámadása.'
 		},
 		rules: ['13.3.3', '13.3.4', '13.3.5', '13.3.6'],
 		page: 80,
 		who: 'both',
+		from: { right: { upper: 30, fore: 170 } },
 		left: DOWN,
-		right: { upper: 30, fore: 160 },
+		right: { upper: 30, fore: 40 },
 		motion: 'down'
 	},
 	{
 		id: 'penetration',
 		name: {
 			en: 'Penetration into the opponents’ court, ball under the net, or foot fault at the serve',
-			hu: 'Átlépés az ellenfél térfelére, labda a háló alatt, vagy lábhiba nyitáskor'
+			hu: 'Ellenmezőbe hatolás, a háló alatt áthaladó labda vagy lábhiba nyitáskor'
 		},
 		gesture: {
 			en: 'Pointing down at the centre line, or at the line concerned.',
@@ -427,7 +444,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 	},
 	{
 		id: 'double-fault',
-		name: { en: 'Double fault and replay', hu: 'Kettős hiba és ismétlés' },
+		name: { en: 'Double fault and replay', hu: 'Kettős hiba, a labdamenet újrajátszása' },
 		gesture: {
 			en: 'Both thumbs raised upright at head height.',
 			hu: 'Mindkét hüvelykujj függőlegesen felemelve, fejmagasságban.'
@@ -444,7 +461,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 	},
 	{
 		id: 'ball-touched',
-		name: { en: 'Ball touched', hu: 'Labdaérintés' },
+		name: { en: 'Ball touched', hu: 'Érintett labda' },
 		gesture: {
 			en: 'The palm of one hand brushes the fingertips of the other, which is held upright.',
 			hu: 'Az egyik tenyér végigsimít a másik, függőlegesen tartott kéz ujjhegyein.'
@@ -456,8 +473,10 @@ export const REFEREE_SIGNALS: Signal[] = [
 		rules: ['24.2.2'],
 		page: 81,
 		who: 'first',
-		left: { upper: 30, fore: 170 },
-		right: { upper: 60, fore: -60 },
+		from: { left: { upper: -5, fore: -120 } },
+		repeat: true,
+		left: { upper: -10, fore: -150 },
+		right: { upper: -10, fore: 180 },
 		motion: 'brush'
 	},
 	{
@@ -465,7 +484,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		name: { en: 'Delay warning or penalty', hu: 'Késleltetés: figyelmeztetés vagy büntetés' },
 		gesture: {
 			en: 'A card held over the wrist: yellow for a warning, red for a penalty.',
-			hu: 'Lap a csukló fölött tartva: sárga a figyelmeztetés, piros a büntetés.'
+			hu: 'A lappal a csuklójára mutat: sárgával a figyelmeztetés, pirossal a büntetés.'
 		},
 		means: {
 			en: 'A team delayed the game. The first delay is a warning; every later one gives the opponents a point and the serve.',
@@ -507,7 +526,7 @@ export const FLAG_SIGNALS: Signal[] = [
 	},
 	{
 		id: 'flag-touched',
-		name: { en: 'Ball touched', hu: 'Labdaérintés' },
+		name: { en: 'Ball touched', hu: 'Érintett labda' },
 		gesture: {
 			en: 'Flag raised, with the palm of the free hand touching its top.',
 			hu: 'A zászló felemelve, a szabad kéz tenyere a tetejét érinti.'
@@ -519,8 +538,8 @@ export const FLAG_SIGNALS: Signal[] = [
 		rules: ['29.2.1.2'],
 		page: 82,
 		who: 'line',
-		left: { upper: 150, fore: 175 },
-		right: { upper: 150, fore: 175 },
+		left: { upper: -175, fore: -90 },
+		right: { upper: 20, fore: -150 },
 		props: ['flag-up']
 	},
 	{
@@ -538,15 +557,17 @@ export const FLAG_SIGNALS: Signal[] = [
 			hu: 'A labda az antennán kívül ment át vagy pályán kívüli tárgyhoz ért, vagy a nyitó a vonalra lépett.'
 		},
 		rules: ['8.4.3', '12.4.3'],
-		page: 83,
+		page: 82,
 		who: 'line',
+		from: { right: { upper: 150, fore: 200 } },
+		repeat: true,
 		left: DOWN,
 		right: { upper: 170, fore: 170 },
 		props: ['flag-wave']
 	},
 	{
 		id: 'flag-unsure',
-		name: { en: 'Judgement impossible', hu: 'Nem látta' },
+		name: { en: 'Judgement impossible', hu: 'Nem tudta megítélni' },
 		gesture: {
 			en: 'Both arms and hands raised and crossed in front of the chest.',
 			hu: 'Mindkét kar és kéz felemelve, keresztben a mellkas előtt.'
@@ -558,7 +579,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		rules: ['30.2'],
 		page: 83,
 		who: 'line',
-		left: { upper: 30, fore: -150 },
-		right: { upper: 30, fore: -150 }
+		left: { upper: 20, fore: -112 },
+		right: { upper: 20, fore: -112 }
 	}
 ];

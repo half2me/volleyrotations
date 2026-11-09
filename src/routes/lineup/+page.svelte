@@ -136,6 +136,7 @@
 
 	let printDefense = $state(false);
 	let printCards = $state(true);
+	let printBands = $state(false);
 </script>
 
 <Seo
@@ -383,6 +384,10 @@
 					<input type="checkbox" class="size-4" bind:checked={printCards} />
 					{m.lineup_cards()}
 				</label>
+				<label class="chip gap-2">
+					<input type="checkbox" class="size-4" bind:checked={printBands} />
+					{m.lineup_wristbands()}
+				</label>
 			</div>
 			<button type="button" class="btn-primary mt-4" onclick={() => print()}>
 				<IconPrinter class="size-4" aria-hidden="true" />{m.lineup_print_button()}
@@ -439,6 +444,36 @@
 		<div class="mt-2 grid gap-3 sm:grid-cols-2 print:grid-cols-2">
 			{#each roles as role (role)}
 				<PlayerCard {options} {role} title="{label(role)} · {roleName(role)}" rotations={order} />
+			{/each}
+		</div>
+	{/if}
+	{#if printBands}
+		<h3 class="mt-6 break-before-page font-semibold">{m.lineup_wristbands()}</h3>
+		<p class="mt-1 text-sm text-ink-soft print:hidden">{m.lineup_wristbands_help()}</p>
+		<div class="mt-2 space-y-2">
+			{#each roles as role (role)}
+				<div
+					class="break-inside-avoid rounded-lg border border-dashed border-ink-soft p-1.5"
+					style="width: 17cm; max-width: 100%"
+				>
+					<p class="px-1 text-xs font-bold">{label(role)} · {roleName(role)}</p>
+					<ol class="grid grid-cols-6 gap-1">
+						{#each order as r (r)}
+							<li>
+								<p class="text-center text-[0.6rem] font-semibold">{r}</p>
+								<FormationCourt
+									placed={formation({ ...options, rotation: r }, 'receive')}
+									names={tokens}
+									you={role}
+									runs={false}
+									zones={false}
+									table={false}
+									label="{phaseName('receive')}, {rotationLabel(r, team.system)}"
+								/>
+							</li>
+						{/each}
+					</ol>
+				</div>
 			{/each}
 		</div>
 	{/if}

@@ -11,7 +11,7 @@ The setter takes the second touch on almost every rally and decides who attacks.
 
 - **Serve receive, back row:** stay out of the passers' way, as close to the target as the [overlap rule](/guides/overlap) lets you, and run in the moment the serve is hit. From zone 1 you wait along the right sideline; from zones 6 and 5 you hide close behind a front-row player.
 - **Serve receive, front row:** you are already at the net. Stay beside the passing line, then slide to the target.
-- **Your serve:** after serving from zone 1, run to right back (or straight to the net if you are front row) and wait in your base spot.
+- **When your team serves:** if you served from zone 1, run in to right back; if a teammate served, wait in your base spot, at the net on the right when you are front row.
 - **Defense:** in the back row, defend right back so the run to the target stays short. In the front row, block on the right against their outside hitter.
 - **Attack:** set, then follow the ball and cover your hitter.
 
@@ -19,7 +19,7 @@ The setter takes the second touch on almost every rally and decides who attacks.
 
 - A **back-row setter** may not complete a block, and may not attack a ball that is entirely above the net from in front of the attack line ([rule 13](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)). Setting near the net is fine; pushing the ball over from above the net is not.
 - A **front-row setter** may attack the second ball (a "dump") and blocks like any front-row player.
-- Leaving your spot before the serve is hit is an [overlap fault](/guides/overlap). Your feet are what count.
+- In serve receive, leaving your spot before the serve is hit is an [overlap fault](/guides/overlap). Your feet are what count.
 
 ## Common mistakes
 

@@ -10,15 +10,15 @@ A nyitásfogadó ütő mindenhez ért egy kicsit: minden forgásban fogad, első
 ## A labdamenet minden pillanata
 
 - **Nyitásfogadás:** minden forgásban te vagy az egyik fő fogadó a liberóval együtt. Első sorban, ha az állásrendi szabály engedi, azon az oldalon fogadj, ahonnan támadni fogsz; aztán lépj el a hálótól a nekifutáshoz.
-- **Saját nyitás:** nyiss, aztán fuss a védekezési helyedre. Az oldal eszközeiben ez hátsó sorban középen hátul (6-os hely), első sorban a bal oldal a hálónál.
+- **Amikor a csapatod nyit:** nyiss, aztán fuss a védekezési helyedre. Az oldal eszközeiben ez hátsó sorban középen hátul (6-os hely), első sorban a bal oldal a hálónál.
 - **Védekezés:** első sorban bal oldalon sáncolsz az ellenfél feladó átlója ellen, vagy ha nem sáncolsz, hátralépsz mezőnyben védekezni. Hátsó sorban mélyen védekezel.
 - **Támadás:** első sorban balról ütsz. Az 1. forgásban sok csapatnál a jobb oldalon fogadó ütő az első támadást jobbról üti. Hátsó sorban középen támadsz (pipe), a támadóvonal mögül elrugaszkodva.
-- **Biztosítás:** ha más támad, helyezkedj alacsonyan köré.
+- **Biztosítás:** ha más támad, helyezkedj alacsony testhelyzetben az ütő köré.
 
 ## A legfontosabb szabályok számodra
 
-- Hátsó sorból csak akkor támadhatsz a háló fölött lévő labdára, ha a támadóvonal mögül rugaszkodsz el; utána a vonal előtt landolni szabad ([13. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)).
-- A nyitás pillanatában meg kell tartanod az állásrendet a melletted, előtted vagy mögötted álló játékosokhoz képest ([7.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)), akkor is, ha szokatlan helyen fogadsz.
+- Hátsó sorból csak akkor támadhatsz a háló fölött lévő labdára, ha a támadóvonal mögül rugaszkodsz el; utána a vonal előtt földet érni szabad ([13. szabály](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=36)).
+- Amikor a csapatod fogad, a nyitás pillanatában meg kell tartanod az állásrendet a melletted, előtted vagy mögötted álló játékosokhoz képest ([7.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)), akkor is, ha szokatlan helyen fogadsz.
 
 ## Gyakori hibák
 

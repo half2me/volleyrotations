@@ -177,3 +177,26 @@
 		--color-libero-ink: oklch(100% 0 0);
 	}
 }
+
+/* Small motions that show something changed. Readers who prefer less motion see none of them. */
+@media (prefers-reduced-motion: no-preference) {
+	.animate-pop {
+		animation: pop 0.35s ease-out;
+	}
+	.animate-reveal {
+		animation: reveal 0.3s ease-out;
+	}
+}
+
+@keyframes pop {
+	40% {
+		transform: scale(1.18);
+	}
+}
+
+@keyframes reveal {
+	from {
+		opacity: 0;
+		transform: translateY(-0.25rem);
+	}
+}

@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { routes } from './routes.ts';
 
 // The analytics beacon is a third-party script: tests stub it so they neither depend on the
@@ -57,8 +57,17 @@ for (const route of routes) {
 	});
 }
 
+/**
+ * Opens a page and waits until the network is quiet, so the app has hydrated: a click before
+ * hydration does nothing, which made interaction tests flaky under load.
+ */
+async function open(page: Page, url: string) {
+	await page.goto(url);
+	await page.waitForLoadState('networkidle');
+}
+
 test('the hungarian homepage is served in hungarian', async ({ page }) => {
-	await page.goto('/hu');
+	await open(page, '/hu');
 	await expect(page.locator('html')).toHaveAttribute('lang', 'hu');
 	await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
 		'href',
@@ -67,7 +76,7 @@ test('the hungarian homepage is served in hungarian', async ({ page }) => {
 });
 
 test('the language switcher keeps the reader on the same page', async ({ page }) => {
-	await page.goto('/explorer');
+	await open(page, '/explorer');
 	await page.getByRole('link', { name: 'Magyar' }).click();
 	await expect(page).toHaveURL(/\/hu\/explorer$/);
 	await expect(page.locator('h1')).toHaveText('Posztkereső');
@@ -75,7 +84,7 @@ test('the language switcher keeps the reader on the same page', async ({ page })
 
 test('the theme toggle switches and remembers the theme', async ({ page }) => {
 	await page.emulateMedia({ colorScheme: 'light' });
-	await page.goto('/');
+	await open(page, '/');
 	await page.getByRole('button', { name: 'Switch to dark mode' }).click();
 	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 	await page.reload();
@@ -89,13 +98,13 @@ test('an unknown URL shows the 404 page', async ({ page }) => {
 });
 
 test('search finds a page', async ({ page }) => {
-	await page.goto('/search');
+	await open(page, '/search');
 	await page.getByRole('search').getByRole('textbox').fill('libero');
 	await expect(page.locator('.pagefind-ui__result-link').first()).toBeVisible();
 });
 
 test('the explorer steps through the rally and remembers the position', async ({ page }) => {
-	await page.goto('/explorer');
+	await open(page, '/explorer');
 	await page.locator('label').getByText('Setter', { exact: true }).click();
 	await page.locator('label').getByText('We serve', { exact: true }).click();
 	await page.getByRole('button', { name: 'Defense' }).click();
@@ -105,7 +114,7 @@ test('the explorer steps through the rally and remembers the position', async ({
 });
 
 test('the overlap trainer flags a fault and accepts the keyboard', async ({ page }) => {
-	await page.goto('/overlap');
+	await open(page, '/overlap');
 	await expect(page.getByText('Legal formation', { exact: true })).toBeVisible();
 	// Move the zone 4 player far to the right, past zone 3.
 	const player = page.getByRole('button', { name: /zone 4/ });
@@ -117,7 +126,7 @@ test('the overlap trainer flags a fault and accepts the keyboard', async ({ page
 });
 
 test('the match tracker rotates on a sideout and survives a reload', async ({ page }) => {
-	await page.goto('/match');
+	await open(page, '/match');
 	await page.locator('label').getByText('They serve', { exact: true }).click();
 	await page.getByRole('button', { name: 'Start match' }).click();
 	await page.getByRole('button', { name: 'Point Us' }).click();
@@ -129,7 +138,7 @@ test('the match tracker rotates on a sideout and survives a reload', async ({ pa
 });
 
 test('the lineup builder puts shirt numbers on the sheets', async ({ page }) => {
-	await page.goto('/lineup');
+	await open(page, '/lineup');
 	await page.getByLabel('Shirt number of the Setter').fill('12');
 	await page.getByLabel('Shirt number of the Setter').blur();
 	await expect(page.getByText('12 = #12')).toBeVisible();
@@ -138,7 +147,7 @@ test('the lineup builder puts shirt numbers on the sheets', async ({ page }) => 
 });
 
 test('a shared team link offers the team and adds it', async ({ page, browser }) => {
-	await page.goto('/lineup');
+	await open(page, '/lineup');
 	await page.getByLabel('Team name').fill('Falcons');
 	await page.getByLabel('Team name').blur();
 	await page.getByLabel('Shirt number of the Setter').fill('7');
@@ -149,7 +158,7 @@ test('a shared team link offers the team and adds it', async ({ page, browser })
 	// A reader who has never visited: a fresh context with empty storage.
 	const other = await browser.newContext();
 	const fresh = await other.newPage();
-	await fresh.goto(url.pathname + url.hash);
+	await open(fresh, url.pathname + url.hash);
 	await expect(fresh.getByText('Someone shared the team “Falcons” with you.')).toBeVisible();
 	await fresh.getByRole('button', { name: 'Add to my teams' }).click();
 	await expect(fresh.getByLabel('Team name')).toHaveValue('Falcons');
@@ -158,7 +167,7 @@ test('a shared team link offers the team and adds it', async ({ page, browser })
 });
 
 test('the playbook saves only legal receive positions', async ({ page }) => {
-	await page.goto('/lineup');
+	await open(page, '/lineup');
 	const save = page.getByRole('button', { name: 'Save positions' });
 	await expect(save).toBeDisabled();
 	const player = page.getByRole('button', { name: /zone 4/ });
@@ -173,11 +182,11 @@ test('the playbook saves only legal receive positions', async ({ page }) => {
 });
 
 test('the explorer follows a chosen team and its league', async ({ page }) => {
-	await page.goto('/lineup');
+	await open(page, '/lineup');
 	await page.getByLabel('Team name').fill('Owls');
 	await page.getByLabel('Team name').blur();
-	await page.locator('label').getByText('NCAA (US college)', { exact: true }).click();
-	await page.goto('/explorer');
+	await page.getByLabel('Rules', { exact: true }).selectOption('ncaa');
+	await open(page, '/explorer');
 	await page.locator('label').getByText('Owls', { exact: true }).click();
 	await expect(page.getByText(/Using Owls's playbook/)).toBeVisible();
 	await page.locator('label').getByText('Libero', { exact: true }).click();
@@ -186,7 +195,7 @@ test('the explorer follows a chosen team and its league', async ({ page }) => {
 });
 
 test('the match tracker shows rotation statistics', async ({ page }) => {
-	await page.goto('/match');
+	await open(page, '/match');
 	await page.locator('label').getByText('They serve', { exact: true }).click();
 	await page.getByRole('button', { name: 'Start match' }).click();
 	await page.getByRole('button', { name: 'Point Us' }).click();
@@ -197,7 +206,7 @@ test('the match tracker shows rotation statistics', async ({ page }) => {
 });
 
 test('the learning path remembers finished steps', async ({ page }) => {
-	await page.goto('/learn');
+	await open(page, '/learn');
 	await expect(page.getByText(/^0 of \d+ steps done$/)).toBeVisible();
 	// A click before hydration does nothing, so retry until the count changes.
 	await expect(async () => {
@@ -210,7 +219,7 @@ test('the learning path remembers finished steps', async ({ page }) => {
 });
 
 test('the explorer shows free balls and hitter coverage', async ({ page }) => {
-	await page.goto('/explorer');
+	await open(page, '/explorer');
 	await page.locator('label').getByText('We serve', { exact: true }).click();
 	await page.getByRole('button', { name: 'Defense', exact: true }).click();
 	await page.locator('label').getByText('Free ball', { exact: true }).click();
@@ -220,7 +229,10 @@ test('the explorer shows free balls and hitter coverage', async ({ page }) => {
 });
 
 test('a shared explorer view opens on the moment it names', async ({ page }) => {
-	await page.goto('/explorer#system=6-2&rotation=4&serving=1&role=MB1&phase=defense&incoming=free');
+	await open(
+		page,
+		'/explorer#system=6-2&rotation=4&serving=1&role=MB1&phase=defense&incoming=free'
+	);
 	await expect(page.getByRole('radio', { name: '6-2', exact: true })).toBeChecked();
 	await expect(page.getByRole('radio', { name: 'Middle 1', exact: true })).toBeChecked();
 	await expect(page.getByText(/can only send a free ball/)).toBeVisible();
@@ -229,7 +241,7 @@ test('a shared explorer view opens on the moment it names', async ({ page }) => 
 });
 
 test('the question of the day keeps the answer and the streak', async ({ page }) => {
-	await page.goto('/');
+	await open(page, '/');
 	const day = page.getByRole('region', { name: 'Question of the day' });
 	await expect(day.getByText('Question', { exact: true })).toBeVisible();
 	await day.getByRole('button', { disabled: false }).first().click();
@@ -240,7 +252,7 @@ test('the question of the day keeps the answer and the streak', async ({ page })
 });
 
 test('detailed match stats are optional and quick to enter', async ({ page }) => {
-	await page.goto('/match');
+	await open(page, '/match');
 	await page.locator('label').getByText('They serve', { exact: true }).click();
 	await page.locator('label').getByText('On', { exact: true }).click();
 	await expect(page.getByRole('radio', { name: 'On', exact: true })).toBeChecked();
@@ -265,4 +277,17 @@ test('detailed match stats are optional and quick to enter', async ({ page }) =>
 	await expect(page.getByRole('heading', { name: 'Past matches' })).toBeVisible();
 	await page.getByRole('button', { name: 'Show report' }).click();
 	await expect(page.getByRole('heading', { name: 'Player statistics' })).toBeVisible();
+});
+
+test('a practice plan keeps its drills and runs a timer', async ({ page }) => {
+	await open(page, '/drills');
+	await page.getByRole('button', { name: /Add to plan Wash table/ }).click();
+	await page.getByRole('button', { name: /Add to plan Coverage drill/ }).click();
+	await expect(page.getByText('20 minutes in total.')).toBeVisible();
+	await page.reload();
+	await expect(page.getByText('20 minutes in total.')).toBeVisible();
+	await page.getByRole('button', { name: 'Start practice' }).click();
+	await expect(
+		page.getByText(/Wash table \(one-way\) · 10:00|Wash table \(one-way\) · 9:5\d/)
+	).toBeVisible();
 });

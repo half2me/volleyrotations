@@ -11,6 +11,8 @@
 	} from '#lib/volley/model.js';
 	import type { OverlapFault } from '#lib/volley/overlap.js';
 	import Court from './Court.svelte';
+	import { cubicOut } from 'svelte/easing';
+	import { prefersReducedMotion, Tween } from 'svelte/motion';
 
 	/**
 	 * A court whose players can be dragged, or moved with the arrow keys, with the rule 7.4
@@ -50,6 +52,15 @@
 
 	// Dragging: pointer coordinates to court metres through the SVG's own transform.
 	let dragging: Zone | undefined = $state();
+
+	/**
+	 * What is drawn: the positions, eased when a whole formation changes (a new puzzle, a reset)
+	 * so the reader sees who moved, but following the pointer at once while dragging.
+	 */
+	const shown = Tween.of(() => positions, {
+		duration: () => (dragging !== undefined || prefersReducedMotion.current ? 0 : 450),
+		easing: cubicOut
+	});
 	let selected: Zone | undefined = $state();
 
 	const clamp = (p: Point): Point => ({
@@ -96,17 +107,17 @@
 >
 	{#each relations as r (`${r.a}-${r.b}`)}
 		<line
-			x1={positions[r.a].x}
-			y1={positions[r.a].y}
-			x2={positions[r.b].x}
-			y2={positions[r.b].y}
+			x1={shown.current[r.a].x}
+			y1={shown.current[r.a].y}
+			x2={shown.current[r.b].x}
+			y2={shown.current[r.b].y}
 			class={broken(r.a, r.b) ? 'stroke-bad' : 'stroke-good'}
 			stroke-width={broken(r.a, r.b) ? 0.12 : 0.06}
 			stroke-dasharray={broken(r.a, r.b) ? undefined : '0.2 0.15'}
 		/>
 	{/each}
 	{#each movable as p (p.zone)}
-		{@const at = positions[p.zone]}
+		{@const at = shown.current[p.zone]}
 		{@const bad = faults.some((f) => f.a === p.zone || f.b === p.zone)}
 		<g
 			transform="translate({at.x} {at.y})"
@@ -138,7 +149,7 @@
 	<!-- Token labels sit outside the focusable groups: each group's accessible name is its
 	     aria-label, which already names the player and zone. Exempt players are drawn here only. -->
 	{#each court as p (p.zone)}
-		{@const at = positions[p.zone]}
+		{@const at = shown.current[p.zone]}
 		<g transform="translate({at.x} {at.y})" class="pointer-events-none" aria-hidden="true">
 			{#if exempt.includes(p.zone)}
 				<circle r="0.5" class={p.role === 'L' ? 'fill-libero' : 'fill-team'} opacity="0.6" />

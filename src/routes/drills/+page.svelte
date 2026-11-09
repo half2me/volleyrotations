@@ -6,6 +6,14 @@
 	import { m } from '#lib/paraglide/messages.js';
 	import { getLocale } from '#lib/paraglide/runtime.js';
 	import IconExternal from '~icons/lucide/external-link';
+	import IconPlus from '~icons/lucide/plus';
+	import PracticePlan from '#lib/components/PracticePlan.svelte';
+	import { Persisted } from '#lib/persisted.svelte.js';
+
+	const plan = new Persisted<{ items: { id: string; minutes: number }[] }>('vr:practice', {
+		items: []
+	});
+	$effect(() => plan.load());
 
 	const lang = $derived(getLocale() as 'en' | 'hu');
 	const topicName = (t: DrillTopic) =>
@@ -33,6 +41,8 @@
 	<a class="text-accent underline" href={href('/match')}>{m.nav_match()}</a>
 </p>
 
+<div class="mt-8"><PracticePlan {plan} /></div>
+
 {#each DRILL_TOPICS as topic (topic)}
 	<section class="mt-10 max-w-3xl" id={topic} aria-labelledby="{topic}-heading">
 		<h2 id="{topic}-heading" class="text-2xl font-bold tracking-tight">{topicName(topic)}</h2>
@@ -42,14 +52,26 @@
 					<h3 class="font-bold">{d.name}</h3>
 					<p class="mt-1 text-ink-soft">{d.purpose[lang]}</p>
 					<p class="mt-2">{d.how[lang]}</p>
-					<a
-						class="mt-2 inline-flex min-h-11 items-center gap-1.5 text-sm text-accent underline"
-						href={d.source.url}
-					>
-						<IconExternal class="size-4 shrink-0" aria-hidden="true" />{m.drills_source({
-							source: d.source.label
-						})}
-					</a>
+					<div class="mt-2 flex flex-wrap items-center gap-x-4">
+						<a
+							class="inline-flex min-h-11 items-center gap-1.5 text-sm text-accent underline"
+							href={d.source.url}
+						>
+							<IconExternal class="size-4 shrink-0" aria-hidden="true" />{m.drills_source({
+								source: d.source.label
+							})}
+						</a>
+						<button
+							type="button"
+							class="btn-secondary"
+							data-pagefind-ignore
+							onclick={() =>
+								plan.set({ items: [...plan.current.items, { id: d.id, minutes: 10 }] })}
+						>
+							<IconPlus class="size-4" aria-hidden="true" />{m.plan_add()}
+							<span class="sr-only">{d.name}</span>
+						</button>
+					</div>
 				</li>
 			{/each}
 		</ul>

@@ -580,5 +580,17 @@
 	"learn_signals": "Learn what the referees’ hand signals and the line judges’ flags mean.",
 	"learn_drills": "Practise the rotations your team loses the most points in.",
 	"learn_scoring": "How to keep the official scoresheet when your club needs a scorer.",
-	"learn_rules": "Pick where you play and see where your rules differ from FIVB."
+	"learn_rules": "Pick where you play and see where your rules differ from FIVB.",
+	"situations_score": "Your calls: {right} of {called} right.",
+	"lineup_wristbands": "Wristbands",
+	"lineup_wristbands_help": "One strip per player with their serve-receive spot in every rotation, in playing order from the starting rotation. Cut along the dashed line and slip it into a wristband.",
+	"plan_title": "Your practice plan",
+	"plan_empty": "Add drills below to build a practice, then run it with a timer.",
+	"plan_total": "{minutes} minutes in total.",
+	"plan_minutes": "min",
+	"plan_remove": "Remove {drill}",
+	"plan_start": "Start practice",
+	"plan_resume": "Resume",
+	"plan_next": "Next drill",
+	"plan_add": "Add to plan"
 }

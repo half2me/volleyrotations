@@ -102,8 +102,8 @@ export const RULE_SETS: Record<LeagueId, RuleSet> = {
 	england: {
 		body: 'Volleyball England',
 		basis: {
-			en: 'Plays the FIVB rules: the National Volleyball League (NVL) regulations say the rules of the game are those issued by the FIVB, and the 2025 serving-team rule applies from 1 September 2025.',
-			hu: 'Az FIVB-szabályok szerint játszik: a National Volleyball League (NVL) versenyszabályzata szerint a játékszabályok az FIVB által kiadottak, és a nyitó csapatra vonatkozó 2025-ös szabály 2025. szeptember 1-jétől érvényes.'
+			en: 'Plays the FIVB rules: the National Volleyball League (NVL) regulations say the rules of the game are those issued by the FIVB. Its rules FAQ for 2025–26 confirms that the serving team may stand anywhere at the serve.',
+			hu: 'Az FIVB-szabályok szerint játszik: a National Volleyball League (NVL) versenyszabályzata szerint a játékszabályok az FIVB által kiadottak; a 2025–26-os szabály-GYIK megerősíti, hogy a nyitó csapat nyitáskor bárhol állhat.'
 		},
 		documents: [
 			NVL,
@@ -132,8 +132,8 @@ export const RULE_SETS: Record<LeagueId, RuleSet> = {
 			},
 			{
 				text: {
-					en: 'Volley 4’s (U14 and U15 tier 2): four against four on a badminton-size court, three timed sets of 8 minutes, and a rotation after three serves in a row.',
-					hu: 'Volley 4’s (U14 és U15, második szint): négy a négy ellen tollaslabdapálya méretű pályán, három 8 perces játszma, és forgás három egymást követő nyitás után.'
+					en: 'Volley 4’s (U14 tier 2): four against four on a badminton-size court, usually three timed sets of about 8 minutes, and a rotation after three serves in a row.',
+					hu: 'Volley 4’s (U14, második szint): négy a négy ellen tollaslabdapálya méretű pályán, általában három, nagyjából 8 perces játszma, és forgás három egymást követő nyitás után.'
 				},
 				source: VE_JUNIOR
 			}
@@ -226,8 +226,8 @@ export const RULE_SETS: Record<LeagueId, RuleSet> = {
 			},
 			{
 				text: {
-					en: 'U12 kismini: three against three on a 12 × 6 m court, net 2.15 m (boys) / 2.10 m (girls), at least two contacts per side and no attack hits.',
-					hu: 'U12 kismini: három a három ellen 12 × 6 m-es pályán, 2,15 m-es (fiúk) / 2,10 m-es (lányok) hálóval, oldalanként legalább két érintéssel, támadóérintés nélkül.'
+					en: 'U12 kismini: three against three on a 12 × 6 m court, net 2.15 m (boys) / 2.10 m (girls), at least two contacts per side and no spiking (tips, blocks and jump sets are allowed).',
+					hu: 'U12 kismini: három a három ellen 12 × 6 m-es pályán, 2,15 m-es (fiúk) / 2,10 m-es (lányok) hálóval, oldalanként legalább két érintéssel, leütés nélkül (ejtés, sánc és légikosár megengedett).'
 				},
 				source: MRSZ_U12
 			}

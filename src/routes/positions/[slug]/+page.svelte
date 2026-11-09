@@ -8,7 +8,8 @@
 	import { positionPages, type PositionSlug } from '#lib/pages.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { viewFragment } from '#lib/view-link.js';
-	import { DEFAULT_OPTIONS, formation } from '#lib/volley/formations.js';
+	import { DEFAULT_OPTIONS, RECEIVE_PHASES, formation } from '#lib/volley/formations.js';
+	import { prefersReducedMotion } from 'svelte/motion';
 	import { phaseName, roleInSentence, rotationLabel, zoneRef } from '#lib/volley/labels.js';
 	import { ROTATIONS, isFront, type RoleId } from '#lib/volley/model.js';
 	import IconArrowLeft from '~icons/lucide/arrow-left';
@@ -35,6 +36,22 @@
 		)
 	);
 	const role = $derived(ROLE[data.slug]);
+
+	/**
+	 * The rally on the opponent's serve, played through every rotation: receive, attack, cover.
+	 * Shows the first rotation's receive and stays still for readers who prefer less motion.
+	 */
+	let step = $state(0);
+	$effect(() => {
+		if (prefersReducedMotion.current) return;
+		const timer = setInterval(() => (step = (step + 1) % (6 * RECEIVE_PHASES.length)), 1800);
+		return () => clearInterval(timer);
+	});
+	const playRotation = $derived(
+		(Math.floor(step / RECEIVE_PHASES.length) + 1) as (typeof ROTATIONS)[number]
+	);
+	const playPhase = $derived(RECEIVE_PHASES[step % RECEIVE_PHASES.length]);
+	const playPlaced = $derived(formation({ ...DEFAULT_OPTIONS, rotation: playRotation }, playPhase));
 	/** The explorer opened on this position, in a 5-1 with a libero, on the opponent's serve. */
 	const explorerLink = (rotation: (typeof ROTATIONS)[number]) =>
 		`${href('/explorer')}#${viewFragment({
@@ -60,9 +77,21 @@
 	{m.guide_positions()}
 </a>
 
-<article class="prose-site">
-	<page.default />
-</article>
+<div class="grid items-start gap-8 lg:grid-cols-[1fr_minmax(0,20rem)]">
+	<article class="prose-site">
+		<page.default />
+	</article>
+	<figure class="mx-auto w-full max-w-72 lg:sticky lg:top-4" data-pagefind-ignore>
+		<FormationCourt
+			placed={playPlaced}
+			you={role}
+			label="{phaseName(playPhase)}, {rotationLabel(playRotation, '5-1')}"
+		/>
+		<figcaption class="mt-2 text-center text-sm text-ink-soft" aria-live="off">
+			{phaseName(playPhase)} · {rotationLabel(playRotation, '5-1')}
+		</figcaption>
+	</figure>
+</div>
 
 <section class="mt-12" aria-labelledby="rotations-heading" data-pagefind-ignore>
 	<h2 id="rotations-heading" class="text-2xl font-bold tracking-tight">{m.position_rotations()}</h2>
@@ -72,11 +101,8 @@
 			{@const at = formation({ ...DEFAULT_OPTIONS, rotation: r }, 'receive')}
 			{@const me = at.find((p) => p.role === role)}
 			<li>
-				<a
-					href={explorerLink(r)}
-					class="card block p-2 hover:border-accent"
-					aria-label="{rotationLabel(r, '5-1')}: {m.position_open_explorer()}"
-				>
+				<a href={explorerLink(r)} class="card block p-2 hover:border-accent">
+					<span class="sr-only">{m.position_open_explorer()}:</span>
 					<span class="block px-1 pb-1 text-sm font-semibold">{rotationLabel(r, '5-1')}</span>
 					<FormationCourt
 						placed={at}

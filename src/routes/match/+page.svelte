@@ -467,7 +467,7 @@
 								<span class="truncate">{t.name}</span>
 							</p>
 							<p class="text-6xl font-bold tabular-nums sm:text-7xl" aria-live="polite">
-								{t.points}
+								{#key t.points}<span class="animate-pop inline-block">{t.points}</span>{/key}
 							</p>
 							<p class="text-sm text-ink-soft">{m.match_sets_won({ n: t.sets })}</p>
 						</div>

@@ -47,6 +47,17 @@
 	);
 	const outcomes = $derived(outcomeCounts(log));
 	const detailed = $derived(log.some((r) => r.detail));
+	/** Serve-receive ratings in each rotation, where the coach rated passes. */
+	const passByRotation = $derived(
+		Object.fromEntries(
+			stats.map((r) => {
+				const passes = log.filter((x) => x.rotation === r.rotation && x.detail?.pass);
+				const total = passes.reduce((sum, x) => sum + x.detail!.pass!.rating, 0);
+				return [r.rotation, { n: passes.length, total }];
+			})
+		)
+	);
+	const anyPasses = $derived(Object.values(passByRotation).some((p) => p.n > 0));
 	const pct = (n: number, of: number) => (of ? `${Math.round((100 * n) / of)}%` : '–');
 	const avg = (total: number, n: number) => (n ? (total / n).toFixed(2) : '–');
 	const id = $props.id();
@@ -71,7 +82,10 @@
 			<tr class="text-left text-ink-soft">
 				<th scope="col" class="py-1 pr-2 font-medium">{m.label_rotation()}</th>
 				<th scope="col" class="py-1 pr-2 font-medium">{m.stats_sideout()}</th>
-				<th scope="col" class="py-1 font-medium">{m.stats_on_serve()}</th>
+				<th scope="col" class="py-1 pr-2 font-medium">{m.stats_on_serve()}</th>
+				{#if anyPasses}<th scope="col" class="py-1 font-medium" title={m.stats_pass_long()}
+						>{m.stats_pass()}</th
+					>{/if}
 			</tr>
 		</thead>
 		<tbody>
@@ -84,10 +98,17 @@
 						{pct(r.sidedOut, r.received)}
 						<span class="text-ink-soft">({r.sidedOut}/{r.received})</span>
 					</td>
-					<td class="py-1.5 tabular-nums">
+					<td class="py-1.5 pr-2 tabular-nums">
 						{pct(r.scored, r.served)}
 						<span class="text-ink-soft">({r.scored}/{r.served})</span>
 					</td>
+					{#if anyPasses}
+						{@const p = passByRotation[r.rotation]}
+						<td class="py-1.5 tabular-nums"
+							>{avg(p.total, p.n)}
+							{#if p.n}<span class="text-ink-soft">({p.n})</span>{/if}</td
+						>
+					{/if}
 				</tr>
 			{/each}
 		</tbody>

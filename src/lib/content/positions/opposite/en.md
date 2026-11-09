@@ -10,7 +10,7 @@ The opposite (also called right side, or opposite hitter) stands directly across
 ## Every moment of the rally
 
 - **Serve receive:** usually you do not pass. Wait where the overlap rule puts you, out of the passers' way, often near the right side so you can approach. In a four-player receive, or in a rotation where a front-row outside has to shield the setter, you may pass too.
-- **Your serve:** serve, then go to right back in the back row, or the right side at the net in the front row.
+- **When your team serves:** serve, then go to right back in the back row, or the right side at the net in the front row.
 - **Defense:** in the front row, block on the right against their outside hitter, who usually gets the most sets. In the back row, defend right back.
 - **Attack:** in the front row, hit from the right. In rotation 1 the opposite often starts the first attack from the left, because the outside who passed on the right hits from there. In the back row, attack from right back (zone 1), taking off from behind the attack line.
 - **Cover:** cover your hitters when the set goes elsewhere.

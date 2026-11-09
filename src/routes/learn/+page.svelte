@@ -110,9 +110,15 @@
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.learn_title()}</h1>
 <p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.learn_lead()}</p>
-<p class="mt-4 font-semibold" aria-live="polite" data-pagefind-ignore>
-	{m.learn_progress({ done: done.size, total })}
-</p>
+<div class="mt-4 max-w-md" data-pagefind-ignore>
+	<p class="font-semibold" aria-live="polite">{m.learn_progress({ done: done.size, total })}</p>
+	<div class="mt-2 h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
+		<div
+			class="h-full rounded-full bg-accent motion-safe:transition-[width] motion-safe:duration-500"
+			style="width: {(100 * done.size) / total}%"
+		></div>
+	</div>
+</div>
 
 <ol class="mt-8 max-w-3xl space-y-10">
 	{#each STAGES as stage, i (i)}

@@ -163,7 +163,7 @@
 			{#if correct !== undefined}
 				<p
 					class={[
-						'mt-6 flex items-center gap-2 text-xl font-bold',
+						'animate-reveal mt-6 flex items-center gap-2 text-xl font-bold',
 						correct ? 'text-good' : 'text-bad'
 					]}
 				>

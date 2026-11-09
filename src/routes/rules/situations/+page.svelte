@@ -17,6 +17,10 @@
 	/** The reader's guesses, so a revealed answer can say whether they were right. */
 	let guesses: Record<string, 'legal' | 'fault'> = $state({});
 	let revealed: Record<string, boolean> = $state({});
+	const called = $derived(Object.keys(guesses).length);
+	const right = $derived(
+		SITUATIONS.filter((s) => guesses[s.id] && guesses[s.id] === s.verdict).length
+	);
 </script>
 
 <Seo
@@ -33,7 +37,11 @@
 	<a class="text-accent underline" href={href('/rules')}>{m.rules_title()}</a>
 </p>
 
-<ol class="mt-8 max-w-3xl space-y-4">
+<p class="mt-4 font-semibold" aria-live="polite" data-pagefind-ignore>
+	{#if called}{m.situations_score({ right, called })}{/if}
+</p>
+
+<ol class="mt-4 max-w-3xl space-y-4">
 	{#each SITUATIONS as s, i (s.id)}
 		{@const local = s.elsewhere?.find((e) => e.leagues.includes(league))}
 		{@const guess = guesses[s.id]}
@@ -65,7 +73,7 @@
 					>
 				</div>
 			{/if}
-			<div class={revealed[s.id] ? 'mt-3' : 'sr-only'} aria-live="polite">
+			<div class={revealed[s.id] ? 'animate-reveal mt-3' : 'sr-only'} aria-live="polite">
 				{#if revealed[s.id] && guess}
 					<p
 						class={[

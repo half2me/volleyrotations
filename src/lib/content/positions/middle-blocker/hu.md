@@ -26,4 +26,4 @@ A center a hálónál él. Ő vezeti a sáncot, figyeli az ellenfél feladóját
 - Az ütő nekifutására ugrasz a feladás helyett: figyeld a feladó kezét, aztán a labdát.
 - Rést hagysz magad és a szélső sáncoló között.
 - Túl későn futsz neki, így nem jelentesz valódi veszélyt a gyorsindításnál.
-- Elfelejtesz bejönni nyitni, vagy rossz helyen hagyod el a pályát: a helyettesítés a kispad melletti helyettesítési zónában történik.
+- Elfelejtesz bejönni nyitni, vagy rossz helyen hagyod el a pályát: a helyettesítés a cserepad melletti helyettesítési zónában történik.

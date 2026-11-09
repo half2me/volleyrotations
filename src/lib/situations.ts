@@ -26,7 +26,7 @@ export const SITUATIONS: Situation[] = [
 		id: 'net-touch-block',
 		scenario: {
 			en: 'A middle blocker jumps to block a quick set, misses the ball, and brushes the net tape between the antennas.',
-			hu: 'A center felugrik sáncolni egy gyors labdára, nem éri el, és a két antenna között hozzáér a háló felső szalagjához.'
+			hu: 'A center felugrik sáncolni egy gyors labdára, nem éri el a labdát, és a két antenna között hozzáér a háló felső szalagjához.'
 		},
 		verdict: 'fault',
 		ruling: { en: 'Fault by the blocker.', hu: 'A sáncoló hibája.' },
@@ -43,7 +43,7 @@ export const SITUATIONS: Situation[] = [
 				leagues: ['nfhs'],
 				text: {
 					en: 'NFHS: any net contact is a fault, except by loose hair or when the opponents drive the net into a player.',
-					hu: 'NFHS: minden hálóérintés hiba, kivéve a laza hajjal, vagy ha az ellenfél üti a hálót a játékosba.'
+					hu: 'NFHS: minden hálóérintés hiba, kivéve, ha csak a laza haj ér a hálóhoz, vagy ha az ellenfél üti a hálót a játékosnak.'
 				}
 			}
 		]
@@ -52,7 +52,7 @@ export const SITUATIONS: Situation[] = [
 		id: 'net-touch-after',
 		scenario: {
 			en: 'After landing safely from a spike, an attacker turns away and her wrist touches the net. Another time, a ponytail flicks the net during a spike.',
-			hu: 'Egy ütő a leütés után biztonságosan talajt fog, megfordul, és a csuklója hozzáér a hálóhoz. Máskor egy lófarok súrolja a hálót leütés közben.'
+			hu: 'Egy ütő a leütés után biztonságosan földet ér, megfordul, és a csuklója hozzáér a hálóhoz. Máskor egy lófarok súrolja a hálót leütés közben.'
 		},
 		verdict: 'legal',
 		ruling: {
@@ -101,7 +101,7 @@ export const SITUATIONS: Situation[] = [
 		id: 'centre-line',
 		scenario: {
 			en: 'Landing from a block, a player’s foot ends up partly over the centre line with the heel still on it. Another time her whole foot lands in the opponents’ court, and another time her hand does.',
-			hu: 'Sáncolásból talajt fogva egy játékos lába részben átér a középvonalon, de a sarka még a vonalon van. Máskor az egész lába az ellenfél térfelére érkezik, máskor a keze.'
+			hu: 'Sáncolásból leérkezve egy játékos lába részben átér a középvonalon, de a sarka még a vonalon van. Máskor az egész lába az ellenfél térfelére érkezik, máskor a keze.'
 		},
 		verdict: 'depends',
 		ruling: {
@@ -145,7 +145,7 @@ export const SITUATIONS: Situation[] = [
 		id: 'outside-antenna',
 		scenario: {
 			en: 'A first-touch dig flies outside the antenna into the opponents’ free zone. A teammate runs round and plays it back over, still outside the antenna.',
-			hu: 'Egy első érintésből védett labda az antennán kívül átrepül az ellenfél szabadterébe. Egy csapattárs utánafut, és az antennán kívül visszajátssza.'
+			hu: 'Egy első érintésből védett labda az antennán kívül átrepül az ellenfél kifutójába. Egy csapattárs utánafut, és az antennán kívül visszajátssza.'
 		},
 		verdict: 'legal',
 		ruling: {
@@ -153,8 +153,8 @@ export const SITUATIONS: Situation[] = [
 			hu: 'Szabályos, ha ugyanazon az oldalon, az antennán kívüli téren keresztül tér vissza.'
 		},
 		why: {
-			en: 'A ball that crossed through the external space may be played back within the team’s hits. The player must not touch the opponents’ court.',
-			hu: 'A külső téren átjutott labda a csapat érintésein belül visszahozható. A játékos nem érintheti az ellenfél pályáját.'
+			en: 'A ball from the team’s first hit that crossed through the external space may be played back within the team’s hits. A second or third hit that leaves outside the crossing space is a fault at once. The player must not touch the opponents’ court.',
+			hu: 'A csapat első érintéséből a külső áthaladási téren átjutott labda a csapat érintésein belül visszahozható. Ha a második vagy harmadik érintés megy ki az áthaladási téren kívül, az azonnal hiba. A játékos nem érintheti az ellenfél pályáját.'
 		},
 		rules: [{ n: '10.1.2', page: 31 }],
 		elsewhere: [
@@ -266,7 +266,7 @@ export const SITUATIONS: Situation[] = [
 		verdict: 'depends',
 		ruling: {
 			en: 'Taking off on the line: fault. Taking off behind it and landing in front: legal.',
-			hu: 'A vonalon elrugaszkodva: hiba. Mögüle elrugaszkodva és előtte talajt fogva: szabályos.'
+			hu: 'A vonalon elrugaszkodva: hiba. Mögüle elrugaszkodva és előtte leérkezve: szabályos.'
 		},
 		why: {
 			en: 'At take-off the back-row attacker’s feet must not touch or cross the attack line. Where they land does not matter. From the front zone, a back-row player may only attack a ball that is partly below the top of the net.',
@@ -456,7 +456,7 @@ export const SITUATIONS: Situation[] = [
 		verdict: 'fault',
 		ruling: {
 			en: 'Fault (screening): the serve goes to the opponents.',
-			hu: 'Hiba (takarás): a nyitásjog az ellenfélé.'
+			hu: 'Hiba (takarás): pont és nyitásjog az ellenfélnek.'
 		},
 		why: {
 			en: 'Since 2025, players of the serving team may not raise their hands above their heads until the served ball has crossed the net, wherever they stand.',
@@ -485,8 +485,8 @@ export const SITUATIONS: Situation[] = [
 		verdict: 'fault',
 		ruling: { en: 'Fault by the receiving team.', hu: 'A fogadó csapat hibája.' },
 		why: {
-			en: 'Attacking the serve from the front zone while the ball is entirely above the net is a fault; from behind the attack line it is legal. Blocking a serve is always a fault.',
-			hu: 'Hiba a nyitást az első zónából megtámadni, amíg teljes terjedelmével a háló felett van; a támadóvonal mögül szabályos. A nyitást sáncolni mindig hiba.'
+			en: 'It is a fault to complete an attack hit on the opponents’ serve when the ball is in the front zone and entirely higher than the top of the net. Attacking it while it is behind the attack line, or partly below the top of the net, is legal. Blocking a serve is always a fault.',
+			hu: 'Hiba az ellenfél nyitását megtámadni, ha a labda az első zónában van, és teljes terjedelmével a háló felső széle fölött van. Ha a labda a támadóvonal mögött van, vagy egy része a háló felső széle alatt van, szabályos. A nyitást sáncolni mindig hiba.'
 		},
 		rules: [
 			{ n: '13.3.4', page: 36 },

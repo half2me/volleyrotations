@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { Arm, Signal } from '#lib/signals.js';
+	import { cubicInOut } from 'svelte/easing';
+	import { prefersReducedMotion, Tween } from 'svelte/motion';
 
 	/**
 	 * A simple sketch of a referee showing a signal, facing the reader. The referee's right arm is
@@ -25,15 +27,65 @@
 		return { elbow, hand };
 	}
 
+	const REST: Arm = { upper: 8, fore: 8 };
+	const mix = (a: Arm, b: Arm, t: number): Arm => ({
+		upper: a.upper + (b.upper - a.upper) * t,
+		fore: a.fore + (b.fore - a.fore) * t
+	});
+
+	/**
+	 * How far through the movement the figure is: 0 is the starting pose, 1 the signal. The figure
+	 * raises its arms into the signal, holds it, and lowers them again; a repeated movement swings
+	 * back and forth. Still for readers who prefer less motion, and while off screen.
+	 */
+	const t = new Tween(1, { easing: cubicInOut });
+	let figure: SVGSVGElement | undefined = $state();
+	let visible = $state(false);
+
+	$effect(() => {
+		if (!figure) return;
+		const observer = new IntersectionObserver(([entry]) => (visible = entry.isIntersecting));
+		observer.observe(figure);
+		return () => observer.disconnect();
+	});
+
+	$effect(() => {
+		if (!visible || prefersReducedMotion.current) {
+			t.set(1, { duration: 0 });
+			return;
+		}
+		let stopped = false;
+		const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+		(async () => {
+			await t.set(0, { duration: 0 });
+			while (!stopped) {
+				if (signal.repeat) {
+					await t.set(1, { duration: 650 });
+					if (stopped) break;
+					await t.set(0, { duration: 650 });
+				} else {
+					await t.set(1, { duration: 700 });
+					await wait(1800);
+					if (stopped) break;
+					await t.set(0, { duration: 500 });
+					await wait(500);
+				}
+			}
+		})();
+		return () => {
+			stopped = true;
+		};
+	});
+
 	const sR = { x: 43, y: 38 };
 	const sL = { x: 57, y: 38 };
-	const right = $derived(arm(sR, signal.right, -1));
-	const left = $derived(arm(sL, signal.left, 1));
+	const right = $derived(arm(sR, mix(signal.from?.right ?? REST, signal.right, t.current), -1));
+	const left = $derived(arm(sL, mix(signal.from?.left ?? REST, signal.left, t.current), 1));
 	const extras = $derived(signal.props ?? []);
 	const raised = $derived(right.hand.y < left.hand.y ? right.hand : left.hand);
 </script>
 
-<svg viewBox="0 0 100 110" class="h-auto w-full" aria-hidden="true">
+<svg bind:this={figure} viewBox="0 -24 100 134" class="h-auto w-full" aria-hidden="true">
 	{#if extras.includes('net')}
 		<line
 			x1="0"
