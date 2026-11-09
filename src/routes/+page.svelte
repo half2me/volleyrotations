@@ -18,6 +18,7 @@
 	import { href } from '#lib/i18n.js';
 	import { guideLabel } from '#lib/page-labels.js';
 	import { m } from '#lib/paraglide/messages.js';
+	import { ballPath } from '#lib/volley/ball.js';
 	import { DEFAULT_OPTIONS, formation } from '#lib/volley/formations.js';
 	import { phaseName, roleName, rotationLabel, systemName } from '#lib/volley/labels.js';
 	import type { RotationNo } from '#lib/volley/model.js';
@@ -40,6 +41,7 @@
 		return () => clearInterval(timer);
 	});
 	const placed = $derived(formation({ ...DEFAULT_OPTIONS, rotation }, 'receive'));
+	const ball = $derived(ballPath({ ...DEFAULT_OPTIONS, rotation }, 'receive', placed, 'OH1'));
 
 	$effect(() => explorerPrefs.load());
 	const beach = $derived(explorerPrefs.current.sport === 'beach');
@@ -157,6 +159,7 @@
 		{:else}
 			<FormationCourt
 				{placed}
+				{ball}
 				you="OH1"
 				area
 				label={m.court_label({

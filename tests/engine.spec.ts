@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { ballPath } from '../src/lib/volley/ball.ts';
 import {
 	ATTACKS_FROM,
 	byZone,
@@ -439,4 +440,44 @@ test('detailed stats count each player’s points, errors and passes', () => {
 	// A rally without detail stays plain, and the CSV keeps a column for each detail.
 	expect(s.log[1].detail).toEqual({ how: 'ace', by: 'OH1' });
 	expect(logCsv(s.log).split('\n')[1]).toBe('1,1,1,0,1,1,0,kill,OH1,L,3,');
+});
+
+test('the ball flies between contacts inside the diagram in every moment', () => {
+	for (const system of SYSTEMS) {
+		for (const rotation of ROTATIONS) {
+			for (const phase of PHASES) {
+				const o: Options = { ...DEFAULT_OPTIONS, system, rotation, serving: phase !== 'receive' };
+				const placed = formation(o, phase);
+				const flights = ballPath(o, phase, placed);
+				if (phase === 'base') {
+					expect(flights).toHaveLength(0);
+					continue;
+				}
+				expect(flights.length, `${system} R${rotation} ${phase}`).toBeGreaterThan(0);
+				for (const f of flights) {
+					for (const p of [f.from, f.to]) {
+						expect(p.x).toBeGreaterThan(-1);
+						expect(p.x).toBeLessThan(10);
+						expect(p.y).toBeGreaterThanOrEqual(-1.3);
+						expect(p.y).toBeLessThan(11);
+					}
+				}
+				// Each flight starts where the one before landed.
+				for (let i = 1; i < flights.length; i++) expect(flights[i].from).toEqual(flights[i - 1].to);
+			}
+		}
+	}
+});
+
+test('the reader gets the ball when their task allows it', () => {
+	const o: Options = { ...DEFAULT_OPTIONS, system: '5-1', rotation: 1, serving: false };
+	const placed = formation(o, 'receive');
+	const passer = placed.find((p) => p.task === 'pass')!;
+	const flights = ballPath(o, 'receive', placed, passer.role);
+	expect(flights[0].to).toEqual({ x: passer.x, y: passer.y });
+	// The setter never passes, so the ball goes to someone else and ends at the setter.
+	const setter = placed.find((p) => p.setter)!;
+	const other = ballPath(o, 'receive', placed, setter.role);
+	expect(other[0].to).not.toEqual({ x: setter.x, y: setter.y });
+	expect(other[1].to).toEqual(setter.run ?? { x: setter.x, y: setter.y });
 });

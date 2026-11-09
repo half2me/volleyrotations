@@ -13,6 +13,7 @@
 		type ExplorerPrefs
 	} from '#lib/prefs.svelte.js';
 	import { numberOf, teams } from '#lib/teams.svelte.js';
+	import { ballPath } from '#lib/volley/ball.js';
 	import { LEAGUE_IDS, leagueOf } from '#lib/volley/leagues.js';
 	import ReportLink from '#lib/components/ReportLink.svelte';
 	import PlayerCard from '#lib/components/PlayerCard.svelte';
@@ -140,6 +141,7 @@
 	const setTo = $derived(sets.includes(o.setTo ?? 'left') ? (o.setTo ?? 'left') : sets[0]);
 	const placed = $derived(formation({ ...options, setTo }, phase));
 	const previous = $derived(step > 0 ? formation(options, phases[step - 1]) : undefined);
+	const ball = $derived(ballPath({ ...options, setTo }, phase, placed, role));
 	const explanation = $derived(explain({ ...options, league }, phase, placed, role));
 	const you = $derived(placed.find((p) => p.role === role));
 	const passerCount = $derived(placed.filter((p) => p.task === 'pass').length);
@@ -367,7 +369,7 @@
 				</button>
 			</nav>
 
-			<FormationCourt {placed} {previous} {names} you={role} area label={courtLabel} />
+			<FormationCourt {placed} {previous} {names} you={role} area label={courtLabel} {ball} />
 
 			<div class="mt-3 flex flex-wrap items-center justify-between gap-2" data-pagefind-ignore>
 				<button
