@@ -42,7 +42,9 @@ const precache = [...immutable, ...prerendered, ...assets]
 			// `_headers` is Cloudflare configuration and is never served; one 404 fails the whole addAll.
 			!path.endsWith('/_headers') &&
 			// Open Graph previews are for link unfurlers; the app never shows them.
-			!path.startsWith(toPathname('og/'))
+			!path.startsWith(toPathname('og/')) &&
+			// Hand-signal sprite sheets are several megabytes; they are cached as they are viewed.
+			!path.startsWith(toPathname('figures/'))
 	);
 
 /**

@@ -1,0 +1,472 @@
+{
+	"time-out": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"substitution": {
+		"frames": 18,
+		"rise": 6,
+		"still": 9,
+		"loop": true,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"ball-out": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"double-contact": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"flag-out": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-one-two": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"team-to-serve": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"authorise-serve": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"change-courts": {
+		"frames": 22,
+		"rise": 6,
+		"still": 10,
+		"loop": true,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"warning": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"penalty": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"expulsion": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"disqualification": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"end-of-set": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"not-tossed": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"delay-serve": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"block-fault": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"position-fault": {
+		"frames": 18,
+		"rise": 6,
+		"still": 9,
+		"loop": true,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"ball-in": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"catch": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": true,
+		"width": 300,
+		"height": 420
+	},
+	"four-hits": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"net-touch": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"reach-over": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"attack-fault": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"penetration": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"double-fault": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"ball-touched": {
+		"frames": 18,
+		"rise": 6,
+		"still": 9,
+		"loop": true,
+		"pingPong": true,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"delay": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"flag-in": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"flag-touched": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"flag-antenna": {
+		"frames": 18,
+		"rise": 6,
+		"still": 9,
+		"loop": true,
+		"pingPong": true,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"flag-unsure": {
+		"frames": 10,
+		"rise": 10,
+		"still": 9,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-one-one": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-one-fist": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-one-open": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-two-one": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-two-two": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-two-fist": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-two-open": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-fist-one": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-fist-two": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-fist-fist": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-fist-open": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-open-one": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-open-two": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-open-fist": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	},
+	"partner-open-open": {
+		"frames": 6,
+		"rise": 6,
+		"still": 5,
+		"loop": false,
+		"pingPong": false,
+		"slow": false,
+		"width": 300,
+		"height": 420
+	}
+}
