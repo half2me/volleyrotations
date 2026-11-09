@@ -1,6 +1,7 @@
 import { Persisted } from '#lib/persisted.svelte.js';
 import type { DefenseSystem, Options } from '#lib/volley/formations.js';
 import { leagueOf, type LeagueId } from '#lib/volley/leagues.js';
+import type { SubPlan } from '#lib/volley/match.js';
 import type {
 	LiberoZone,
 	LineupOrder,
@@ -33,6 +34,8 @@ export type Team = {
 	liberoServesFor?: RoleId;
 	formationBy?: Partial<Record<RotationNo, ReceiveFormation>>;
 	custom?: Partial<Record<RotationNo, Partial<Record<Zone, Point>>>>;
+	/** Planned substitutions for the match tracker; teams saved before the planner have none. */
+	plan?: SubPlan;
 };
 
 /** The playbook settings every choice a team makes, for the formation engine. */

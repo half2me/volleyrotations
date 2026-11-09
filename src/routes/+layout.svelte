@@ -1,6 +1,7 @@
 <script lang="ts">
 	import LanguageSwitcher from '#lib/components/LanguageSwitcher.svelte';
 	import ThemeToggle from '#lib/components/ThemeToggle.svelte';
+	import UpdateToast from '#lib/components/UpdateToast.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
 	import SiteNav from '#lib/components/SiteNav.svelte';
@@ -65,8 +66,16 @@
 					{m.footer_accuracy()}
 					<ReportLink />
 				</p>
+				<p>
+					<a
+						class="inline-flex min-h-11 items-center underline hover:text-accent"
+						href={href('/settings')}>{m.settings_footer_link()}</a
+					>
+				</p>
 			</div>
 			<LanguageSwitcher />
 		</div>
 	</footer>
 </div>
+
+<UpdateToast />

@@ -1,3 +1,5 @@
+import { opponent, player, pt, type Diagram, type Text } from '#lib/volley/diagram.js';
+import { TARGET } from '#lib/volley/formations.js';
 import type { LeagueId } from '#lib/volley/leagues.js';
 
 /**
@@ -5,11 +7,11 @@ import type { LeagueId } from '#lib/volley/leagues.js';
  * checked against the rule text (and the FIVB Casebook 2025 where it decides the case); `page` is
  * the page of the rules PDF. Differences in other rule sets are listed only where confirmed.
  */
-type Text = { en: string; hu: string };
-
 export type Situation = {
 	id: string;
 	scenario: Text;
+	/** Drawn where a place on the court decides the case, never where only the contact does. */
+	diagram?: Diagram;
 	ruling: Text;
 	verdict: 'legal' | 'fault' | 'depends';
 	why: Text;
@@ -21,9 +23,19 @@ export const RULES_PDF =
 	'https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf';
 export const CASEBOOK_PDF = 'https://inside.cev.eu/media/n40ey4ap/casebook-2025.pdf';
 
+/** Where the opponents' serve comes from: their zone 1, at the far edge of the strip. */
+const SERVE = pt(1.8, -1.2);
+
 export const SITUATIONS: Situation[] = [
 	{
 		id: 'net-touch-block',
+		diagram: {
+			players: [player('MB1', 4.6, 0.4), opponent('S', 3.8, -0.8), opponent('MB1', 5.4, -0.8)],
+			ball: [
+				{ from: pt(3.8, -0.8), to: pt(5.4, -0.8) },
+				{ from: pt(5.4, -0.8), to: pt(3.0, 5.0) }
+			]
+		},
 		scenario: {
 			en: 'A middle blocker jumps to block a quick set, misses the ball, and brushes the net tape between the antennas.',
 			hu: 'A center felugrik sáncolni egy gyors labdára, nem éri el a labdát, és a két antenna között hozzáér a háló felső szalagjához.'
@@ -79,6 +91,10 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'antenna',
+		diagram: {
+			players: [player('MB1', 8.6, 0.45), player('OH1', -0.4, 0.5), opponent('OH1', 7.6, -0.8)],
+			ball: [{ from: pt(7.6, -0.8), to: pt(8.4, -0.1) }]
+		},
 		scenario: {
 			en: 'A blocker grabs the antenna while blocking. Another time, a hitter lands, stumbles and touches the net outside the antenna.',
 			hu: 'Egy sáncoló sáncolás közben megfogja az antennát. Máskor egy ütő talajfogás után megbotlik, és az antennán kívül érinti a hálót.'
@@ -99,6 +115,9 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'centre-line',
+		diagram: {
+			players: [player('MB1', 4.5, 0.1), opponent('MB1', 3.6, -0.85), opponent('S', 5.6, -0.85)]
+		},
 		scenario: {
 			en: 'Landing from a block, a player’s foot ends up partly over the centre line with the heel still on it. Another time her whole foot lands in the opponents’ court, and another time her hand does.',
 			hu: 'Sáncolásból leérkezve egy játékos lába részben átér a középvonalon, de a sarka még a vonalon van. Máskor az egész lába az ellenfél térfelére érkezik, máskor a keze.'
@@ -143,6 +162,18 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'outside-antenna',
+		diagram: {
+			players: [
+				player('L', 1.6, 6.2, 'libero'),
+				player('OH1', 1.2, 3.2),
+				opponent('OPP', 2.2, -0.9)
+			],
+			moves: [{ from: pt(1.2, 3.2), to: pt(-0.5, -0.9) }],
+			ball: [
+				{ from: pt(1.6, 6.2), to: pt(-0.6, -1.3) },
+				{ from: pt(-0.6, -1.3), to: pt(2.5, 2.5) }
+			]
+		},
 		scenario: {
 			en: 'A first-touch dig flies outside the antenna into the opponents’ free zone. A teammate runs round and plays it back over, still outside the antenna.',
 			hu: 'Egy első érintésből védett labda az antennán kívül átrepül az ellenfél kifutójába. Egy csapattárs utánafut, és az antennán kívül visszajátssza.'
@@ -176,6 +207,13 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'antenna-spike',
+		diagram: {
+			players: [player('OH1', 0.9, 1.0), opponent('OPP', 1.8, -0.9)],
+			ball: [
+				{ from: pt(0.9, 1.0), to: pt(0, 0) },
+				{ from: pt(0, 0), to: pt(1.0, -1.3) }
+			]
+		},
 		scenario: {
 			en: 'A spike clips the antenna and lands in the opponents’ court.',
 			hu: 'Egy leütés súrolja az antennát, és az ellenfél pályájára esik.'
@@ -213,6 +251,10 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'reach-over',
+		diagram: {
+			players: [player('MB1', 7.0, 0.45), opponent('S', 5.4, -0.8), opponent('OH1', 7.9, -1.0)],
+			ball: [{ from: pt(5.4, -0.8), to: pt(7.0, -0.35) }]
+		},
 		scenario: {
 			en: 'A blocker reaches over the net and touches the ball before the opponent attacks it. Another time, she reaches over and blocks the ball after their spike.',
 			hu: 'Egy sáncoló átnyúl a háló fölött, és hozzáér a labdához, mielőtt az ellenfél megtámadná. Máskor átnyúl, és a leütés után sáncolja a labdát.'
@@ -242,6 +284,20 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'back-row-block',
+		diagram: {
+			players: [
+				player('S', 6.3, 0.5),
+				{ label: 'S', x: 7.6, y: 4.5, faded: true },
+				player('OPP', 1.4, 0.9),
+				player('MB1', 4.3, 0.7),
+				player('OH1', 7.8, 1.5),
+				player('OH2', 1.5, 5.8),
+				player('L', 4.5, 7.2, 'libero'),
+				opponent('OH1', 3.0, -0.9)
+			],
+			moves: [{ from: pt(7.6, 4.5), to: pt(6.3, 0.5) }],
+			ball: [{ from: pt(3.0, -0.9), to: pt(6.2, -0.2) }]
+		},
 		scenario: {
 			en: 'A back-row setter jumps at the net, reaches above the top of it and touches the opponents’ attack.',
 			hu: 'Egy hátsó soros feladó a hálónál felugrik, a háló teteje fölé nyúl, és hozzáér az ellenfél támadásához.'
@@ -259,6 +315,19 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'back-row-attack',
+		diagram: {
+			players: [
+				player('S', TARGET.x, TARGET.y),
+				player('OH1', 4.5, 3.0),
+				{ label: 'OPP', x: 1.6, y: 4.3, faded: true },
+				player('OPP', 1.6, 2.4)
+			],
+			moves: [{ from: pt(1.6, 4.3), to: pt(1.6, 2.4) }],
+			ball: [
+				{ from: TARGET, to: pt(4.5, 3.0) },
+				{ from: pt(4.5, 3.0), to: pt(2.5, -1.1) }
+			]
+		},
 		scenario: {
 			en: 'A back-row player takes off standing on the attack line and spikes a ball that is entirely above the net. Another time she takes off from behind the line and lands in front of it.',
 			hu: 'Egy hátsó soros játékos a támadóvonalon állva rugaszkodik el, és leüt egy labdát, amely teljes terjedelmével a háló felett van. Máskor a vonal mögül rugaszkodik el, és előtte fog talajt.'
@@ -279,6 +348,13 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'libero-set',
+		diagram: {
+			players: [player('L', 5.6, 2.2, 'libero'), player('OH1', 1.5, 1.0), player('MB1', 4.0, 0.8)],
+			ball: [
+				{ from: pt(5.6, 2.2), to: pt(1.5, 1.0) },
+				{ from: pt(1.5, 1.0), to: pt(7.5, -1.1) }
+			]
+		},
 		scenario: {
 			en: 'The libero, standing in front of the attack line, sets with her fingers, and a hitter spikes the ball while it is entirely above the net.',
 			hu: 'A liberó a támadóvonal előtt kosárérintéssel feladja a labdát, és egy ütő leüti, miközben a labda teljes terjedelmével a háló felett van.'
@@ -296,6 +372,17 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'libero-attack',
+		diagram: {
+			players: [
+				player('S', TARGET.x, TARGET.y),
+				player('L', 4.5, 3.6, 'libero'),
+				player('OH1', 1.4, 1.0)
+			],
+			ball: [
+				{ from: TARGET, to: pt(4.5, 3.6) },
+				{ from: pt(4.5, 3.6), to: pt(2.5, -1.1) }
+			]
+		},
 		scenario: {
 			en: 'The libero jumps from the back court and spikes a ball that is above the net. Another time, the libero joins a block.',
 			hu: 'A liberó a hátsó területről felugrik, és leüt egy háló feletti labdát. Máskor beáll sáncolni.'
@@ -399,6 +486,13 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'serve-net',
+		diagram: {
+			players: [player('OH1', 7.4, 9.0), opponent('OH2', 4.0, -0.9)],
+			ball: [
+				{ from: pt(7.4, 9.0), to: pt(6.5, 0) },
+				{ from: pt(6.5, 0), to: pt(6.0, -1.1) }
+			]
+		},
 		scenario: {
 			en: 'A serve clips the top of the net and drops in. Another time the server’s toe touches the end line as she hits the ball.',
 			hu: 'Egy nyitás súrolja a háló tetejét, és bepottyan. Máskor a nyitó lábujja a megütés pillanatában az alapvonalhoz ér.'
@@ -420,6 +514,17 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'overlap',
+		diagram: {
+			players: [
+				player('S', 7.4, 1.9),
+				player('OH1', 7.6, 2.9),
+				player('MB1', 4.5, 1.2),
+				player('OPP', 1.4, 1.4),
+				player('OH2', 2.0, 5.8),
+				player('L', 4.6, 6.4, 'libero')
+			],
+			ball: [{ from: SERVE, to: pt(4.6, 6.4) }]
+		},
 		scenario: {
 			en: 'At the serve, the receiving team’s player in zone 1 stands completely in front of the player in zone 2.',
 			hu: 'Nyitáskor a fogadó csapat 1-es helyen álló játékosa teljesen a 2-es helyen álló előtt áll.'
@@ -478,6 +583,13 @@ export const SITUATIONS: Situation[] = [
 	},
 	{
 		id: 'attack-serve',
+		diagram: {
+			players: [player('OH1', 4.5, 2.2), player('OH2', 2.0, 5.8), player('L', 4.6, 6.4, 'libero')],
+			ball: [
+				{ from: SERVE, to: pt(4.5, 2.2) },
+				{ from: pt(4.5, 2.2), to: pt(7.0, -1.1) }
+			]
+		},
 		scenario: {
 			en: 'A front-row receiver, standing in front of the attack line, spikes the incoming serve while it is entirely above the net.',
 			hu: 'Egy első soros fogadó a támadóvonal előtt állva leüti az érkező nyitást, miközben az teljes terjedelmével a háló felett van.'

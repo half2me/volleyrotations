@@ -10,6 +10,8 @@
 		path,
 		type = 'website',
 		schema,
+		breadcrumbs,
+		structuredData,
 		noindex = false
 	}: {
 		/** Full document title. */
@@ -23,13 +25,27 @@
 		 * homepage, an interactive tool, or a guide.
 		 */
 		schema?: 'WebSite' | 'WebApplication' | 'Article';
+		/**
+		 * The page's place in the site, from the homepage down to the page itself, written as a
+		 * BreadcrumbList. Paths are base-locale paths, localized here.
+		 */
+		breadcrumbs?: { name: string; path: string }[];
+		/**
+		 * More schema.org objects the page describes itself with, such as a Quiz, each written as
+		 * its own JSON-LD block; `@context` is added here.
+		 */
+		structuredData?: Record<string, unknown>[];
 		noindex?: boolean;
 	} = $props();
+
+	// `<` is escaped so the JSON cannot close the script element early.
+	const toJsonLd = (data: Record<string, unknown>) =>
+		JSON.stringify({ '@context': 'https://schema.org', ...data }).replace(/</g, '\\u003c');
 
 	/** Open Graph wants a territory with the language. */
 	const OG_LOCALE: Record<Locale, string> = { en: 'en_GB', hu: 'hu_HU' };
 
-	const urlFor = (locale: Locale) => site.url + href(path, locale);
+	const urlFor = (locale: Locale, p = path) => site.url + href(p, locale);
 	const locale = $derived(getLocale());
 	const url = $derived(urlFor(locale));
 	// Every page has its own preview image, drawn by `pnpm og` (scripts/og-images.ts).
@@ -40,7 +56,6 @@
 		// Structured data names the page itself, without the site name the <title> ends with.
 		const name = title.replace(` · ${site.name}`, '');
 		const common = {
-			'@context': 'https://schema.org',
 			'@type': schema,
 			name,
 			description,
@@ -67,9 +82,23 @@
 							publisher: { '@type': 'Organization', name: site.name, url: site.url },
 							isPartOf: { '@type': 'WebSite', name: site.name, url: site.url }
 						};
-		// `<` is escaped so the JSON cannot close the script element early.
-		return JSON.stringify({ ...common, ...extra }).replace(/</g, '\\u003c');
+		return toJsonLd({ ...common, ...extra });
 	});
+
+	const breadcrumbJsonLd = $derived(
+		breadcrumbs?.length
+			? toJsonLd({
+					'@type': 'BreadcrumbList',
+					itemListElement: breadcrumbs.map((crumb, i) => ({
+						'@type': 'ListItem',
+						position: i + 1,
+						name: crumb.name,
+						item: urlFor(locale, crumb.path)
+					}))
+				})
+			: undefined
+	);
+	const extraJsonLd = $derived(structuredData?.map(toJsonLd) ?? []);
 </script>
 
 <svelte:head>
@@ -108,4 +137,10 @@
 	{#if jsonLd}
 		{@html `<script type="application/ld+json">${jsonLd}</script>`}
 	{/if}
+	{#if breadcrumbJsonLd}
+		{@html `<script type="application/ld+json">${breadcrumbJsonLd}</script>`}
+	{/if}
+	{#each extraJsonLd as block, i (i)}
+		{@html `<script type="application/ld+json">${block}</script>`}
+	{/each}
 </svelte:head>

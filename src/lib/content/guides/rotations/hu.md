@@ -5,6 +5,8 @@ description: A hat hely, az óramutató járásával megegyező forgás, a nyit�
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
+	import RotationGrid from '#lib/components/guide/RotationGrid.svelte';
 </script>
 
 # Hogyan működik a forgás a röplabdában
@@ -64,11 +66,17 @@ Az edzők a hat felállást aszerint nevezik el, hogy a nyitáskor hol áll a fe
 | 5. forgás | 3              | első sorköteles                              |
 | 6. forgás | 2              | első sorköteles                              |
 
+<RotationGrid you="S" caption="Az 5:1 hat forgása nyitásfogadásban. A bekarikázott feladó minden forgással egy helyet lép az óramutató járása szerint: 1, 6, 5, 4, 3, 2. A szaggatott vonal a feladó útja a feladóhelyre, amint elhangzik a nyitás." />
+
 Európa nagy részén és a scoutingprogramokban (például a Data Volley-ban) viszont a szám a feladó helyét jelenti (P1, P6, P5 …), így ott a „6-os forgás” azt jelenti, hogy a feladó a 6-os helyen áll. Az oldal a forgás száma mellett mindig kiírja a feladó helyét is; kérdezd meg az edződet, melyik szokást használja.
 
 A számok a játék sorrendjét követik: az 1. forgás után jön a 2., és így tovább. Van, ahol fordítva számolnak, vagy a nyitó szerint nevezik el a forgásokat, ezért érdemes tisztázni, mit ért rajta az edződ.
 
 [5:1-es rendszerben](/hu/guides/systems) az 1. forgás jellemzően így néz ki: feladó az 1-esben, nyitásfogadó ütő a 2-esben, center a 3-asban, feladó átló a 4-esben, a másik nyitásfogadó ütő az 5-ösben, a másik center a 6-osban.
+
+<RotationFigure rotation={1} you="S" caption="Az 5:1 1. forgása a nyitás pillanatában: a feladó (F) az 1-es helyről, a 2-es helyen fogadó társa mögül indul, és a nyitás pillanatában a feladóhelyre fut. A liberó (L) a 6-os helyen a centert helyettesíti; a másik center és a feladó átló a hálónál vár." />
+
+Minden rendszer minden forgásának [saját oldala van](/hu/rotations), pályarajzzal a nyitásfogadásról, a nyitásról, az alapállásról, a védekezésről és a támadásról, és azzal, hogy ki mit csinál: például [5:1, 1. forgás](/hu/rotations/5-1/1).
 
 ## Posztváltás a nyitás után
 
@@ -76,6 +84,8 @@ Az állásrend csak a nyitás pillanatára vonatkozik. Amint a nyitó megüti a 
 
 - **Első sor:** a nyitásfogadó ütő balra, a center középre, a feladó vagy a feladó átló jobbra. Az 1. forgásban sok csapat a fogadás utáni első támadásnál nem cserél helyet: a jobb oldalon fogadó nyitásfogadó ütő jobbról, a feladó átló balról támad.
 - **Hátsó sor:** a feladó vagy a feladó átló jobb hátulra (1-es hely), a nyitásfogadó ütő hátsó középre (6-os hely, készen a pipe-ra), a liberó bal hátulra (5-ös hely).
+
+<RotationFigure rotation={6} phase="attack" you="OH1" caption="6. forgás, az első támadás a fogadás után: a nyitásfogadó ütő (NY1) a 3-as helyről fogadott, és balról támad, a 4-es helyről induló center a háló közepére fut, a 2-es helyen álló feladó már a feladóhelyen van. A szaggatott vonalak a nekifutások." />
 
 Fogadásnál a játékosok olyan közel állnak a céljukhoz, amennyire az [állásrendi szabály](/hu/guides/overlap) engedi, és a nyitás pillanatában váltanak. Saját nyitásnál az FIVB 2025–2028-as szabályai szerint már a helyeteken várhattok; a régi szabály szerint a nyitás pillanatában váltotok. Az ellenfél nyitásánál a legtöbben előbb fogadnak, és a támadás közben vagy után váltanak.
 
@@ -97,6 +107,6 @@ A váltás nem változtat azon, ki első sorköteles. A nyitás pillanatában a 
 
 ## Gyakorolj
 
-- Lépkedj végig mind a hat forgáson a saját posztodban a [Posztkeresőben](/hu/explorer).
+- Lépkedj végig mind a hat forgáson a saját posztodban a [Posztkeresőben](/hu/explorer), vagy olvasd el őket egyenként a [forgásoldalakon](/hu/rotations).
 - Teszteld magad a [forgáskvízzel](/hu/quiz).
 - Állítsd össze a csapatod felállását, és nyomtass forgáslapot a [Felállás-készítővel](/hu/lineup).

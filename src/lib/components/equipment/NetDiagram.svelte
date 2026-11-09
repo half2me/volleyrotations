@@ -16,9 +16,12 @@
 	const opts = () => ({ duration: prefersReducedMotion.current ? 0 : 600, easing: cubicInOut });
 	const h = new Tween(2.43, opts());
 	const w = new Tween(9, opts());
+	/** The net is drawn at the longest length its rules allow, which sets where its ends sit. */
+	const n = new Tween(10, opts());
 	$effect(() => {
 		h.set(height, opts());
 		w.set(spec.court.width, opts());
+		n.set(spec.net.span[1], opts());
 	});
 
 	/** Ground level in drawing units; heights go up from it. */
@@ -29,6 +32,8 @@
 	const top = $derived(y(h.current));
 	const left = $derived(-w.current / 2);
 	const right = $derived(w.current / 2);
+	const netLeft = $derived(-n.current / 2);
+	const netRight = $derived(n.current / 2);
 	const stripes = Array.from({ length: 18 }, (_, i) => i);
 	const id = $props.id();
 </script>
@@ -60,25 +65,25 @@
 	{/each}
 	<!-- Cables from the net to the posts -->
 	<g class="stroke-net" stroke-width="0.02">
-		<line x1={left - 1} y1={top + 0.02} x2={left - 0.4} y2={top + 0.02} />
-		<line x1={right + 0.4} y1={top + 0.02} x2={right + 1} y2={top + 0.02} />
-		<line x1={left - 1} y1={top + 0.98} x2={left - 0.4} y2={top + 0.98} />
-		<line x1={right + 0.4} y1={top + 0.98} x2={right + 1} y2={top + 0.98} />
+		<line x1={left - 1} y1={top + 0.02} x2={netLeft} y2={top + 0.02} />
+		<line x1={netRight} y1={top + 0.02} x2={right + 1} y2={top + 0.02} />
+		<line x1={left - 1} y1={top + 0.98} x2={netLeft} y2={top + 0.98} />
+		<line x1={netRight} y1={top + 0.98} x2={right + 1} y2={top + 0.98} />
 	</g>
 	<!-- The net: mesh, top and bottom bands -->
-	<rect x={left - 0.4} y={top} width={w.current + 0.8} height="1" fill="url(#{id}-mesh)" />
+	<rect x={netLeft} y={top} width={n.current} height="1" fill="url(#{id}-mesh)" />
 	<rect
-		x={left - 0.4}
+		x={netLeft}
 		y={top}
-		width={w.current + 0.8}
+		width={n.current}
 		height={sport === 'beach' ? 0.08 : 0.07}
 		class="fill-court-line stroke-net"
 		stroke-width="0.01"
 	/>
 	<rect
-		x={left - 0.4}
+		x={netLeft}
 		y={top + 1 - (sport === 'beach' ? 0.08 : 0.05)}
-		width={w.current + 0.8}
+		width={n.current}
 		height={sport === 'beach' ? 0.08 : 0.05}
 		class="fill-court-line stroke-net"
 		stroke-width="0.01"
@@ -119,7 +124,7 @@
 	<g class="fill-ink stroke-ink" font-weight="600">
 		<g stroke-width="0.025">
 			<line x1="-6.6" y1={G} x2="-6.6" y2={top} />
-			<line x1="-6.8" y1={top} x2={left - 0.45} y2={top} stroke-dasharray="0.08 0.06" />
+			<line x1="-6.8" y1={top} x2={netLeft - 0.05} y2={top} stroke-dasharray="0.08 0.06" />
 			<line x1="-6.8" y1={G} x2="-6.4" y2={G} />
 		</g>
 		<text x="-6.8" y={(G + top) / 2 + 0.16} font-size="0.48" text-anchor="end" stroke="none"

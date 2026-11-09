@@ -5,6 +5,8 @@ description: The six court zones, clockwise rotation after a sideout, service or
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
+	import RotationGrid from '#lib/components/guide/RotationGrid.svelte';
 </script>
 
 # How volleyball rotation works
@@ -64,11 +66,17 @@ Coaches name the six line-ups by where the setter stands at the serve. On this s
 | Rotation 5 | 3              | front row                             |
 | Rotation 6 | 2              | front row                             |
 
+<RotationGrid you="S" caption="The six rotations of a 5-1 in serve receive. The ringed setter moves one zone clockwise each time: 1, 6, 5, 4, 3, 2. The dashed line is the setter's run to the target once the serve is hit." />
+
 In much of Europe, and in scouting software such as Data Volley, the number is the setter's zone instead (P1, P6, P5 …), so "rotation 6" there means the setter is in zone 6. This site always shows the setter's zone next to the rotation number; check which convention your coach uses.
 
 The numbers follow the order of play: after Rotation 1 the team rotates into Rotation 2, and so on. Some teams count in a different direction or name rotations after the server instead, so check what your coach means.
 
 In a [5-1 system](/guides/systems), Rotation 1 typically looks like this: setter in 1, outside hitter in 2, middle blocker in 3, opposite in 4, the other outside hitter in 5, the other middle in 6.
+
+<RotationFigure rotation={1} you="S" caption="Rotation 1 of a 5-1 at the serve: the setter (S) starts in zone 1, behind the zone 2 passer, and runs to the target the moment the serve is hit. The libero (L) stands in for the middle in zone 6; the other middle and the opposite wait at the net." />
+
+Every rotation of every system has [its own page](/rotations), with court diagrams for serve receive, the serve, base, defense and attack, and a note on what each player does: for example [5-1 Rotation 1](/rotations/5-1/1).
 
 ## Switching after the serve
 
@@ -76,6 +84,8 @@ Rotation only governs the moment the serve is hit. As soon as the server's hand 
 
 - **Front row:** outside hitter to the left, middle blocker to the middle, setter or opposite to the right. In Rotation 1 many teams don't switch for the first attack after serve receive: the outside, who passed on the right, attacks from the right, and the opposite from the left.
 - **Back row:** setter or opposite to right back (zone 1), outside hitter to middle back (zone 6, ready for the pipe), libero to left back (zone 5).
+
+<RotationFigure rotation={6} phase="attack" you="OH1" caption="Rotation 6, the first attack after serve receive: the outside hitter (OH1) passed from zone 3 and attacks from the left, the middle from zone 4 runs to the middle of the net, and the setter in zone 2 is already at the target. The dashed lines are the approaches." />
 
 When you receive, players stand as close to their target spot as the [overlap rule](/guides/overlap) allows, then switch the moment the serve is hit. When you serve, the FIVB 2025–2028 rules let you wait in your spot already; under the older rule you switch at the serve hit. On the opponent's serve, most players pass first and switch on the transition.
 
@@ -97,6 +107,6 @@ Switching does not change who is front row. At the serve, zones 4, 3 and 2 are f
 
 ## Practise it
 
-- Step through all six rotations for your role in the [position explorer](/explorer).
+- Step through all six rotations for your role in the [position explorer](/explorer), or read them one by one on the [rotation pages](/rotations).
 - Test yourself with the [rotation quiz](/quiz).
 - Build your own line-up and print a rotation sheet with the [lineup builder](/lineup).

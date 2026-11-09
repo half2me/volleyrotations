@@ -9,8 +9,9 @@
 	import { Persisted } from '#lib/persisted.svelte.js';
 	import { effectiveOptions, explorerPrefs } from '#lib/prefs.svelte.js';
 	import { teams } from '#lib/teams.svelte.js';
-	import { roleName, systemName } from '#lib/volley/labels.js';
-	import { rolesOf } from '#lib/volley/model.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { roleInSentence, roleName, systemName, zoneRef } from '#lib/volley/labels.js';
+	import { ROTATIONS, ZONES, rolesOf, zoneOf, type RoleId } from '#lib/volley/model.js';
 	import {
 		isCorrect,
 		makeQuestion,
@@ -64,6 +65,43 @@
 		if (explorerPrefs.loaded && score.loaded && !question) next();
 	});
 
+	/**
+	 * The quiz as structured data, with a fixed sample question per rotation of a 5-1: the
+	 * questions readers get are random, so the page cannot list those.
+	 */
+	const SAMPLE_ROLES: readonly RoleId[] = ['OH1', 'MB1', 'OPP', 'S', 'OH2', 'MB2'];
+	const option = (role: RoleId, zone: number) =>
+		m.player_in_zone({ name: roleName(role), zone: zoneRef(zone) });
+	const quizSchema = {
+		'@type': 'Quiz',
+		name: m.quiz_title(),
+		description: m.quiz_description(),
+		url: site.url + href('/quiz'),
+		inLanguage: getLocale(),
+		isAccessibleForFree: true,
+		about: { '@type': 'Thing', name: m.guide_rotations() },
+		educationalLevel: 'Beginner',
+		hasPart: ROTATIONS.map((rotation, i) => {
+			const role = SAMPLE_ROLES[i];
+			const zone = zoneOf('5-1', rotation, role)!;
+			return {
+				'@type': 'Question',
+				eduQuestionType: 'Multiple choice',
+				learningResourceType: 'Practice problem',
+				text: m.quiz_zone_prompt({
+					role: roleInSentence(role),
+					rotation: m.rotation_n({ n: rotation }),
+					system: systemName('5-1')
+				}),
+				acceptedAnswer: { '@type': 'Answer', text: option(role, zone) },
+				suggestedAnswer: ZONES.filter((z) => z !== zone).map((z) => ({
+					'@type': 'Answer',
+					text: option(role, z)
+				}))
+			};
+		})
+	};
+
 	function answer(choice: number) {
 		if (chosen !== undefined || !question) return;
 		chosen = choice;
@@ -85,6 +123,7 @@
 	description={m.quiz_description()}
 	path="/quiz"
 	schema="WebApplication"
+	structuredData={[quizSchema]}
 />
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.quiz_title()}</h1>
@@ -124,6 +163,9 @@
 <p class="mt-2 text-sm text-ink-soft">
 	{m.quiz_settings_note({ system: systemName(prefs.system) })}
 	<a class="text-accent underline" href={href('/explorer')}>{m.explorer_title()}</a>
+</p>
+<p class="mt-1 text-sm text-ink-soft">
+	<a class="text-accent underline" href={href('/rules/signals/quiz')}>{m.signals_quiz_link()}</a>
 </p>
 <p class="mt-1 text-sm text-ink-soft">
 	{m.quiz_revisit_note({ n: Object.keys(score.current.misses ?? {}).length })}

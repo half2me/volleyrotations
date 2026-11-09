@@ -15,17 +15,10 @@
 		type Member,
 		type Team
 	} from '#lib/teams.svelte.js';
-	import { LEAGUE_IDS, leagueOf, type LeagueId } from '#lib/volley/leagues.js';
+	import { leagueOf, type LeagueId } from '#lib/volley/leagues.js';
 	import { explorerPrefs } from '#lib/prefs.svelte.js';
-	import IconDownload from '~icons/lucide/download';
 	import { DEFAULT_OPTIONS, formation } from '#lib/volley/formations.js';
-	import {
-		leagueName,
-		roleName,
-		roleShort,
-		rotationLabel,
-		systemName
-	} from '#lib/volley/labels.js';
+	import { roleName, roleShort, rotationLabel, systemName } from '#lib/volley/labels.js';
 	import {
 		LOSS_OUTCOMES,
 		PLAYER_OUTCOMES,
@@ -33,13 +26,16 @@
 		annotateLast,
 		beachServer,
 		courtRoles,
+		isFullCopy,
 		sideSwitchDue,
 		technicalTimeoutDue,
 		subsPerSet,
 		timeoutsPerSet,
 		newMatch,
 		nextSetServing,
+		pushUndo,
 		rally,
+		restoreUndo,
 		setOver,
 		setTarget,
 		setWinner,
@@ -47,6 +43,7 @@
 		startSet,
 		subOptions,
 		substitute,
+		undoEntry,
 		type MatchState,
 		type Outcome,
 		type PassRating,
@@ -54,7 +51,8 @@
 		type RallyRecord,
 		type SetScore,
 		type Sport,
-		type SubOption
+		type SubOption,
+		type UndoEntry
 	} from '#lib/volley/match.js';
 	import {
 		ROTATIONS,
@@ -64,8 +62,14 @@
 		type SystemId
 	} from '#lib/volley/model.js';
 	import MatchReport from '#lib/components/MatchReport.svelte';
+	import Matchup from '#lib/components/Matchup.svelte';
+	import PlannedSubs from '#lib/components/PlannedSubs.svelte';
+	import { setOpponentRotation } from '#lib/volley/match.js';
+	import { rotationWithSetterIn, type Zone } from '#lib/volley/model.js';
 	import { Dialog } from 'bits-ui';
+	import { untrack } from 'svelte';
 	import IconArrowLeftRight from '~icons/lucide/arrow-left-right';
+	import IconAlertTriangle from '~icons/lucide/triangle-alert';
 	import IconFlag from '~icons/lucide/flag';
 	import IconTimer from '~icons/lucide/timer';
 	import IconUndo from '~icons/lucide/undo-2';
@@ -74,13 +78,16 @@
 
 	type Saved = {
 		match?: MatchState;
-		history: MatchState[];
+		/** Undo steps, oldest first. */
+		history: UndoEntry[];
 		teamId?: string;
 		opponent: string;
 		/** Whether the coach records how each rally ended; off unless chosen. */
 		detailed?: boolean;
 		/** Beach: our two players' names, which the stats key as `p0` and `p1`. */
 		pair?: [string, string];
+		/** The opponents' players in service order, setter first, when the coach names them. */
+		oppNames?: string[];
 	};
 	const saved = new Persisted<Saved>('vr:match', { history: [], opponent: '' });
 
@@ -103,7 +110,21 @@
 		saved.load();
 		archive.load();
 		explorerPrefs.load();
+		untrack(slimHistory);
 	});
+
+	/** Undo history saved before `UndoEntry` holds full copies of the match; this converts them. */
+	function slimHistory() {
+		const history: (UndoEntry | MatchState)[] = saved.current.history;
+		if (!history.some(isFullCopy)) return;
+		saved.set({
+			...saved.current,
+			history: history.reduce<UndoEntry[]>(
+				(acc, h) => pushUndo(acc, isFullCopy(h) ? undoEntry(h) : h),
+				[]
+			)
+		});
+	}
 
 	// Setup choices before a match starts.
 	let teamId: string | undefined = $state();
@@ -167,7 +188,8 @@
 				libero: t ? t.libero && t.system !== '6-6' : looseSystem !== '6-6',
 				rotation: startRotation,
 				serving: firstServe,
-				league: setupLeague
+				league: setupLeague,
+				oppRotation: oppRotationFrom(oppZone)
 			})
 		});
 	}
@@ -177,14 +199,19 @@
 		saved.set({
 			...saved.current,
 			match: next,
-			history: [...saved.current.history, match].slice(-300)
+			history: pushUndo(saved.current.history, undoEntry(match))
 		});
 	}
 
 	function undo() {
 		const history = saved.current.history;
-		if (!history.length) return;
-		saved.set({ ...saved.current, match: history.at(-1), history: history.slice(0, -1) });
+		const last = history.at(-1);
+		if (!last || !match) return;
+		saved.set({
+			...saved.current,
+			match: restoreUndo(last, match.log ?? []),
+			history: history.slice(0, -1)
+		});
 	}
 
 	/** Keeps a played match for review, then clears the tracker for the next one. */
@@ -341,6 +368,55 @@
 	const setIndex = $derived((match?.sets.length ?? 1) - 1);
 	const won = $derived(match ? setsWon(match) : { us: 0, them: 0 });
 	const over = $derived(match ? setOver(match) : false);
+	/** Whether a set is being played: points can be scored and the screen should stay on. */
+	const scoring = $derived(!!match && !match.finished && !over);
+
+	// Keeps the screen on courtside while a set is being played and the page is visible. The
+	// browser drops the lock whenever the page is hidden, so it is asked for again on return.
+	$effect(() => {
+		if (!scoring || !('wakeLock' in navigator)) return;
+		let lock: WakeLockSentinel | undefined;
+		let active = true;
+		const request = async () => {
+			if (!active || document.visibilityState !== 'visible') return;
+			try {
+				const sentinel = await navigator.wakeLock.request('screen');
+				if (active) lock = sentinel;
+				else await sentinel.release();
+			} catch {
+				// Refused (low battery, or a browser policy): the screen may dim as usual.
+			}
+		};
+		request();
+		document.addEventListener('visibilitychange', request);
+		return () => {
+			active = false;
+			document.removeEventListener('visibilitychange', request);
+			lock?.release().catch(() => {});
+		};
+	});
+
+	// Keyboard scoring, for a laptop or a tablet with a keyboard at the scorer's table.
+	$effect(() => {
+		const onKey = (e: KeyboardEvent) => {
+			if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || subOpen) return;
+			if ((e.target as Element | null)?.closest('input, textarea, select, [contenteditable]'))
+				return;
+			const key = e.key.toLowerCase();
+			if (key === 'arrowleft' || key === 'a') {
+				if (!scoring) return;
+				point('us');
+			} else if (key === 'arrowright' || key === 'l') {
+				if (!scoring) return;
+				point('them');
+			} else if (key === 'u' || key === 'backspace') {
+				undo();
+			} else return;
+			e.preventDefault();
+		};
+		window.addEventListener('keydown', onKey);
+		return () => window.removeEventListener('keydown', onKey);
+	});
 
 	// Next set: defaults the reader can change before starting it.
 	let nextRotation: RotationNo = $derived(team.start);
@@ -359,6 +435,23 @@
 		subOpen = false;
 		subRole = undefined;
 	}
+
+	// Opponent tracking: the zone their setter starts in, chosen before a set (0 = unknown), and
+	// the matchup panel's corrections during it.
+	let oppZone: 0 | Zone = $state(0);
+	let nextOppZone: 0 | Zone = $state(0);
+	const oppRotationFrom = (zone: 0 | Zone) => (zone ? rotationWithSetterIn(zone) : undefined);
+	const ourCourt = $derived(
+		placed.map((p) => ({
+			zone: p.zone,
+			label: tokens[p.role] ?? roleShort(p.role),
+			setter: p.setter
+		}))
+	);
+	const OPP_ZONES = [
+		{ value: 0, label: m.opp_unknown() },
+		...([1, 2, 3, 4, 5, 6] as Zone[]).map((z) => ({ value: z, label: String(z) }))
+	];
 </script>
 
 <Seo
@@ -460,6 +553,10 @@
 				options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
 				bind:value={startRotation}
 			/>
+			<div>
+				<ChipGroup legend={m.opp_setter_zone()} options={OPP_ZONES} bind:value={oppZone} />
+				<p class="mt-2 text-sm text-ink-soft">{m.opp_setter_zone_help()}</p>
+			</div>
 		{/if}
 		<div>
 			<ChipGroup
@@ -537,6 +634,16 @@
 {:else}
 	{@const us = team.name}
 	{@const them = saved.current.opponent || m.match_them()}
+	{#if saved.unsaved}
+		<p
+			role="alert"
+			class="mt-4 flex items-start gap-2 rounded-xl border border-accent px-3 py-2 text-sm"
+			data-pagefind-ignore
+		>
+			<IconAlertTriangle class="mt-0.5 size-4 shrink-0 text-accent" aria-hidden="true" />
+			{m.match_unsaved()}
+		</p>
+	{/if}
 	<div class="mt-6 grid items-start gap-6 lg:grid-cols-[1fr_minmax(0,24rem)]" data-pagefind-ignore>
 		<div class="min-w-0">
 			<!-- Scoreboard -->
@@ -620,6 +727,7 @@
 							options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
 							bind:value={nextRotation}
 						/>
+						<ChipGroup legend={m.opp_setter_zone()} options={OPP_ZONES} bind:value={nextOppZone} />
 					{/if}
 					<div class="flex flex-wrap gap-2">
 						<button type="button" class="btn-secondary" onclick={undo}>
@@ -628,7 +736,18 @@
 						<button
 							type="button"
 							class="btn-primary"
-							onclick={() => apply(startSet(match, nextRotation, nextServing, nextFirstServer))}
+							onclick={() => {
+								apply(
+									startSet(
+										match,
+										nextRotation,
+										nextServing,
+										nextFirstServer,
+										oppRotationFrom(nextOppZone)
+									)
+								);
+								nextOppZone = 0;
+							}}
 						>
 							{m.match_next_set({ n: setIndex + 2 })}
 						</button>
@@ -647,6 +766,16 @@
 						onclick={() => point('them')}>{m.match_point({ team: them })}</button
 					>
 				</div>
+				<p class="mt-2 hidden flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-soft sm:flex">
+					<span class="font-medium">{m.match_keys()}:</span>
+					<span
+						><kbd class="key">←</kbd> <kbd class="key">A</kbd> {m.match_point({ team: us })}</span
+					>
+					<span
+						><kbd class="key">→</kbd> <kbd class="key">L</kbd> {m.match_point({ team: them })}</span
+					>
+					<span><kbd class="key">U</kbd> <kbd class="key">Backspace</kbd> {m.match_undo()}</span>
+				</p>
 				{#if switchSides || technicalTimeout}
 					<div class="mt-3 space-y-2" role="status">
 						{#if switchSides}
@@ -665,6 +794,17 @@
 							</p>
 						{/if}
 					</div>
+				{/if}
+				{#if !beach && team.plan}
+					<PlannedSubs
+						{match}
+						plan={team.plan}
+						benchSize={team.bench.length}
+						occupant={label}
+						starter={(role) => memberLabel(team.players[role], roleName(role))}
+						bench={(i) => memberLabel(team.bench[i], m.match_bench_n({ n: i + 1 }))}
+						onSub={(role, option) => apply(substitute(match, role, option))}
+					/>
 				{/if}
 				{#if saved.current.detailed && !match.serving}
 					<div class="mt-3" aria-live="polite">
@@ -830,6 +970,13 @@
 						</li>
 					{/each}
 				</ul>
+				<Matchup
+					{match}
+					ours={ourCourt}
+					names={saved.current.oppNames ?? []}
+					onRotation={(r) => apply(setOpponentRotation(match, r))}
+					onNames={(oppNames) => saved.set({ ...saved.current, oppNames })}
+				/>
 			</section>
 		{/if}
 	</div>

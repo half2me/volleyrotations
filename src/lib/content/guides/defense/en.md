@@ -5,6 +5,7 @@ description: Perimeter, rotational and middle-up defense explained, with base po
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # Volleyball defensive systems
@@ -32,6 +33,8 @@ description: Perimeter, rotational and middle-up defense explained, with base po
 
 Before the opponent attacks, the team waits in a **base**: blockers at the net spread across the court, back-row defenders near the middle of their area, ready to move. Once the opponent's setter releases the ball, everyone runs to their spot for that attack. Base positions differ between teams; in this site's tools they follow the default switches: outside hitter blocks left, middle blocks in the middle, setter or opposite blocks right, libero left back, outside hitter middle back, setter or opposite right back.
 
+<RotationFigure rotation={4} phase="base" caption="Base in Rotation 4 while the opponent passes and sets: three blockers spread along the net, the libero (L) left back, the outside hitter (OH1) middle back and the opposite (OPP) right back." />
+
 ## Blocking assignments
 
 With the usual front-row switch:
@@ -54,6 +57,8 @@ Against an attack from the opponent's left (your right side):
 - **Left back (zone 5):** cross, deep in the diagonal.
 - **Off-blocker (left front):** drops back to around the attack line for the sharp cross and short balls.
 
+<RotationFigure rotation={4} phase="defense" defense="perimeter" attackFrom="outside" caption="Perimeter defense against their outside hitter, attacking at our right: the setter and the middle block, right back (OPP) takes the line, middle back (OH1) goes deep, left back (L) takes the cross and the off-blocker (OH2) drops to the attack line." />
+
 The attack from the other side is mirrored.
 
 - **Pros:** strong against hard-hitting teams; covers the deep court well.
@@ -68,11 +73,15 @@ The back row **rotates** towards the attack:
 - **Left back (zone 5)** slides towards the deep middle.
 - The **off-blocker** drops to cover the sharp angle.
 
+<RotationFigure rotation={4} phase="defense" defense="rotational" attackFrom="outside" caption="Rotational defense against the same attack: right back (OPP) comes up behind the block for tips, middle back (OH1) rotates to the deep line, left back (L) slides to the deep middle and the off-blocker (OH2) covers the sharp angle." />
+
 It is very good against tips and roll shots, because the defender behind the block is in place early. The downside is that the deep cross corner and the deep middle can be open, and players have to move more. Against an attack from the middle it plays like perimeter.
 
 ## Middle-up (6-up)
 
 The **middle back** (zone 6) moves up to just behind the block, around the attack line, and takes every tip. The two wing defenders (zones 1 and 5) take deep line and deep cross.
+
+<RotationFigure rotation={4} phase="defense" defense="middle-up" attackFrom="outside" caption="Middle-up against the same attack: the middle back (OH1) stands just behind the block for tips, the two wing defenders take deep line and deep cross; the deep middle is open." />
 
 - **Pros:** easy to learn, perfect against teams that tip a lot. Common in recreational and youth play.
 - **Cons:** the deep middle of the court is empty, so a hard ball over the block or a deep roll shot can land there.
@@ -88,6 +97,8 @@ When your team attacks, the ball can come straight back off the opponent's block
 - **Close ring:** two or three players (often the setter, the middle who did not get the set, and the back-row player behind the hitter) form a tight half-circle about a metre or two from the hitter.
 - **Second ring:** the remaining players fill the gaps further back.
 - Everyone stays low, eyes on the block, not on the hitter.
+
+<RotationFigure rotation={2} phase="cover" setTo="left" caption="Covering the outside hitter (OH2) attacking from the left: the libero, the middle and the setter form the close ring, the opposite and the other outside cover deeper." />
 
 Teams often describe it as "3-2" coverage: three close, two behind.
 

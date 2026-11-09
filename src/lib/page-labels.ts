@@ -1,5 +1,25 @@
-import type { GuideSlug, PagePath, PositionSlug } from '#lib/pages.js';
+import {
+	rotationNumbers,
+	rotationPath,
+	rotationSystems,
+	type GuideSlug,
+	type PagePath,
+	type PositionSlug,
+	type RotationPath
+} from '#lib/pages.js';
 import { m } from '#lib/paraglide/messages.js';
+import { rotationLabel, systemName } from '#lib/volley/labels.js';
+import type { RotationNo, SystemId } from '#lib/volley/model.js';
+
+/** A rotation page's name: the system, then the rotation with its setter's zone. */
+export const rotationPageLabel = (system: SystemId, rotation: RotationNo) =>
+	`${systemName(system)} · ${rotationLabel(rotation, system)}`;
+
+const rotationLabels = Object.fromEntries(
+	rotationSystems.flatMap((system) =>
+		rotationNumbers.map((n) => [rotationPath(system, n), () => rotationPageLabel(system, n)])
+	)
+) as Record<RotationPath, () => string>;
 
 /** Each guide's short name for menus and cards; the page itself uses its Markdown `title`. */
 export const guideLabel: Record<GuideSlug, () => string> = {
@@ -42,9 +62,11 @@ export const pageLabel: Record<PagePath, () => string> = {
 	'/drills': m.drills_title,
 	'/rules/situations': m.situations_title,
 	'/rules/signals': m.signals_title,
+	'/rules/signals/quiz': m.signals_quiz_title,
 	'/beach': m.beach_title,
 	'/beach/quiz': m.beach_quiz_title,
 	'/equipment': m.equipment_title,
+	'/settings': m.nav_settings,
 	'/guides': m.nav_guides,
 	'/guides/positions': guideLabel.positions,
 	'/guides/rotations': guideLabel.rotations,
@@ -66,5 +88,7 @@ export const pageLabel: Record<PagePath, () => string> = {
 	'/positions/middle-blocker': positionLabel['middle-blocker'],
 	'/positions/opposite': positionLabel.opposite,
 	'/positions/libero': positionLabel.libero,
+	'/rotations': m.rotations_title,
+	...rotationLabels,
 	'/search': m.nav_search
 };

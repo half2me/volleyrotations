@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Sport } from '#lib/volley/match.js';
 	import type { Snippet } from 'svelte';
 	import type { SVGAttributes } from 'svelte/elements';
 
@@ -11,19 +12,29 @@
 		label,
 		zones = true,
 		serviceZone = true,
+		sport = 'indoor',
+		far = 1.3,
 		children,
 		...rest
 	}: {
 		/** What the diagram shows, for screen readers. */
 		label: string;
-		/** Faint zone numbers 1–6. */
+		/** Faint zone numbers 1–6 (indoor only). */
 		zones?: boolean;
 		/** Room behind the end line for a server. */
 		serviceZone?: boolean;
+		/** A sand court is 8 m square with no attack line. */
+		sport?: Sport;
+		/** How many metres of the opponents' side to show; their whole half is 9 (8 on sand). */
+		far?: number;
 		children?: Snippet;
 	} & Omit<SVGAttributes<SVGSVGElement>, 'children'> = $props();
 
-	const bottom = $derived(serviceZone ? 11 : 9.6);
+	const size = $derived(sport === 'beach' ? 8 : 9);
+	const bottom = $derived(serviceZone ? size + 2 : size + 0.6);
+	/* The drawing is always 11 m wide, so a sand court renders at the same scale as a hall. */
+	const left = $derived(-(11 - size) / 2);
+	const floor = $derived(sport === 'beach' ? 'fill-sand' : 'fill-court');
 	const ZONE_LABELS = [
 		{ zone: 4, x: 1.5, y: 1.9 },
 		{ zone: 3, x: 4.5, y: 1.9 },
@@ -35,18 +46,29 @@
 </script>
 
 <svg
-	viewBox="-1 -1.3 11 {bottom + 1.3}"
+	viewBox="{left} {-far} 11 {bottom + far}"
 	role="img"
 	aria-label={label}
 	class="block h-auto w-full touch-none select-none"
 	{...rest}
 >
-	<!-- Opponent strip and our court -->
-	<rect x="-1" y="-1.3" width="11" height={bottom + 1.3} class="fill-paper" />
-	<rect x="0" y="-1.3" width="9" height="1.3" class="fill-court opacity-50" />
-	<rect x="0" y="0" width="9" height="9" class="fill-court" />
-	<rect x="0" y="0" width="9" height="3" class="fill-court-front" />
-	{#if zones}
+	<!-- Opponent side and our court -->
+	<rect x={left} y={-far} width="11" height={bottom + far} class="fill-paper" />
+	<rect
+		x="0"
+		y={-Math.min(far, size)}
+		width={size}
+		height={Math.min(far, size)}
+		class={[floor, 'opacity-50']}
+	/>
+	{#if sport === 'indoor' && far > 3}
+		<rect x="0" y="-3" width="9" height="3" class="fill-court-front opacity-50" />
+	{/if}
+	<rect x="0" y="0" width={size} height={size} class={floor} />
+	{#if sport === 'indoor'}
+		<rect x="0" y="0" width="9" height="3" class="fill-court-front" />
+	{/if}
+	{#if zones && sport === 'indoor'}
 		{#each ZONE_LABELS as z (z.zone)}
 			<text
 				x={z.x}
@@ -61,15 +83,19 @@
 		{/each}
 	{/if}
 	<g class="stroke-court-line" stroke-width="0.05" fill="none">
-		<rect x="0" y="0" width="9" height="9" />
-		<line x1="0" y1="3" x2="9" y2="3" />
-		<line x1="0" y1="-1.3" x2="0" y2="0" />
-		<line x1="9" y1="-1.3" x2="9" y2="0" />
+		<rect x="0" y="0" width={size} height={size} />
+		{#if sport === 'indoor'}
+			<line x1="0" y1="3" x2="9" y2="3" />
+			{#if far > 3}<line x1="0" y1="-3" x2="9" y2="-3" />{/if}
+		{/if}
+		<line x1="0" y1={-Math.min(far, size)} x2="0" y2="0" />
+		<line x1={size} y1={-Math.min(far, size)} x2={size} y2="0" />
+		{#if far >= size}<line x1="0" y1={-size} x2={size} y2={-size} />{/if}
 	</g>
 	<!-- Net and antennae -->
-	<line x1="-0.5" y1="0" x2="9.5" y2="0" class="stroke-ink" stroke-width="0.14" />
+	<line x1="-0.5" y1="0" x2={size + 0.5} y2="0" class="stroke-ink" stroke-width="0.14" />
 	<line x1="0" y1="-0.5" x2="0" y2="0.1" class="stroke-bad" stroke-width="0.1" />
-	<line x1="9" y1="-0.5" x2="9" y2="0.1" class="stroke-bad" stroke-width="0.1" />
+	<line x1={size} y1="-0.5" x2={size} y2="0.1" class="stroke-bad" stroke-width="0.1" />
 
 	{@render children?.()}
 </svg>

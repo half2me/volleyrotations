@@ -1,8 +1,11 @@
+import { coach, opponent, player, pt, type Diagram, type Text } from '#lib/volley/diagram.js';
+import { TARGET } from '#lib/volley/formations.js';
+
 /**
  * Well-known drills from reputable coaching sources, each linked to where it is described. The
- * descriptions are short summaries; the source has the full drill.
+ * descriptions are short summaries; the source has the full drill, and the diagram shows its
+ * setup.
  */
-type Text = { en: string; hu: string };
 
 export type DrillTopic =
 	| 'sideout'
@@ -40,12 +43,54 @@ export type Drill = {
 	name: string;
 	purpose: Text;
 	how: Text;
+	diagram: Diagram;
 	source: { label: string; url: string };
 };
+
+/** Where the opponents' serve comes from: their zone 1, at the far edge of the strip. */
+const SERVE = pt(1.8, -1.2);
+
+/** A team receiving in rotation 1 of a 5-1 with three passers, the libero in for a middle. */
+const RECEIVING = [
+	player('S', 8.4, 5.8),
+	player('OH1', 6.8, 5.0),
+	player('MB1', 4.3, 1.6),
+	player('OPP', 1.3, 1.5),
+	player('OH2', 2.0, 5.8),
+	player('L', 4.6, 6.4, 'libero')
+];
+const SETTER_RUN = { from: pt(8.4, 5.8), to: TARGET };
+
+/** The same team in base defence, blockers at the net. */
+const BASE = [
+	player('OPP', 1.5, 0.9),
+	player('MB1', 4.5, 0.8),
+	player('OH1', 7.5, 0.9),
+	player('OH2', 1.5, 5.8),
+	player('L', 4.5, 7.4, 'libero'),
+	player('S', 7.6, 5.8)
+];
+
+/* Letters for a beach player's job, as each language abbreviates it. */
+const ATTACKER: Text = { en: 'A', hu: 'Ü' };
+const BLOCKER: Text = { en: 'B', hu: 'S' };
+const DEFENDER: Text = { en: 'D', hu: 'V' };
+const SERVER: Text = { en: 'Sv', hu: 'Ny' };
+const PASSER: Text = { en: 'P', hu: 'F' };
+const CATCHER: Text = { en: 'C', hu: 'E' };
 
 export const DRILLS: Drill[] = [
 	{
 		id: 'wash-table',
+		diagram: {
+			players: [...RECEIVING, coach(6.8, -0.8)],
+			moves: [SETTER_RUN],
+			ball: [
+				{ from: SERVE, to: pt(4.6, 6.4) },
+				{ from: pt(4.6, 6.4), to: TARGET },
+				{ from: pt(6.8, -0.8), to: pt(2.6, 5.2) }
+			]
+		},
 		topic: 'sideout',
 		name: 'Wash table (one-way)',
 		purpose: {
@@ -63,6 +108,16 @@ export const DRILLS: Drill[] = [
 	},
 	{
 		id: 'ten-ball-wash',
+		diagram: {
+			players: [...RECEIVING, coach(6.8, -0.8)],
+			moves: [SETTER_RUN],
+			ball: [
+				{ from: SERVE, to: pt(4.6, 6.4) },
+				{ from: pt(4.6, 6.4), to: TARGET },
+				{ from: pt(6.8, -0.8), to: pt(1.6, 4.6) }
+			],
+			targets: [pt(1.6, 4.6), pt(7.8, 3.6), pt(8.4, 10.2)]
+		},
 		topic: 'sideout',
 		name: '10-ball wash',
 		purpose: {
@@ -80,6 +135,16 @@ export const DRILLS: Drill[] = [
 	},
 	{
 		id: 'three-ball',
+		diagram: {
+			players: [...RECEIVING, coach(4.5, -0.8)],
+			moves: [SETTER_RUN],
+			ball: [
+				{ from: SERVE, to: pt(6.8, 5.0) },
+				{ from: pt(6.8, 5.0), to: TARGET },
+				{ from: pt(4.5, -0.8), to: pt(2.4, 5.0) },
+				{ from: pt(4.5, -0.8), to: pt(7.2, 3.4) }
+			]
+		},
 		topic: 'sideout',
 		name: 'Three-ball drill',
 		purpose: {
@@ -97,6 +162,24 @@ export const DRILLS: Drill[] = [
 	},
 	{
 		id: 'six-in-rotation',
+		diagram: {
+			players: [
+				player('S', 8.4, 5.8),
+				player('OH1', 6.8, 5.0),
+				player('MB1', 4.4, 1.6),
+				player('OPP', 1.0, 2.8),
+				player('OH2', 2.0, 5.8),
+				player('L', 4.6, 6.4, 'libero'),
+				coach(1.8, -0.8)
+			],
+			moves: [SETTER_RUN, { from: pt(1.0, 2.8), to: pt(1.6, 0.9) }],
+			ball: [
+				{ from: pt(1.8, -0.8), to: pt(4.6, 6.4) },
+				{ from: pt(4.6, 6.4), to: TARGET },
+				{ from: TARGET, to: pt(1.6, 0.9) },
+				{ from: pt(1.6, 0.9), to: pt(7.4, -1.2) }
+			]
+		},
 		topic: 'sideout',
 		name: 'Six-player drill in every rotation',
 		purpose: {
@@ -114,6 +197,29 @@ export const DRILLS: Drill[] = [
 	},
 	{
 		id: 'bingo-bango-bongo',
+		diagram: {
+			bothHalves: true,
+			players: [
+				player('OPP', 1.4, 1.0),
+				player('MB1', 4.5, 0.8),
+				player('OH1', 7.6, 1.0),
+				player('OH2', 1.6, 5.6),
+				player('L', 4.5, 7.2, 'libero'),
+				player('S', 7.6, 4.8),
+				opponent('OPP', 7.6, -1.0),
+				opponent('MB1', 4.5, -0.8),
+				opponent('OH1', 1.4, -1.0),
+				opponent('OH2', 7.4, -5.6),
+				opponent('L', 4.5, -7.2),
+				opponent('S', 1.4, -4.8),
+				coach(-0.5, 3.5),
+				coach(9.5, -3.5)
+			],
+			ball: [
+				{ from: pt(9.5, -3.5), to: pt(3.5, 5.0) },
+				{ from: pt(-0.5, 3.5), to: pt(5.5, -5.0) }
+			]
+		},
 		topic: 'free-ball',
 		name: 'Bingo-bango-bongo',
 		purpose: {
@@ -131,6 +237,25 @@ export const DRILLS: Drill[] = [
 	},
 	{
 		id: 'team-transition',
+		diagram: {
+			players: [
+				...BASE,
+				opponent('S', 3.2, -0.9),
+				opponent('OH1', 7.4, -1.0),
+				opponent('OPP', 1.6, -1.0)
+			],
+			moves: [
+				{ from: pt(4.5, 0.8), to: pt(6.7, 0.8) },
+				{ from: pt(1.5, 0.9), to: pt(2.2, 3.2) },
+				{ from: pt(7.6, 5.8), to: pt(8.2, 3.6) },
+				{ from: pt(1.5, 5.8), to: pt(1.3, 7.2) },
+				{ from: pt(4.5, 7.4), to: pt(3.4, 8.0) }
+			],
+			ball: [
+				{ from: pt(3.2, -0.9), to: pt(7.4, -1.0) },
+				{ from: pt(7.4, -1.0), to: pt(2.0, 6.4) }
+			]
+		},
 		topic: 'transition',
 		name: 'Team transition',
 		purpose: {
@@ -148,6 +273,29 @@ export const DRILLS: Drill[] = [
 	},
 	{
 		id: 'coverage',
+		diagram: {
+			players: [
+				player('OH1', 1.4, 1.0),
+				player('S', 5.8, 0.8),
+				player('MB1', 4.4, 1.7),
+				player('OPP', 7.6, 1.0),
+				player('OH2', 1.6, 5.2),
+				player('L', 4.5, 6.8, 'libero'),
+				opponent('MB1', 1.6, -0.8),
+				coach(7.0, -0.9)
+			],
+			moves: [
+				{ from: pt(5.8, 0.8), to: pt(3.2, 2.4) },
+				{ from: pt(4.4, 1.7), to: pt(2.8, 1.5) },
+				{ from: pt(1.6, 5.2), to: pt(1.2, 3.2) },
+				{ from: pt(7.6, 1.0), to: pt(7.0, 4.4) }
+			],
+			ball: [
+				{ from: TARGET, to: pt(1.4, 1.0) },
+				{ from: pt(1.4, 1.0), to: pt(1.6, -0.1) },
+				{ from: pt(1.6, -0.1), to: pt(2.6, 3.4) }
+			]
+		},
 		topic: 'coverage',
 		name: 'Coverage drill',
 		purpose: {
@@ -165,6 +313,25 @@ export const DRILLS: Drill[] = [
 	},
 	{
 		id: 'setter-footwork',
+		diagram: {
+			players: [
+				player('S', 7.8, 6.0),
+				{ label: 'S', x: 4.5, y: 7.2, faded: true },
+				{ label: 'S', x: 1.8, y: 2.4, faded: true },
+				player('OH1', 1.0, 1.0),
+				coach(2.6, 8.6)
+			],
+			moves: [
+				{ from: pt(7.8, 6.0), to: TARGET },
+				{ from: pt(4.5, 7.2), to: TARGET },
+				{ from: pt(1.8, 2.4), to: TARGET },
+				{ from: TARGET, to: pt(2.8, 2.2) }
+			],
+			ball: [
+				{ from: pt(2.6, 8.6), to: TARGET },
+				{ from: TARGET, to: pt(1.0, 1.0) }
+			]
+		},
 		topic: 'setter',
 		name: 'Setter footwork challenge',
 		purpose: {
@@ -182,6 +349,16 @@ export const DRILLS: Drill[] = [
 	},
 	{
 		id: 'serving-ladder',
+		diagram: {
+			bothHalves: true,
+			players: [player(SERVER, 2.0, -10.0)],
+			ball: [
+				{ from: pt(2.0, -10.0), to: pt(7.5, 7.5) },
+				{ from: pt(2.0, -10.0), to: pt(4.5, 7.5) },
+				{ from: pt(2.0, -10.0), to: pt(1.5, 7.5) }
+			],
+			targets: [pt(7.5, 7.5), pt(4.5, 7.5), pt(1.5, 7.5), pt(7.5, 1.5), pt(4.5, 1.5), pt(1.5, 1.5)]
+		},
 		topic: 'serving',
 		name: 'Serving ladder',
 		purpose: {
@@ -210,6 +387,14 @@ const fivbDrill = (n: string, page: number) => ({
 export const BEACH_DRILLS: Drill[] = [
 	{
 		id: 'plus-three-minus-three',
+		diagram: {
+			bothHalves: true,
+			players: [player(SERVER, 5.5, 9.3), player(PASSER, 4.5, -5.5), player(CATCHER, 3.0, -1.2)],
+			ball: [
+				{ from: pt(5.5, 9.3), to: pt(4.5, -5.5) },
+				{ from: pt(4.5, -5.5), to: pt(3.0, -1.2) }
+			]
+		},
 		topic: 'beach-receive',
 		name: 'Plus three, minus three',
 		purpose: {
@@ -227,6 +412,20 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'four-great-sets',
+		diagram: {
+			players: [player('S', 5.5, 5.0), player(ATTACKER, 6.3, 1.2), coach(4.0, 9.4)],
+			targets: [pt(1.4, 0.7), pt(3.0, 1.6), pt(3.0, 3.6), pt(-0.6, 2.2)],
+			moves: [
+				{ from: pt(5.5, 5.0), to: pt(1.4, 0.7) },
+				{ from: pt(5.5, 5.0), to: pt(3.0, 1.6) },
+				{ from: pt(5.5, 5.0), to: pt(3.0, 3.6) },
+				{ from: pt(5.5, 5.0), to: pt(-0.6, 2.2) }
+			],
+			ball: [
+				{ from: pt(4.0, 9.4), to: pt(3.0, 1.6) },
+				{ from: pt(3.0, 1.6), to: pt(6.3, 1.2) }
+			]
+		},
 		topic: 'beach-setting',
 		name: '4 great sets',
 		purpose: {
@@ -241,6 +440,22 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'shot-practice',
+		diagram: {
+			bothHalves: true,
+			players: [
+				player(ATTACKER, 2.0, 1.4),
+				{ label: ATTACKER, x: 6.0, y: 1.4, faded: true },
+				coach(-1.0, -4.0)
+			],
+			areas: [
+				{ x: 0, y: -8, w: 2, h: 2.5 },
+				{ x: 6, y: -3, w: 2, h: 2.5 }
+			],
+			ball: [
+				{ from: pt(2.0, 1.4), to: pt(1.0, -6.8) },
+				{ from: pt(2.0, 1.4), to: pt(7.0, -1.8) }
+			]
+		},
 		topic: 'beach-shots',
 		name: 'Shot practice',
 		purpose: {
@@ -255,6 +470,31 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'high-line-cut-shot-challenge',
+		diagram: {
+			bothHalves: true,
+			players: [
+				player('S', 3.6, 1.0),
+				player(ATTACKER, 1.5, 5.5),
+				player(ATTACKER, 1.0, 7.2),
+				player(ATTACKER, 6.5, 5.5),
+				player(ATTACKER, 7.0, 7.2),
+				coach(4.0, -1.2)
+			],
+			areas: [
+				{ x: 0, y: -8, w: 1.5, h: 1.5 },
+				{ x: 6.5, y: -8, w: 1.5, h: 1.5 },
+				{ x: 0, y: -1.5, w: 1.5, h: 1.5 },
+				{ x: 6.5, y: -1.5, w: 1.5, h: 1.5 }
+			],
+			moves: [{ from: pt(1.5, 5.5), to: pt(1.8, 1.4) }],
+			ball: [
+				{ from: pt(4.0, -1.2), to: pt(1.5, 5.5) },
+				{ from: pt(1.5, 5.5), to: pt(3.6, 1.0) },
+				{ from: pt(3.6, 1.0), to: pt(1.8, 1.4) },
+				{ from: pt(1.8, 1.4), to: pt(0.7, -7.3) },
+				{ from: pt(1.8, 1.4), to: pt(7.2, -0.8) }
+			]
+		},
 		topic: 'beach-shots',
 		name: 'High line and cut shot challenge',
 		purpose: {
@@ -272,6 +512,13 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'read-the-power-shot',
+		diagram: {
+			players: [player(BLOCKER, 3.0, 0.6), coach(3.4, 2.8), opponent(ATTACKER, 4.5, -2.4)],
+			ball: [
+				{ from: pt(3.4, 2.8), to: pt(4.5, -2.4) },
+				{ from: pt(4.5, -2.4), to: pt(1.8, 5.2) }
+			]
+		},
 		topic: 'beach-block-defence',
 		name: 'Read the power shot',
 		purpose: {
@@ -286,6 +533,21 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'retreat-decision-drill',
+		diagram: {
+			players: [
+				player(BLOCKER, 2.5, 0.7),
+				player(DEFENDER, 5.5, 6.0),
+				opponent(ATTACKER, 2.5, -2.4),
+				opponent('S', 4.2, -0.9),
+				coach(5.6, -3.2)
+			],
+			moves: [{ from: pt(2.5, 0.7), to: pt(2.0, 3.6) }],
+			ball: [
+				{ from: pt(5.6, -3.2), to: pt(4.2, -0.9) },
+				{ from: pt(4.2, -0.9), to: pt(2.6, -1.4) },
+				{ from: pt(2.6, -1.4), to: pt(1.4, 4.2) }
+			]
+		},
 		topic: 'beach-block-defence',
 		name: 'Retreat decision drill',
 		purpose: {
@@ -300,6 +562,20 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'chase-line-shot-behind-block',
+		diagram: {
+			players: [
+				player(BLOCKER, 2.5, 0.6),
+				player(DEFENDER, 6.0, 6.0),
+				opponent('S', 4.2, -0.9),
+				opponent(ATTACKER, 2.5, -1.6)
+			],
+			moves: [{ from: pt(6.0, 6.0), to: pt(1.5, 6.4) }],
+			ball: [
+				{ from: pt(4.2, -0.9), to: pt(2.5, -1.6) },
+				{ from: pt(2.5, -1.6), to: pt(6.6, 6.6) },
+				{ from: pt(2.5, -1.6), to: pt(1.0, 6.6) }
+			]
+		},
 		topic: 'beach-block-defence',
 		name: 'Chase the line shot behind a block',
 		purpose: {
@@ -314,6 +590,20 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'two-person-defence-transition',
+		diagram: {
+			bothHalves: true,
+			players: [player('1', 3.0, -2.2), player('2', 5.0, 5.5)],
+			moves: [
+				{ from: pt(3.0, -2.2), to: pt(4.4, 1.6) },
+				{ from: pt(5.0, 5.5), to: pt(6.4, 1.4) }
+			],
+			ball: [
+				{ from: pt(3.0, -2.2), to: pt(5.0, 5.5) },
+				{ from: pt(5.0, 5.5), to: pt(4.4, 1.6) },
+				{ from: pt(4.4, 1.6), to: pt(6.4, 1.4) },
+				{ from: pt(6.4, 1.4), to: pt(2.0, -5.6) }
+			]
+		},
 		topic: 'beach-block-defence',
 		name: 'Two-person defence drill',
 		purpose: {
@@ -328,6 +618,12 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'split-the-passers',
+		diagram: {
+			bothHalves: true,
+			players: [player(SERVER, 5.5, 9.3), opponent(PASSER, 2.0, -5.2), opponent(PASSER, 6.0, -5.2)],
+			targets: [pt(2.9, -4.9)],
+			ball: [{ from: pt(5.5, 9.3), to: pt(4.2, -5.3) }]
+		},
 		topic: 'beach-serving',
 		name: 'Split the passers',
 		purpose: {
@@ -342,6 +638,19 @@ export const BEACH_DRILLS: Drill[] = [
 	},
 	{
 		id: 'monarch-of-the-court',
+		diagram: {
+			bothHalves: true,
+			players: [
+				opponent('A', 2.5, -4.5),
+				opponent('A', 5.5, -4.5),
+				player('B', 6.0, 9.3),
+				player('B', 3.0, 5.0),
+				player('C', -1.0, 5.5),
+				player('C', -1.0, 6.8)
+			],
+			moves: [{ from: pt(3.0, 5.0), to: pt(3.0, -3.0) }],
+			ball: [{ from: pt(6.0, 9.3), to: pt(3.5, -6.0) }]
+		},
 		topic: 'beach-games',
 		name: 'Monarch of the court',
 		purpose: {

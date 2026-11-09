@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Figure renderer</title>
+		<style>
+			body {
+				margin: 0;
+				background: #faf7f2;
+			}
+			canvas {
+				display: block;
+			}
+		</style>
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "/node_modules/three/build/three.module.js",
+					"three/addons/": "/node_modules/three/examples/jsm/"
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<script type="module">
+			import { createFigure } from './mannequin.mjs';
+			import { FIGURES } from './poses.mjs';
+
+			/**
+			 * Renders a figure's frames into one sprite sheet, a row of frames of equal size, and hands
+			 * back a WebP data URL and the frame metadata. Driven by scripts/figures.ts through
+			 * `window.renderFigure(id, frameWidth, frameHeight)`.
+			 */
+			window.renderFigure = async (id, frameW, frameH) => {
+				const spec = FIGURES[id];
+				if (!spec) throw new Error(`No figure ${id}`);
+				const fig = createFigure({ width: frameW, height: frameH });
+				const frames = spec.frames(fig);
+				// First pass: pose every frame to find how wide the picture must be.
+				const box = new fig.THREE.Box3();
+				for (const apply of frames) {
+					apply();
+					box.union(fig.extent());
+				}
+				const framing = fig.frame(box, spec.view ?? {});
+				console.log(
+					id,
+					JSON.stringify({
+						min: box.min.toArray().map((n) => +n.toFixed(2)),
+						max: box.max.toArray().map((n) => +n.toFixed(2)),
+						framing
+					})
+				);
+				const sheet = document.createElement('canvas');
+				sheet.width = frameW * frames.length;
+				sheet.height = frameH;
+				const ctx = sheet.getContext('2d');
+				frames.forEach((apply, i) => {
+					apply();
+					fig.render();
+					ctx.drawImage(fig.canvas, i * frameW, 0);
+				});
+				fig.renderer.dispose();
+				const dataUrl = sheet.toDataURL('image/webp', 0.86);
+				return {
+					dataUrl,
+					meta: {
+						frames: frames.length,
+						rise: spec.rise ?? frames.length,
+						still: spec.still ?? frames.length - 1,
+						loop: !!spec.loop,
+						pingPong: !!spec.pingPong,
+						slow: !!spec.slow
+					}
+				};
+			};
+			window.figureIds = () => Object.keys(FIGURES);
+			window.__ready = true;
+		</script>
+	</body>
+</html>

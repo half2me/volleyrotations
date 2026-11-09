@@ -1,32 +1,10 @@
 /**
  * The official referee hand signals (FIVB rules 2025–2028, Diagram 11) and line judge flag
  * signals (Diagram 12). Names and gestures follow the rulebook; `page` is the page of the rules
- * PDF that shows the signal. The figure is a simple sketch: the text is what to go by.
- *
- * A figure faces the reader. Arm angles are degrees from hanging straight down: 90 is out to the
- * side, 180 straight up, and negative angles point across the body.
+ * PDF that shows the signal. Each signal's figure is drawn by scripts/figures/poses.mjs under the
+ * same id; the written gesture here is what to go by.
  */
 type Text = { en: string; hu: string };
-
-export type Arm = { upper: number; fore: number };
-export type Side = -1 | 1;
-export type Prop =
-	'yellow' | 'red' | 'both-cards' | 'net' | 'flag-down' | 'flag-up' | 'flag-wave' | 'line';
-export type Motion = 'sweep' | 'spin' | 'circle' | 'up' | 'down' | 'brush';
-
-/** What a hand does: open palm, pointing finger, fist, thumb up, fingers counted, or holding something. */
-export type Hand =
-	| 'open'
-	| 'point'
-	| 'fist'
-	| 'thumb'
-	| 'two'
-	| 'four'
-	| 'five'
-	| 'yellow'
-	| 'red'
-	| 'both-cards'
-	| 'flag';
 
 export type Signal = {
 	id: string;
@@ -38,44 +16,7 @@ export type Signal = {
 	page: number;
 	/** The referees who show it: first, second, or both. */
 	who: 'first' | 'both' | 'line';
-	left: Arm;
-	right: Arm;
-	/**
-	 * Where the arms start when the figure acts the signal out; arms hanging down when left out.
-	 * A signal with a repeated movement, such as rolling the forearms, swings between the two.
-	 */
-	from?: { left?: Arm; right?: Arm };
-	/** Keep repeating the movement rather than showing the signal once and holding it. */
-	repeat?: boolean;
-	/**
-	 * How the hands travel from the starting pose: along an arc of the joints (the default, as when
-	 * raising an arm), or in a straight line, for a hand that sweeps across at one height. Joint
-	 * arcs would drop such a hand towards the hip halfway through.
-	 */
-	path?: 'arc' | 'line';
-	/**
-	 * Which side of the hand the thumb is on, as the reader sees the hand with its fingers pointing
-	 * down: -1 the reader's left, 1 the right. Left out, each hand is drawn palm to the reader, so
-	 * the thumb is away from the body (the referee's right hand: -1, left hand: 1). A palm facing
-	 * up or towards the body, or a forearm turned across the chest, puts it on the other side.
-	 * `thumbsFrom` is the starting pose's; the thumb rolls across as the forearm turns.
-	 */
-	thumbs?: { left?: Side; right?: Side };
-	thumbsFrom?: { left?: Side; right?: Side };
-	/** The hands, open palms when left out. */
-	hands?: { left?: Hand; right?: Hand };
-	/**
-	 * A hand held at its own angle rather than in line with the forearm, in degrees: 0 fingers
-	 * down, 180 up, 90 pointing to the reader's left. For a palm laid flat on the other hand.
-	 */
-	tilt?: { left?: number; right?: number };
-	props?: Prop[];
-	motion?: Motion;
-	/** Fingers shown on the raised hand(s), drawn as a number. */
-	fingers?: string;
 };
-
-const DOWN: Arm = { upper: 8, fore: 8 };
 
 export const REFEREE_SIGNALS: Signal[] = [
 	{
@@ -88,13 +29,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		means: { en: 'The server may serve now.', hu: 'A nyitó most nyithat.' },
 		rules: ['12.3'],
 		page: 75,
-		who: 'first',
-		from: { right: { upper: 40, fore: -95 } },
-		path: 'line',
-		thumbsFrom: { right: 1 },
-		left: DOWN,
-		right: { upper: 80, fore: 90 },
-		motion: 'sweep'
+		who: 'first'
 	},
 	{
 		id: 'team-to-serve',
@@ -109,9 +44,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['22.2.3'],
 		page: 75,
-		who: 'both',
-		left: DOWN,
-		right: { upper: 90, fore: 90 }
+		who: 'both'
 	},
 	{
 		id: 'change-courts',
@@ -123,14 +56,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		means: { en: 'Teams change ends.', hu: 'A csapatok térfelet cserélnek.' },
 		rules: ['18.2'],
 		page: 75,
-		who: 'first',
-		path: 'line',
-		from: { left: { upper: 20, fore: 60 }, right: { upper: 20, fore: 60 } },
-		repeat: true,
-		thumbs: { right: 1, left: -1 },
-		left: { upper: 20, fore: -80 },
-		right: { upper: 20, fore: -80 },
-		motion: 'spin'
+		who: 'first'
 	},
 	{
 		id: 'time-out',
@@ -142,10 +68,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		means: { en: 'A team has a time-out.', hu: 'Egy csapat pihenőidőt kapott.' },
 		rules: ['15.4.1'],
 		page: 75,
-		who: 'both',
-		tilt: { left: 90, right: 180 },
-		left: { upper: 137, fore: -79 },
-		right: { upper: -1, fore: -162 }
+		who: 'both'
 	},
 	{
 		id: 'substitution',
@@ -157,15 +80,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		means: { en: 'A substitution is made.', hu: 'Csere történik.' },
 		rules: ['15.5'],
 		page: 76,
-		who: 'both',
-		from: { left: { upper: 25, fore: -100 }, right: { upper: 25, fore: -70 } },
-		repeat: true,
-		hands: { left: 'fist', right: 'fist' },
-		thumbs: { right: 1, left: -1 },
-		thumbsFrom: { right: 1, left: -1 },
-		left: { upper: 25, fore: -70 },
-		right: { upper: 25, fore: -100 },
-		motion: 'circle'
+		who: 'both'
 	},
 	{
 		id: 'warning',
@@ -177,11 +92,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['21.1', '21.6'],
 		page: 76,
-		who: 'first',
-		hands: { right: 'yellow' },
-		left: DOWN,
-		right: { upper: 170, fore: 170 },
-		props: ['yellow']
+		who: 'first'
 	},
 	{
 		id: 'penalty',
@@ -193,11 +104,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['21.3.1'],
 		page: 76,
-		who: 'first',
-		hands: { right: 'red' },
-		left: DOWN,
-		right: { upper: 170, fore: 170 },
-		props: ['red']
+		who: 'first'
 	},
 	{
 		id: 'expulsion',
@@ -212,11 +119,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['21.3.2'],
 		page: 76,
-		who: 'first',
-		hands: { right: 'both-cards' },
-		left: DOWN,
-		right: { upper: 170, fore: 170 },
-		props: ['both-cards']
+		who: 'first'
 	},
 	{
 		id: 'disqualification',
@@ -231,11 +134,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['21.3.3'],
 		page: 77,
-		who: 'first',
-		hands: { left: 'red', right: 'yellow' },
-		left: { upper: 160, fore: 165 },
-		right: { upper: 160, fore: 165 },
-		props: ['yellow', 'red']
+		who: 'first'
 	},
 	{
 		id: 'end-of-set',
@@ -247,9 +146,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		means: { en: 'The set or the match is over.', hu: 'Vége a játszmának vagy a mérkőzésnek.' },
 		rules: ['6.2', '6.3'],
 		page: 77,
-		who: 'both',
-		left: { upper: 20, fore: -112 },
-		right: { upper: 20, fore: -112 }
+		who: 'both'
 	},
 	{
 		id: 'not-tossed',
@@ -264,12 +161,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['12.4.1'],
 		page: 77,
-		who: 'first',
-		from: { right: { upper: 20, fore: 30 } },
-		thumbs: { right: 1 },
-		left: DOWN,
-		right: { upper: 60, fore: 120 },
-		motion: 'up'
+		who: 'first'
 	},
 	{
 		id: 'delay-serve',
@@ -284,11 +176,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['12.4.4'],
 		page: 77,
-		who: 'first',
-		hands: { left: 'four', right: 'four' },
-		left: { upper: 120, fore: 170 },
-		right: { upper: 120, fore: 170 },
-		fingers: '4 + 4'
+		who: 'first'
 	},
 	{
 		id: 'block-fault',
@@ -303,9 +191,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['12.5', '14.6'],
 		page: 78,
-		who: 'both',
-		left: { upper: 172, fore: 172 },
-		right: { upper: 172, fore: 172 }
+		who: 'both'
 	},
 	{
 		id: 'position-fault',
@@ -320,13 +206,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['7.5', '7.7'],
 		page: 78,
-		who: 'both',
-		from: { right: { upper: 25, fore: -20 } },
-		repeat: true,
-		hands: { right: 'point' },
-		left: DOWN,
-		right: { upper: 20, fore: -60 },
-		motion: 'circle'
+		who: 'both'
 	},
 	{
 		id: 'ball-in',
@@ -338,10 +218,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		means: { en: 'The ball landed in the court.', hu: 'A labda a pályán belül ért földet.' },
 		rules: ['8.3'],
 		page: 78,
-		who: 'first',
-		left: DOWN,
-		right: { upper: 45, fore: 45 },
-		props: ['line']
+		who: 'first'
 	},
 	{
 		id: 'ball-out',
@@ -356,10 +233,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['8.4'],
 		page: 78,
-		who: 'both',
-		thumbs: { right: 1, left: -1 },
-		left: { upper: 35, fore: 175 },
-		right: { upper: 35, fore: 175 }
+		who: 'both'
 	},
 	{
 		id: 'catch',
@@ -374,13 +248,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['9.2.2', '9.3.3'],
 		page: 79,
-		who: 'first',
-		from: { right: { upper: 15, fore: 40 } },
-		thumbs: { right: 1 },
-		thumbsFrom: { right: 1 },
-		left: DOWN,
-		right: { upper: 15, fore: 110 },
-		motion: 'up'
+		who: 'first'
 	},
 	{
 		id: 'double-contact',
@@ -395,11 +263,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['9.3.4'],
 		page: 79,
-		who: 'first',
-		hands: { right: 'two' },
-		left: DOWN,
-		right: { upper: 150, fore: 170 },
-		fingers: '2'
+		who: 'first'
 	},
 	{
 		id: 'four-hits',
@@ -414,11 +278,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['9.3.1'],
 		page: 79,
-		who: 'first',
-		hands: { right: 'four' },
-		left: DOWN,
-		right: { upper: 150, fore: 170 },
-		fingers: '4'
+		who: 'first'
 	},
 	{
 		id: 'net-touch',
@@ -436,10 +296,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['11.4.4', '12.6.2.1'],
 		page: 79,
-		who: 'both',
-		left: DOWN,
-		right: { upper: 120, fore: 140 },
-		props: ['net']
+		who: 'both'
 	},
 	{
 		id: 'reach-over',
@@ -454,10 +311,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['11.4.1', '14.3'],
 		page: 80,
-		who: 'first',
-		left: DOWN,
-		right: { upper: 130, fore: 100 },
-		props: ['net']
+		who: 'first'
 	},
 	{
 		id: 'attack-fault',
@@ -472,11 +326,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['13.3.3', '13.3.4', '13.3.5', '13.3.6'],
 		page: 80,
-		who: 'both',
-		from: { right: { upper: 30, fore: 170 } },
-		left: DOWN,
-		right: { upper: 30, fore: 40 },
-		motion: 'down'
+		who: 'both'
 	},
 	{
 		id: 'penetration',
@@ -494,11 +344,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['8.4.5', '11.2.2', '12.4.3'],
 		page: 80,
-		who: 'both',
-		hands: { right: 'point' },
-		left: DOWN,
-		right: { upper: 25, fore: 20 },
-		props: ['line']
+		who: 'both'
 	},
 	{
 		id: 'double-fault',
@@ -513,10 +359,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['6.1.2.2', '17.2'],
 		page: 80,
-		who: 'first',
-		hands: { left: 'thumb', right: 'thumb' },
-		left: { upper: 40, fore: 170 },
-		right: { upper: 40, fore: 170 }
+		who: 'first'
 	},
 	{
 		id: 'ball-touched',
@@ -531,13 +374,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['24.2.2'],
 		page: 81,
-		who: 'first',
-		from: { left: { upper: 140, fore: -50 } },
-		repeat: true,
-		tilt: { left: 90, right: 180 },
-		left: { upper: 137, fore: -79 },
-		right: { upper: -1, fore: -162 },
-		motion: 'brush'
+		who: 'first'
 	},
 	{
 		id: 'delay',
@@ -552,11 +389,7 @@ export const REFEREE_SIGNALS: Signal[] = [
 		},
 		rules: ['16.2'],
 		page: 81,
-		who: 'first',
-		hands: { left: 'fist', right: 'yellow' },
-		left: { upper: 30, fore: -60 },
-		right: { upper: 30, fore: -100 },
-		props: ['yellow']
+		who: 'first'
 	}
 ];
 
@@ -568,11 +401,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		means: { en: 'The ball landed in.', hu: 'A labda bent ért földet.' },
 		rules: ['8.3'],
 		page: 82,
-		who: 'line',
-		hands: { right: 'flag' },
-		left: DOWN,
-		right: { upper: 30, fore: 25 },
-		props: ['flag-down']
+		who: 'line'
 	},
 	{
 		id: 'flag-out',
@@ -581,11 +410,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		means: { en: 'The ball landed out.', hu: 'A labda kint ért földet.' },
 		rules: ['8.4.1'],
 		page: 82,
-		who: 'line',
-		hands: { right: 'flag' },
-		left: DOWN,
-		right: { upper: 170, fore: 170 },
-		props: ['flag-up']
+		who: 'line'
 	},
 	{
 		id: 'flag-touched',
@@ -600,13 +425,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		},
 		rules: ['29.2.1.2'],
 		page: 82,
-		who: 'line',
-		hands: { right: 'flag' },
-		path: 'line',
-		tilt: { left: 90 },
-		left: { upper: -85, fore: -145 },
-		right: { upper: -8, fore: 115 },
-		props: ['flag-up']
+		who: 'line'
 	},
 	{
 		id: 'flag-antenna',
@@ -624,13 +443,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		},
 		rules: ['8.4.3', '12.4.3'],
 		page: 82,
-		who: 'line',
-		from: { right: { upper: 150, fore: 200 } },
-		repeat: true,
-		hands: { right: 'flag' },
-		left: DOWN,
-		right: { upper: 170, fore: 170 },
-		props: ['flag-wave']
+		who: 'line'
 	},
 	{
 		id: 'flag-unsure',
@@ -645,9 +458,7 @@ export const FLAG_SIGNALS: Signal[] = [
 		},
 		rules: ['30.2'],
 		page: 83,
-		who: 'line',
-		left: { upper: 20, fore: -112 },
-		right: { upper: 20, fore: -112 }
+		who: 'line'
 	}
 ];
 
@@ -709,11 +520,7 @@ export const BEACH_REFEREE_SIGNALS: Signal[] = [
 		means: {
 			en: 'The server took longer than 5 seconds after the whistle.',
 			hu: 'A nyitó a sípszó után 5 másodpercnél tovább várt.'
-		},
-		hands: { right: 'five' },
-		left: { upper: 8, fore: 8 },
-		right: { upper: 120, fore: 170 },
-		fingers: '5'
+		}
 	}),
 	onSand('block-fault', {
 		rules: ['12.5', '14.5', '14.6.3'],

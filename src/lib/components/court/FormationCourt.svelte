@@ -1,10 +1,12 @@
 <script lang="ts">
+	import type { Flight } from '#lib/volley/ball.js';
 	import type { Placed } from '#lib/volley/formations.js';
 	import { coverageAreas } from '#lib/volley/coverage.js';
 	import { roleName, roleShort, taskName } from '#lib/volley/labels.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import type { Point, RoleId } from '#lib/volley/model.js';
 	import Arrow from './Arrow.svelte';
+	import Ball from './Ball.svelte';
 	import Court from './Court.svelte';
 	import PlayerToken from './PlayerToken.svelte';
 
@@ -18,7 +20,8 @@
 		runs = true,
 		zones = true,
 		names,
-		table = true
+		table = true,
+		ball
 	}: {
 		placed: Placed[];
 		label: string;
@@ -37,6 +40,8 @@
 		 * a button, which cannot hold a table.
 		 */
 		table?: boolean;
+		/** The ball's flights in this moment, animated over the players. */
+		ball?: Flight[];
 	} = $props();
 
 	const metres = (n: number) => (Math.round(n * 10) / 10).toLocaleString(m.number_locale());
@@ -84,6 +89,7 @@
 			setter={p.setter}
 		/>
 	{/each}
+	{#if ball?.length}<Ball flights={ball} />{/if}
 </Court>
 
 {#if table && placed.length}

@@ -5,6 +5,7 @@ description: What the libero may and may not do under FIVB rules, how libero rep
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # Libero rules explained
@@ -29,9 +30,13 @@ The libero lets a team keep its best passer and digger on court in the back row 
 
 The libero can replace any back-row player ([rule 19.3.1.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)). Most teams use the libero for the **middle blockers**: middles are tall, built for blocking and quick attacks, and usually weaker passers. When a middle rotates into the back row (after serving from zone 1, once the team loses the serve), the libero comes on; when that middle would rotate to the front row again, the libero goes off and the middle comes back.
 
+<RotationFigure rotation={3} you="L" caption="Rotation 3, receiving: the libero (L) has replaced middle 1 in zone 1 and passes on the right. Middle 2 is front row in zone 4, so only one middle is ever off the court." />
+
 The libero takes the exact place of the replaced player in the rotation order, including for the [overlap rule](/guides/overlap).
 
 **Serving:** under FIVB rules the libero may not serve. So when the middle reaches zone 1 and the team is serving, the middle serves. Once the team loses the serve, the libero can come back on for the middle. Some teams have the libero replace a different player in that rotation, which is legal as long as there is a completed rally between the two replacements (see below).
+
+<RotationFigure rotation={3} phase="serve" you="MB1" caption="Rotation 3, our serve: middle 1 (MB1) has reached zone 1 and serves, so the libero is off the court until the team loses the serve." />
 
 ## What the libero may not do
 

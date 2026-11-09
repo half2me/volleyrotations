@@ -151,6 +151,10 @@ export const rotateZone = (zone: Zone, steps = 1): Zone =>
 /** The zone of the first setter in a rotation, which is how coaches often name rotations. */
 export const setterZoneOf = (rotation: RotationNo): Zone => rotateZone(1, rotation - 1);
 
+/** The rotation that puts the first setter in a zone: the inverse of `setterZoneOf`. */
+export const rotationWithSetterIn = (zone: Zone): RotationNo =>
+	ROTATIONS.find((r) => setterZoneOf(r) === zone)!;
+
 /**
  * Who follows the setter in the service order: the usual lineup has an outside hitter there
  * ("outside first"); some teams put a middle there instead, which swaps every outside with the

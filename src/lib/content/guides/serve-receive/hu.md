@@ -5,6 +5,7 @@ description: Az ötfős W, a négyfős U és a háromfős fogadás, a rések kez
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # Fogadási alakzatok
@@ -31,6 +32,8 @@ Minden alakzatnak szabályosnak kell lennie a nyitás pillanatában. Az FIVB-sza
 
 Három játékos áll egy sorban keresztben, nagyjából 4–5 méterre a hálótól, kettő pedig mélyebben, a köztük lévő résekben. Felülről nézve W betűre hasonlít. A feladó a hálónál van: 6:6-ban és 4:2-ben mindig első sorköteles, 6:2-ben mindig hátsó sorköteles, 5:1-ben az 1–3. forgásban hátsó, a 4–6.-ban első sorköteles. Ha a feladó a 6-os vagy az 5-ös helyről indul, és a hálónál rejtőzik, az előtte álló első sorköteles a nyitáskor nem állhat távolabb a hálótól, mint ő (egy vonalban állhatnak), ezért a hálónál marad, így ezekben a forgásokban a W négy fogadóval áll fel. Az 1-es helyről a feladó a jobb oldalvonal mentén, a 2-es helyen fogadó társ mögött rejtőzhet.
 
+<RotationFigure rotation={1} formation={5} you="S" caption="Ötfős W az 1. forgásban: három fogadó keresztben, a hálótól 4–5 méterre, kettő mélyebben a résekben. A feladó (F) a jobb oldalvonalnál, a 2-es helyen fogadó társa mögül indul, és a nyitás pillanatában a feladóhelyre fut." />
+
 - **Előnyök:** könnyű megtanulni, jól kezeli a rövid nyitást, és senkinek nem kell nagy területet lefednie.
 - **Hátrányok:** sok fogadó, sok **rés** (a fogadók közötti hézag), és a gyengébb fogadók nem rejthetők el. A W elülső három játékosának fogadás után támadásra is készülnie kell.
 - **Kinek való:** kezdőknek, amatőr csapatoknak, és rövid nyitások ellen.
@@ -39,6 +42,8 @@ Három játékos áll egy sorban keresztben, nagyjából 4–5 méterre a háló
 
 Négy fogadó áll egy lapos, a háló felé nyitott ívben: kettő szélesen az oldalvonalak közelében, kettő mélyebben középen. A feladó és egy első sorköteles játékos, általában a center, a hálónál marad.
 
+<RotationFigure rotation={1} formation={4} caption="Négyfős U az 1. forgásban: két fogadó szélesen, kettő mélyebben középen. A center (C1) a hálónál marad, így szabadon indulhat gyors támadásra, a feladó (F) a 2-es helyen fogadó társa mögött rejtőzik." />
+
 - **Előnyök:** kevesebb rés, mint a W-ben, és a center szabadon indulhat gyors támadásra.
 - **Hátrányok:** minden fogadóra nagyobb terület jut. A középre érkező rövid nyitás gondot okozhat.
 - **Kinek való:** négy elfogadható fogadóval rendelkező csapatoknak, vagy 4:2-es rendszerhez.
@@ -46,6 +51,8 @@ Négy fogadó áll egy lapos, a háló felé nyitott ívben: kettő szélesen az
 ## Háromfős fogadás
 
 A liberó és a két nyitásfogadó ütő három sávra osztja a pályát. A feladó, a feladó átló és a center a hálónál vagy a széleken rejtőzik.
+
+<RotationFigure rotation={1} formation={3} you="L" area caption="Háromfős fogadás az 1. forgásban: a liberó (L) és a két nyitásfogadó ütő három sávra osztja a pályát; a színezett terület a liberóé. A feladó, a center és a feladó átló a hálónál vagy egy fogadó mögött rejtőzik." />
 
 - **Előnyök:** csak a legjobb fogadók érnek a nyitáshoz. A feladó átló és a center teljesen a támadásra koncentrálhat.
 - **Hátrányok:** minden fogadó kb. három méter szélességet és a teljes mélységet fedi le, ehhez jó mozgás és a nyitó olvasása kell.
@@ -73,6 +80,8 @@ Bármi is a szabályotok, a legfontosabb: **a nyitás előtt döntsetek**, ne ak
 ## Hová megy a feladó?
 
 A feladóhely minden alakzatban ugyanaz: középtől kicsit jobbra, közel a hálóhoz. Hátsó sorból a feladó olyan közel kezd, amennyire az állásrendi szabály engedi, gyakran az ugyanabban az oszlopban álló első sorköteles játékos mögé bújva, és a nyitás pillanatában a feladóhelyre fut. Első sorból a hálónál várhat. A fogadók a feladóhelyre fogadnak, nem a feladóra: ha a feladó késik, a labda akkor is jó helyre megy.
+
+<RotationFigure rotation={2} you="S" caption="2. forgás: a feladó (F) a 6-os helyen közvetlenül a 3-as helyen álló társa mögött kezd, olyan közel a feladóhelyhez, amennyire a szabály engedi, és a nyitás pillanatában előrelép." />
 
 ## Váltás az alakzatok között
 

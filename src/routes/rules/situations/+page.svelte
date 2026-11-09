@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DrillCourt from '#lib/components/court/DrillCourt.svelte';
 	import Seo from '#lib/components/Seo.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
@@ -45,67 +46,82 @@
 	{#each SITUATIONS as s, i (s.id)}
 		{@const local = s.elsewhere?.find((e) => e.leagues.includes(league))}
 		{@const guess = guesses[s.id]}
-		<li class="card">
-			<p class="eyebrow">{m.situations_case({ n: i + 1 })}</p>
-			<p class="mt-1 text-lg">{s.scenario[lang]}</p>
-			{#if !revealed[s.id]}
-				<div class="mt-3 flex flex-wrap gap-2" data-pagefind-ignore>
-					{#if s.verdict !== 'depends'}
-						<button
-							type="button"
-							class="chip"
-							onclick={() => {
-								guesses[s.id] = 'legal';
-								revealed[s.id] = true;
-							}}>{m.quiz_is_legal()}</button
-						>
-						<button
-							type="button"
-							class="chip"
-							onclick={() => {
-								guesses[s.id] = 'fault';
-								revealed[s.id] = true;
-							}}>{m.situations_fault()}</button
-						>
-					{/if}
-					<button type="button" class="chip" onclick={() => (revealed[s.id] = true)}
-						>{m.situations_show()}</button
-					>
+		<li
+			class={[
+				'card',
+				s.diagram && 'sm:grid sm:grid-cols-[12rem_minmax(0,1fr)] sm:items-start sm:gap-5'
+			]}
+		>
+			{#if s.diagram}
+				<div class="mx-auto mb-3 w-full max-w-56 sm:mx-0 sm:mb-0 sm:max-w-none">
+					<DrillCourt diagram={s.diagram} label={m.situations_figure({ n: i + 1 })} />
 				</div>
 			{/if}
-			<div class={revealed[s.id] ? 'animate-reveal mt-3' : 'sr-only'} aria-live="polite">
-				{#if revealed[s.id] && guess}
-					<p
-						class={[
-							'flex items-center gap-1.5 font-semibold',
-							guess === s.verdict ? 'text-good' : 'text-bad'
-						]}
-					>
-						{#if guess === s.verdict}<IconCheck class="size-5" aria-hidden="true" />{m.quiz_right()}
-						{:else}<IconX class="size-5" aria-hidden="true" />{m.quiz_wrong()}{/if}
-					</p>
+			<div class="min-w-0">
+				<p class="eyebrow">{m.situations_case({ n: i + 1 })}</p>
+				<p class="mt-1 text-lg">{s.scenario[lang]}</p>
+				{#if !revealed[s.id]}
+					<div class="mt-3 flex flex-wrap gap-2" data-pagefind-ignore>
+						{#if s.verdict !== 'depends'}
+							<button
+								type="button"
+								class="chip"
+								onclick={() => {
+									guesses[s.id] = 'legal';
+									revealed[s.id] = true;
+								}}>{m.quiz_is_legal()}</button
+							>
+							<button
+								type="button"
+								class="chip"
+								onclick={() => {
+									guesses[s.id] = 'fault';
+									revealed[s.id] = true;
+								}}>{m.situations_fault()}</button
+							>
+						{/if}
+						<button type="button" class="chip" onclick={() => (revealed[s.id] = true)}
+							>{m.situations_show()}</button
+						>
+					</div>
 				{/if}
-				<p class="mt-1 font-semibold">
-					<IconScale class="inline size-4 align-[-2px] text-accent" aria-hidden="true" />
-					{s.ruling[lang]}
-				</p>
-				<p class="mt-1 text-ink-soft">{s.why[lang]}</p>
-				<p class="mt-2 text-sm">
-					{m.situations_fivb()}
-					{#each s.rules as r, j (r.n)}{j ? ', ' : ''}<a
-							class="text-accent underline"
-							href="{RULES_PDF}#page={r.page}">{r.n}</a
-						>{/each}
-				</p>
-				{#if local}
-					<p class="mt-3 rounded-xl border-l-4 border-accent bg-paper px-3 py-2 text-sm">
-						<span class="font-semibold">{leagueName(league)}:</span>
-						{local.text[lang]}
+				<div class={revealed[s.id] ? 'animate-reveal mt-3' : 'sr-only'} aria-live="polite">
+					{#if revealed[s.id] && guess}
+						<p
+							class={[
+								'flex items-center gap-1.5 font-semibold',
+								guess === s.verdict ? 'text-good' : 'text-bad'
+							]}
+						>
+							{#if guess === s.verdict}<IconCheck
+									class="size-5"
+									aria-hidden="true"
+								/>{m.quiz_right()}
+							{:else}<IconX class="size-5" aria-hidden="true" />{m.quiz_wrong()}{/if}
+						</p>
+					{/if}
+					<p class="mt-1 font-semibold">
+						<IconScale class="inline size-4 align-[-2px] text-accent" aria-hidden="true" />
+						{s.ruling[lang]}
 					</p>
-				{/if}
-				{#each (s.elsewhere ?? []).filter((e) => e !== local) as e, j (j)}
-					<p class="mt-2 text-sm text-ink-soft">{e.text[lang]}</p>
-				{/each}
+					<p class="mt-1 text-ink-soft">{s.why[lang]}</p>
+					<p class="mt-2 text-sm">
+						{m.situations_fivb()}
+						{#each s.rules as r, j (r.n)}{j ? ', ' : ''}<a
+								class="text-accent underline"
+								href="{RULES_PDF}#page={r.page}">{r.n}</a
+							>{/each}
+					</p>
+					{#if local}
+						<p class="mt-3 rounded-xl border-l-4 border-accent bg-paper px-3 py-2 text-sm">
+							<span class="font-semibold">{leagueName(league)}:</span>
+							{local.text[lang]}
+						</p>
+					{/if}
+					{#each (s.elsewhere ?? []).filter((e) => e !== local) as e, j (j)}
+						<p class="mt-2 text-sm text-ink-soft">{e.text[lang]}</p>
+					{/each}
+				</div>
 			</div>
 		</li>
 	{/each}

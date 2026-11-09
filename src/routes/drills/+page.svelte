@@ -10,6 +10,7 @@
 		type DrillTopic
 	} from '#lib/drills.js';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
+	import DrillCourt from '#lib/components/court/DrillCourt.svelte';
 	import { explorerPrefs } from '#lib/prefs.svelte.js';
 	import type { Sport } from '#lib/volley/match.js';
 	import { href } from '#lib/i18n.js';
@@ -80,29 +81,34 @@
 		<h2 id="{topic}-heading" class="text-2xl font-bold tracking-tight">{topicName(topic)}</h2>
 		<ul class="mt-4 space-y-3">
 			{#each drills.filter((d) => d.topic === topic) as d (d.id)}
-				<li class="card">
-					<h3 class="font-bold">{d.name}</h3>
-					<p class="mt-1 text-ink-soft">{d.purpose[lang]}</p>
-					<p class="mt-2">{d.how[lang]}</p>
-					<div class="mt-2 flex flex-wrap items-center gap-x-4">
-						<a
-							class="inline-flex min-h-11 items-center gap-1.5 text-sm text-accent underline"
-							href={d.source.url}
-						>
-							<IconExternal class="size-4 shrink-0" aria-hidden="true" />{m.drills_source({
-								source: d.source.label
-							})}
-						</a>
-						<button
-							type="button"
-							class="btn-secondary"
-							data-pagefind-ignore
-							onclick={() =>
-								plan.set({ items: [...plan.current.items, { id: d.id, minutes: 10 }] })}
-						>
-							<IconPlus class="size-4" aria-hidden="true" />{m.plan_add()}
-							<span class="sr-only">{d.name}</span>
-						</button>
+				<li class="card sm:grid sm:grid-cols-[13rem_minmax(0,1fr)] sm:items-start sm:gap-5">
+					<div class="mx-auto w-full max-w-56 sm:mx-0 sm:max-w-none">
+						<DrillCourt diagram={d.diagram} {sport} label={m.drills_figure({ name: d.name })} />
+					</div>
+					<div class="mt-3 min-w-0 sm:mt-0">
+						<h3 class="font-bold">{d.name}</h3>
+						<p class="mt-1 text-ink-soft">{d.purpose[lang]}</p>
+						<p class="mt-2">{d.how[lang]}</p>
+						<div class="mt-2 flex flex-wrap items-center gap-x-4">
+							<a
+								class="inline-flex min-h-11 items-center gap-1.5 text-sm text-accent underline"
+								href={d.source.url}
+							>
+								<IconExternal class="size-4 shrink-0" aria-hidden="true" />{m.drills_source({
+									source: d.source.label
+								})}
+							</a>
+							<button
+								type="button"
+								class="btn-secondary"
+								data-pagefind-ignore
+								onclick={() =>
+									plan.set({ items: [...plan.current.items, { id: d.id, minutes: 10 }] })}
+							>
+								<IconPlus class="size-4" aria-hidden="true" />{m.plan_add()}
+								<span class="sr-only">{d.name}</span>
+							</button>
+						</div>
 					</div>
 				</li>
 			{/each}

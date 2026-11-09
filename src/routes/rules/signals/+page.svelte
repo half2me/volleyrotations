@@ -56,10 +56,13 @@
 	/>
 	{#if beach}<p class="mt-2 max-w-2xl text-sm text-ink-soft">{m.signals_beach_note()}</p>{/if}
 </div>
+<p class="mt-4">
+	<a class="btn-secondary" href={href('/rules/signals/quiz')}>{m.signals_quiz_link()}</a>
+</p>
 
 {#snippet card(s: Signal, n: number)}
 	<li class="card flex flex-col gap-4 sm:flex-row">
-		<div class="mx-auto w-full max-w-60 shrink-0 sm:mx-0 sm:w-48">
+		<div class="mx-auto w-full max-w-64 shrink-0 sm:mx-0 sm:w-56">
 			<SignalFigure signal={s} />
 		</div>
 		<div class="min-w-0">
@@ -92,6 +95,7 @@
 </section>
 
 <p class="mt-8 text-sm text-ink-soft">
+	<a class="text-accent underline" href={href('/rules/signals/quiz')}>{m.signals_quiz_title()}</a> ·
 	<a class="text-accent underline" href={href('/rules/situations')}>{m.situations_title()}</a> ·
 	<a class="text-accent underline" href={href('/rules')}>{m.rules_title()}</a>
 </p>

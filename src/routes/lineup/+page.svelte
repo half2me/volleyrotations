@@ -4,6 +4,8 @@
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
 	import PlayerCard from '#lib/components/PlayerCard.svelte';
 	import PlaybookEditor from '#lib/components/PlaybookEditor.svelte';
+	import SubPlanner from '#lib/components/SubPlanner.svelte';
+	import SubPlanSheet from '#lib/components/SubPlanSheet.svelte';
 	import { shareFragment, teamFromFragment } from '#lib/share.js';
 	import { page } from '$app/state';
 	import { replaceState } from '$app/navigation';
@@ -150,6 +152,10 @@
 <div class="print:hidden">
 	<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.lineup_title()}</h1>
 	<p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.lineup_lead()}</p>
+	<p class="mt-1 text-ink-soft">
+		{m.settings_lineup_note()}
+		<a class="text-accent underline" href={href('/settings')}>{m.settings_footer_link()}</a>
+	</p>
 	<IndoorOnlyNotice />
 	<div aria-live="polite" data-pagefind-ignore>
 		{#if incoming}
@@ -328,6 +334,8 @@
 
 		<PlaybookEditor {team} {save} names={tokens} />
 
+		<SubPlanner {team} {save} />
+
 		<section class="card" aria-labelledby="share-heading">
 			<h2 id="share-heading" class="text-xl font-bold">{m.share_title()}</h2>
 			<p class="mt-1 text-sm text-ink-soft">{m.share_help()}</p>
@@ -422,6 +430,8 @@
 			</li>
 		{/each}
 	</ol>
+
+	<SubPlanSheet {team} />
 
 	{#if printDefense}
 		<h3 class="mt-6 break-before-page font-semibold">

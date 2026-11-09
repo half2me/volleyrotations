@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test';
+import { BackupError, clearAll, exportBackup, importBackup } from '../src/lib/backup.ts';
+import { ballPath } from '../src/lib/volley/ball.ts';
 import {
 	ATTACKS_FROM,
 	byZone,
@@ -13,13 +15,21 @@ import {
 import {
 	annotateLast,
 	beachServer,
+	EMPTY_PLAN,
 	logCsv,
 	longestRuns,
 	newMatch,
+	oppSetterZone,
+	planFaults,
+	plannedSubs,
+	planSubCount,
 	playerStats,
+	pushUndo,
 	rally,
+	restoreUndo,
 	rotationStats,
 	serverStats,
+	setOpponentRotation,
 	setOver,
 	setWinner,
 	sideSwitchDue,
@@ -28,9 +38,23 @@ import {
 	subsPerSet,
 	substitute,
 	technicalTimeoutDue,
-	timeoutsPerSet
+	timeoutsPerSet,
+	undoEntry,
+	type MatchState,
+	type SubPlan,
+	type UndoEntry
 } from '../src/lib/volley/match.ts';
-import { ROLE_KIND, ROTATIONS, setterOf, SYSTEM, SYSTEMS, ZONES } from '../src/lib/volley/model.ts';
+import {
+	ROLE_KIND,
+	ROTATIONS,
+	rotationWithSetterIn,
+	setterOf,
+	setterZoneOf,
+	SYSTEM,
+	SYSTEMS,
+	ZONES,
+	type RotationNo
+} from '../src/lib/volley/model.ts';
 import { overlapFaults } from '../src/lib/volley/overlap.ts';
 import { daySeed, makeQuestion, seeded } from '../src/lib/volley/quiz.ts';
 
@@ -174,6 +198,34 @@ test('a set needs 25 points and a two-point lead, the fifth set 15', () => {
 	expect(setOver(s)).toBe(true);
 	expect(setWinner({ us: 15, them: 13 }, 4)).toBe('us');
 	expect(setWinner({ us: 15, them: 13 }, 3)).toBeUndefined();
+});
+
+test('undo steps restore the match without copying the rally log, within a size budget', () => {
+	let s = newMatch({ system: '5-1', libero: true, rotation: 1, serving: false });
+	const history: UndoEntry[] = [];
+	const states: ReturnType<typeof newMatch>[] = [];
+	const timeout = (state: typeof s) => ({
+		...state,
+		timeouts: { ...state.timeouts, us: state.timeouts.us + 1 }
+	});
+	for (let i = 0; i < 30; i++) {
+		states.push(s);
+		history.push(undoEntry(s));
+		s = i % 7 === 3 || i === 29 ? timeout(s) : rally(s, i % 3 ? 'us' : 'them');
+	}
+	expect(history.every((h) => !('log' in h))).toBe(true);
+	// Detail added to the last rally after a step survives undoing the later time-out.
+	const annotated = annotateLast(s, { how: 'kill', by: 'OH1' });
+	expect(restoreUndo(history[29], annotated.log)).toEqual({ ...states[29], log: annotated.log });
+	for (let i = 29; i >= 0; i--) s = restoreUndo(history[i], s.log);
+	expect(s).toEqual(states[0]);
+
+	let capped: UndoEntry[] = [];
+	for (let i = 0; i < 400; i++) capped = pushUndo(capped, undoEntry(rally(s, 'us')), 20_000);
+	expect(capped.length).toBeLessThan(400);
+	expect(capped.length).toBeGreaterThan(10);
+	expect(JSON.stringify(capped).length).toBeLessThanOrEqual(20_000);
+	expect(pushUndo([], undoEntry(s), 10)).toHaveLength(1);
 });
 
 test('beach sets go to 21, the third to 15, and two sets win the match', () => {
@@ -439,4 +491,278 @@ test('detailed stats count each player’s points, errors and passes', () => {
 	// A rally without detail stays plain, and the CSV keeps a column for each detail.
 	expect(s.log[1].detail).toEqual({ how: 'ace', by: 'OH1' });
 	expect(logCsv(s.log).split('\n')[1]).toBe('1,1,1,0,1,1,0,kill,OH1,L,3,');
+});
+
+test('the ball flies between contacts inside the diagram in every moment', () => {
+	for (const system of SYSTEMS) {
+		for (const rotation of ROTATIONS) {
+			for (const phase of PHASES) {
+				const o: Options = { ...DEFAULT_OPTIONS, system, rotation, serving: phase !== 'receive' };
+				const placed = formation(o, phase);
+				const flights = ballPath(o, phase, placed);
+				if (phase === 'base') {
+					expect(flights).toHaveLength(0);
+					continue;
+				}
+				expect(flights.length, `${system} R${rotation} ${phase}`).toBeGreaterThan(0);
+				for (const f of flights) {
+					for (const p of [f.from, f.to]) {
+						expect(p.x).toBeGreaterThan(-1);
+						expect(p.x).toBeLessThan(10);
+						expect(p.y).toBeGreaterThanOrEqual(-1.3);
+						expect(p.y).toBeLessThan(11);
+					}
+				}
+				// Each flight starts where the one before landed.
+				for (let i = 1; i < flights.length; i++) expect(flights[i].from).toEqual(flights[i - 1].to);
+			}
+		}
+	}
+});
+
+test('the reader gets the ball when their task allows it', () => {
+	const o: Options = { ...DEFAULT_OPTIONS, system: '5-1', rotation: 1, serving: false };
+	const placed = formation(o, 'receive');
+	const passer = placed.find((p) => p.task === 'pass')!;
+	const flights = ballPath(o, 'receive', placed, passer.role);
+	expect(flights[0].to).toEqual({ x: passer.x, y: passer.y });
+	// The setter never passes, so the ball goes to someone else and ends at the setter.
+	const setter = placed.find((p) => p.setter)!;
+	const other = ballPath(o, 'receive', placed, setter.role);
+	expect(other[0].to).not.toEqual({ x: setter.x, y: setter.y });
+	expect(other[1].to).toEqual(setter.run ?? { x: setter.x, y: setter.y });
+});
+
+/** A `Storage` stand-in backed by a map, as the backup functions accept. */
+function memoryStorage(entries: Record<string, string> = {}) {
+	const map = new Map(Object.entries(entries));
+	return {
+		get length() {
+			return map.size;
+		},
+		key: (i: number) => [...map.keys()][i] ?? null,
+		getItem: (k: string) => map.get(k) ?? null,
+		setItem: (k: string, v: string) => void map.set(k, v),
+		removeItem: (k: string) => void map.delete(k),
+		map
+	};
+}
+
+test('a backup restores every saved key into empty storage', () => {
+	const from = memoryStorage({
+		'vr:teams': JSON.stringify({ list: [{ id: 'a', name: 'Lions' }], active: 'a' }),
+		'vr:quiz': JSON.stringify({ right: 3, total: 5 }),
+		'vr:future': JSON.stringify({ kept: true }),
+		'site:theme': 'dark'
+	});
+	const backup = exportBackup(from, new Date('2026-11-09T10:00:00Z'));
+	expect(backup).toMatchObject({
+		app: 'volleyrotations',
+		version: 1,
+		exported: '2026-11-09T10:00:00.000Z'
+	});
+	// Every site key goes out, known or not; other keys stay behind.
+	expect(Object.keys(backup.data).sort()).toEqual(['vr:future', 'vr:quiz', 'vr:teams']);
+
+	const to = memoryStorage({ 'vr:learn': JSON.stringify({ done: ['x'] }) });
+	const restored = importBackup(JSON.stringify(backup), 'replace', to);
+	expect(restored).toEqual(['vr:teams', 'vr:quiz']);
+	expect(JSON.parse(to.getItem('vr:teams')!)).toEqual(backup.data['vr:teams']);
+	// Replace drops what the backup lacks, and an unknown key is never written.
+	expect(to.getItem('vr:learn')).toBeNull();
+	expect(to.getItem('vr:future')).toBeNull();
+});
+
+test('a merge restore keeps keys the backup lacks', () => {
+	const to = memoryStorage({ 'vr:learn': '{"done":["x"]}', 'vr:quiz': '{"right":0}' });
+	const json = {
+		app: 'volleyrotations',
+		version: 1,
+		exported: '',
+		data: { 'vr:quiz': '{"right":9}' }
+	};
+	expect(importBackup(json, 'merge', to)).toEqual(['vr:quiz']);
+	expect(to.getItem('vr:learn')).toBe('{"done":["x"]}');
+	expect(to.getItem('vr:quiz')).toBe('{"right":9}');
+});
+
+test('anything but a backup is refused without touching storage', () => {
+	const to = memoryStorage({ 'vr:quiz': '{"right":1}' });
+	const reason = (json: unknown) => {
+		try {
+			importBackup(json, 'replace', to);
+		} catch (e) {
+			return e instanceof BackupError ? e.reason : 'other';
+		}
+	};
+	expect(reason('not json')).toBe('json');
+	expect(reason('[]')).toBe('shape');
+	expect(reason({ app: 'other', version: 1, data: {} })).toBe('shape');
+	expect(reason({ app: 'volleyrotations', version: 2, data: {} })).toBe('shape');
+	expect(reason({ app: 'volleyrotations', version: 1, data: [] })).toBe('shape');
+	expect(reason({ app: 'volleyrotations', version: 1, data: { 'vr:other': {} } })).toBe('empty');
+	expect(to.map.size).toBe(1);
+	expect(clearAll(memoryStorage({ 'vr:a': '1', other: '2' }))).toBe(1);
+});
+
+test('the opponents rotate on their sideouts, from the zone their setter started in', () => {
+	// Their setter starts in zone 2: the rotation before the one with the setter serving.
+	let s = newMatch({
+		system: '5-1',
+		libero: true,
+		rotation: 1,
+		serving: true,
+		oppRotation: rotationWithSetterIn(2)
+	});
+	expect(s.oppRotation).toBe(6);
+	expect(oppSetterZone(s)).toBe(2);
+	s = rally(s, 'us'); // point on our serve: nobody rotates
+	expect(s.oppRotation).toBe(6);
+	s = rally(s, 'them'); // their sideout: their setter rotates to zone 1 and serves
+	expect(s.oppRotation).toBe(1);
+	expect(oppSetterZone(s)).toBe(1);
+	expect(s.rotation).toBe(1);
+	s = rally(s, 'them'); // point on their serve: nobody rotates
+	expect(s.oppRotation).toBe(1);
+	s = rally(s, 'us'); // our sideout: we rotate, they do not
+	expect(s.rotation).toBe(2);
+	expect(s.oppRotation).toBe(1);
+	for (const zone of ZONES) expect(setterZoneOf(rotationWithSetterIn(zone))).toBe(zone);
+	// The next set starts with their rotation unknown until the coach enters it.
+	expect(startSet(s, 1, true).oppRotation).toBeUndefined();
+	expect(startSet(s, 1, true, 0, 3).oppRotation).toBe(3);
+	expect(setOpponentRotation(s).oppRotation).toBeUndefined();
+	expect(setOpponentRotation(s, 4).oppRotation).toBe(4);
+	// Without a known opponent rotation nothing is tracked.
+	const blind = rally(
+		newMatch({ system: '5-1', libero: true, rotation: 1, serving: true }),
+		'them'
+	);
+	expect(blind.oppRotation).toBeUndefined();
+	expect(oppSetterZone(blind)).toBeUndefined();
+});
+
+test('a substitution plan is checked against rule 15.6 and the league limit', () => {
+	const team = { system: '5-1' as const, benchSize: 4 };
+	const ds = { rotation: 4 as const, forSetter: 0, forOpposite: 1 };
+	expect(planFaults({ doubleSwitch: ds, specialists: [] }, team)).toEqual([]);
+	expect(planSubCount({ doubleSwitch: ds, specialists: [] })).toBe(4);
+	// The double switch needs a 5-1 with the setter in the front row.
+	expect(planFaults({ doubleSwitch: ds, specialists: [] }, { ...team, system: '6-2' })).toContain(
+		'double-switch-system'
+	);
+	expect(planFaults({ doubleSwitch: { ...ds, rotation: 1 }, specialists: [] }, team)).toContain(
+		'double-switch-row'
+	);
+	expect(planFaults({ doubleSwitch: { ...ds, forOpposite: 0 }, specialists: [] }, team)).toContain(
+		'same-bench'
+	);
+	expect(planFaults({ doubleSwitch: { ...ds, forOpposite: 9 }, specialists: [] }, team)).toContain(
+		'missing-bench'
+	);
+	// A specialist's rotations must be one run; a wrap around rotation 6 to 1 is fine.
+	const ds1 = { for: 'OH1' as const, bench: 2, rotations: [6, 1, 2] as RotationNo[] };
+	expect(planFaults({ doubleSwitch: ds, specialists: [ds1] }, team)).toEqual([]);
+	expect(planFaults({ specialists: [{ ...ds1, rotations: [1, 3] }] }, team)).toContain(
+		'not-contiguous'
+	);
+	expect(planFaults({ specialists: [{ ...ds1, rotations: [] }] }, team)).toContain('no-rotations');
+	// Under FIVB rules a starter leaves once and a substitute enters once, so nobody plans twice.
+	expect(planFaults({ specialists: [ds1, { ...ds1, bench: 3 }] }, team)).toContain('starter-twice');
+	expect(planFaults({ specialists: [ds1, { ...ds1, for: 'OH2' }] }, team)).toContain('bench-twice');
+	expect(planFaults({ doubleSwitch: ds, specialists: [{ ...ds1, for: 'OPP' }] }, team)).toContain(
+		'starter-twice'
+	);
+	// Six substitutions per set: a double switch (four) and one specialist fill them, or three
+	// specialists; anything more is too many.
+	const big = { ...team, benchSize: 6 };
+	const two = [ds1, { for: 'OH2' as const, bench: 3, rotations: [3, 4, 5] as RotationNo[] }];
+	expect(planFaults({ doubleSwitch: ds, specialists: two }, big)).toEqual(['too-many']);
+	const three = [...two, { for: 'MB1' as const, bench: 4, rotations: [2] as RotationNo[] }];
+	expect(planFaults({ specialists: three }, big)).toEqual([]);
+	const four = [...three, { for: 'MB2' as const, bench: 5, rotations: [5] as RotationNo[] }];
+	expect(planFaults({ specialists: four }, big)).toEqual(['too-many']);
+	// A league with freer re-entry only counts the total.
+	expect(
+		planFaults({ specialists: [ds1, { ...ds1, bench: 3 }] }, { ...team, league: 'ncaa' })
+	).toEqual([]);
+});
+
+test('the planner reminds the coach of each planned substitution when its rotation arrives', () => {
+	const plan: SubPlan = {
+		doubleSwitch: { rotation: 4, forSetter: 0, forOpposite: 1 },
+		specialists: [{ for: 'OH1', bench: 2, rotations: [6, 1, 2] }]
+	};
+	let s = newMatch({ system: '5-1', libero: true, rotation: 3, serving: false });
+	expect(plannedSubs(s, plan, 3)).toEqual([]);
+	s = rally(s, 'us'); // sideout into rotation 4: the double switch is due
+	expect(plannedSubs(s, plan, 3)).toEqual([
+		{ role: 'S', option: { kind: 'bench', bench: 0 }, kind: 'double-switch' },
+		{ role: 'OPP', option: { kind: 'bench', bench: 1 }, kind: 'double-switch' }
+	]);
+	for (const p of plannedSubs(s, plan, 3)) s = substitute(s, p.role, p.option);
+	expect(plannedSubs(s, plan, 3)).toEqual([]);
+	// Rotations 5 and 6: the setter's spot is still front row, so nothing to do but the specialist.
+	s = rally(rally(s, 'them'), 'us');
+	expect(plannedSubs(s, plan, 3)).toEqual([]);
+	s = rally(rally(s, 'them'), 'us');
+	expect(s.rotation).toBe(6);
+	expect(plannedSubs(s, plan, 3)).toEqual([
+		{ role: 'OH1', option: { kind: 'bench', bench: 2 }, kind: 'specialist' }
+	]);
+	s = substitute(s, 'OH1', { kind: 'bench', bench: 2 });
+	// Rotation 1: the setter's spot is back row, so the starters return.
+	s = rally(rally(s, 'them'), 'us');
+	expect(s.rotation).toBe(1);
+	expect(plannedSubs(s, plan, 3)).toEqual([
+		{ role: 'S', option: { kind: 'starter' }, kind: 'return' },
+		{ role: 'OPP', option: { kind: 'starter' }, kind: 'return' }
+	]);
+	s = substitute(substitute(s, 'S', { kind: 'starter' }), 'OPP', { kind: 'starter' });
+	expect(s.subCount).toBe(5);
+	// Rotation 3: the specialist's run is over, and the sixth substitution brings OH1 back.
+	s = rally(rally(s, 'them'), 'us');
+	s = rally(rally(s, 'them'), 'us');
+	expect(s.rotation).toBe(3);
+	expect(plannedSubs(s, plan, 3)).toEqual([
+		{ role: 'OH1', option: { kind: 'starter' }, kind: 'return' }
+	]);
+	s = substitute(s, 'OH1', { kind: 'starter' });
+	// Everything used: the plan has nothing more to offer, even back in rotation 4.
+	s = rally(rally(s, 'them'), 'us');
+	expect(s.rotation).toBe(4);
+	expect(plannedSubs(s, plan, 3)).toEqual([]);
+	// Nothing is offered without a bench, and nothing once the set is over.
+	expect(plannedSubs(startSet(s, 4, true), plan, 0)).toEqual([]);
+	let done = startSet(s, 4, true);
+	for (let i = 0; i < 25; i++) done = rally(done, 'them');
+	expect(setOver(done)).toBe(true);
+	expect(plannedSubs(done, plan, 3)).toEqual([]);
+});
+
+test('matches and teams saved before opponent tracking and the planner still load', () => {
+	// A match the tracker saved before these fields existed: no opponent rotation, league or log.
+	const old = {
+		system: '5-1',
+		libero: true,
+		sets: [{ us: 10, them: 8 }],
+		serving: true,
+		rotation: 2,
+		servedFirst: true,
+		timeouts: { us: 0, them: 0 },
+		subs: {},
+		usedBench: [],
+		subCount: 0,
+		finished: false
+	} as unknown as MatchState;
+	expect(oppSetterZone(old)).toBeUndefined();
+	const next = rally(old, 'them');
+	expect(next.oppRotation).toBeUndefined();
+	expect(next.sets[0]).toEqual({ us: 10, them: 9 });
+	expect(plannedSubs(old, EMPTY_PLAN, 0)).toEqual([]);
+	// A team without a plan plans nothing and is legal.
+	const team = { system: '5-1' as const, benchSize: 0 };
+	expect(planFaults(EMPTY_PLAN, team)).toEqual([]);
+	expect(planSubCount(EMPTY_PLAN)).toBe(0);
+	expect(plannedSubs(newMatch({ ...old, rotation: 4 }), EMPTY_PLAN, 0)).toEqual([]);
 });
