@@ -16,5 +16,8 @@
 	"search_dev_notice": "Search works in a built site only: run pnpm build, then pnpm preview.",
 	"error_title": "Something went wrong",
 	"error_not_found": "Page not found",
-	"error_home": "Back to the homepage"
+	"error_home": "Back to the homepage",
+	"update_available": "A new version is ready.",
+	"update_reload": "Reload",
+	"update_later": "Later"
 }

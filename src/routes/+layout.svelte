@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import LanguageSwitcher from '#lib/components/LanguageSwitcher.svelte';
 	import ThemeToggle from '#lib/components/ThemeToggle.svelte';
+	import UpdateToast from '#lib/components/UpdateToast.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
 	import { pageLabel } from '#lib/page-labels.js';
@@ -68,3 +69,5 @@
 		</div>
 	</footer>
 </div>
+
+<UpdateToast />

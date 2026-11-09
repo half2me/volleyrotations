@@ -16,5 +16,8 @@
 	"search_dev_notice": "A keresés csak a lefordított oldalon működik: pnpm build, majd pnpm preview.",
 	"error_title": "Hiba történt",
 	"error_not_found": "Az oldal nem található",
-	"error_home": "Vissza a kezdőlapra"
+	"error_home": "Vissza a kezdőlapra",
+	"update_available": "Elérhető egy új verzió.",
+	"update_reload": "Újratöltés",
+	"update_later": "Később"
 }

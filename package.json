@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && pagefind --site build",
+		"build": "vite build && pagefind --site build && node scripts/pagefind-precache.js",
 		"preview": "wrangler dev --port 4173",
 		"deploy": "pnpm run build && wrangler deploy",
 		"prepare": "pnpm run i18n && svelte-kit sync || echo \"\"",
