@@ -33,6 +33,11 @@ static, built from the static-site template; the README covers the stack.
   desktop and phone sizes: every page in every locale loads without errors or sideways scroll,
   and passes axe (WCAG 2.1 AA) in light and dark mode.
 - `pnpm format`: Prettier. Run after every change.
+- `pnpm figures`: renders the referee and beach-blocker figures (a 3D mannequin in three.js, see
+  `scripts/figures/`) to WebP sprite sheets in `static/figures/` with frame metadata in
+  `src/lib/figures.json`, in headless Chromium with software WebGL. Run it after changing a pose in
+  `scripts/figures/poses.mjs` or the model in `mannequin.mjs`; pass figure ids to redraw only some.
+  `Sprite.svelte` plays the frames, and `SignalFigure` and `PartnerSignal` wrap it.
 - `pnpm og`: redraws the 1200×630 social preview of every page in every locale (and the app
   icons) into `static/og/` with Playwright. Run it after adding a page or changing a title or
   description; set `CHROMIUM_PATH` if Playwright's own browser is missing. `<Seo>` points

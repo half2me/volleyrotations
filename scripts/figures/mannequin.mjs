@@ -86,11 +86,25 @@ export function createFigure({ width, height }) {
 	add(root, new THREE.CylinderGeometry(0.58, 0.62, 1.3, 32), SHIRT, [0, 1.45, 0], [1.12, 1, 0.72]);
 	add(root, sphere, TRIM, [0, 0.75, 0], [0.78, 0.5, 0.48]);
 	add(root, new THREE.CylinderGeometry(0.78, 0.82, 0.35, 32), TRIM, [0, 0.85, 0], [1, 1, 0.62]);
-	add(root, new THREE.TorusGeometry(0.3, 0.07, 12, 32), TRIM, [0, 3.0, 0.02], [1, 1, 1.3], [Math.PI / 2, 0, 0]);
+	add(
+		root,
+		new THREE.TorusGeometry(0.3, 0.07, 12, 32),
+		TRIM,
+		[0, 3.0, 0.02],
+		[1, 1, 1.3],
+		[Math.PI / 2, 0, 0]
+	);
 	add(root, new THREE.BoxGeometry(0.05, 0.6, 0.05), TRIM, [0, 2.6, 0.5]);
 	// Lanyard and whistle
 	add(root, new THREE.TorusGeometry(0.22, 0.012, 8, 32), DARK, [0, 2.75, 0.45], [1, 1.6, 1]);
-	add(root, new THREE.CylinderGeometry(0.08, 0.08, 0.26, 16), GREY, [0, 2.25, 0.5], [1, 1, 1], [0, 0, Math.PI / 2]);
+	add(
+		root,
+		new THREE.CylinderGeometry(0.08, 0.08, 0.26, 16),
+		GREY,
+		[0, 2.25, 0.5],
+		[1, 1, 1],
+		[0, 0, Math.PI / 2]
+	);
 	// Neck and head
 	add(root, new THREE.CylinderGeometry(0.17, 0.2, 0.55, 24), SKIN, [0, 3.15, 0]);
 	const head = pivot(root, [0, 3.95, 0]);
@@ -102,10 +116,24 @@ export function createFigure({ width, height }) {
 		add(head, sphere, SKIN, [sx * 0.41, -0.04, 0.02], [0.06, 0.11, 0.07]);
 		add(head, sphere, WHITE, [sx * 0.15, -0.02, 0.4], [0.065, 0.045, 0.03]);
 		add(head, sphere, DARK, [sx * 0.15, -0.02, 0.425], [0.032, 0.036, 0.015]);
-		add(head, new THREE.BoxGeometry(0.15, 0.028, 0.03), HAIR, [sx * 0.15, 0.08, 0.41], [1, 1, 1], [0, 0, sx * -0.12]);
+		add(
+			head,
+			new THREE.BoxGeometry(0.15, 0.028, 0.03),
+			HAIR,
+			[sx * 0.15, 0.08, 0.41],
+			[1, 1, 1],
+			[0, 0, sx * -0.12]
+		);
 	}
 	add(head, sphere, SKIN, [0, -0.1, 0.46], [0.055, 0.1, 0.06]);
-	add(head, new THREE.TorusGeometry(0.075, 0.011, 8, 16, Math.PI), DARK, [0, -0.25, 0.4], [1, 0.45, 1], [Math.PI, 0, 0]);
+	add(
+		head,
+		new THREE.TorusGeometry(0.075, 0.011, 8, 16, Math.PI),
+		DARK,
+		[0, -0.25, 0.4],
+		[1, 0.45, 1],
+		[Math.PI, 0, 0]
+	);
 
 	/**
 	 * An arm. `side` is -1 for the referee's right (the viewer's left when the referee faces the
@@ -147,14 +175,29 @@ export function createFigure({ width, height }) {
 		// Props live in the hand's frame and are shown per pose.
 		const props = new THREE.Group();
 		hand.add(props);
-		const card = (m, dx, rz) => add(props, new THREE.BoxGeometry(0.42, 0.6, 0.02), m, [dx, -0.55, 0.07], [1, 1, 1], [0, 0, rz]);
+		const card = (m, dx, rz) =>
+			add(
+				props,
+				new THREE.BoxGeometry(0.42, 0.6, 0.02),
+				m,
+				[dx, -0.55, 0.07],
+				[1, 1, 1],
+				[0, 0, rz]
+			);
 		const yellow = card(YELLOW, 0, 0);
 		const red = card(RED, 0, 0);
 		const redFanned = card(RED, 0.14, -0.22);
 		// Flag: pole across the fist along the hand's x axis, cloth beyond the thumb side.
 		const flag = new THREE.Group();
 		props.add(flag);
-		add(flag, new THREE.CylinderGeometry(0.03, 0.03, 2.2, 12), DARK, [side * 0.55, -0.25, 0], [1, 1, 1], [0, 0, Math.PI / 2]);
+		add(
+			flag,
+			new THREE.CylinderGeometry(0.03, 0.03, 2.2, 12),
+			DARK,
+			[side * 0.55, -0.25, 0],
+			[1, 1, 1],
+			[0, 0, Math.PI / 2]
+		);
 		const cloth = new THREE.Group();
 		cloth.position.set(side * 1.3, -0.25, 0);
 		flag.add(cloth);
@@ -164,7 +207,17 @@ export function createFigure({ width, height }) {
 		const all = { yellow, red, redFanned, flag };
 		for (const p of Object.values(all)) p.visible = false;
 		const joints = [shoulder, elbow, wrist, hand, ...fingers.flat(), thumbBase, thumbTip];
-		return { side, shoulder, elbow, wrist, hand, fingers, thumb: [thumbBase, thumbTip], props: all, joints };
+		return {
+			side,
+			shoulder,
+			elbow,
+			wrist,
+			hand,
+			fingers,
+			thumb: [thumbBase, thumbTip],
+			props: all,
+			joints
+		};
 	}
 	const R = arm(-1);
 	const L = arm(1);
@@ -173,15 +226,26 @@ export function createFigure({ width, height }) {
 	// Scene props: a net with its antenna, and a floor line.
 	const net = new THREE.Group();
 	scene.add(net);
-	const mesh = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 1.4), new THREE.MeshToonMaterial({ color: 0xffffff, transparent: true, opacity: 0.0 }));
+	const mesh = new THREE.Mesh(
+		new THREE.PlaneGeometry(4.2, 1.4),
+		new THREE.MeshToonMaterial({ color: 0xffffff, transparent: true, opacity: 0.0 })
+	);
 	net.add(mesh);
-	for (let i = 0; i <= 14; i++) add(net, new THREE.BoxGeometry(0.012, 1.4, 0.012), DARK, [-2.1 + i * 0.3, -0.7, 0]);
-	for (let i = 0; i <= 5; i++) add(net, new THREE.BoxGeometry(4.2, 0.012, 0.012), DARK, [0, -0.1 - i * 0.26, 0]);
+	for (let i = 0; i <= 14; i++)
+		add(net, new THREE.BoxGeometry(0.012, 1.4, 0.012), DARK, [-2.1 + i * 0.3, -0.7, 0]);
+	for (let i = 0; i <= 5; i++)
+		add(net, new THREE.BoxGeometry(4.2, 0.012, 0.012), DARK, [0, -0.1 - i * 0.26, 0]);
 	add(net, new THREE.BoxGeometry(4.2, 0.1, 0.03), WHITE, [0, 0, 0]);
 	add(net, new THREE.CylinderGeometry(0.025, 0.025, 2.2, 10), RED, [2.1, 0.2, 0]);
-	for (let i = 0; i < 4; i++) add(net, new THREE.CylinderGeometry(0.027, 0.027, 0.27, 10), WHITE, [2.1, 1.17 - i * 0.55, 0]);
+	for (let i = 0; i < 4; i++)
+		add(net, new THREE.CylinderGeometry(0.027, 0.027, 0.27, 10), WHITE, [2.1, 1.17 - i * 0.55, 0]);
 	net.visible = false;
-	const line = add(scene, new THREE.BoxGeometry(2.2, 0.04, 0.12), mat(0xb5522a), [0, -0.6, 1.2]);
+	const line = add(
+		scene,
+		new THREE.BoxGeometry(2.2, 0.04, 0.12),
+		mat(0xb5522a),
+		[-0.6, -0.25, 1.4]
+	);
 	line.visible = false;
 
 	root.updateMatrixWorld(true);
@@ -199,7 +263,10 @@ export function createFigure({ width, height }) {
 		A.shoulder.getWorldPosition(S);
 		const T = v(target);
 		const toT = T.clone().sub(S);
-		const dist = Math.min(UPPER + FORE - 0.01, Math.max(Math.abs(UPPER - FORE) + 0.01, toT.length()));
+		const dist = Math.min(
+			UPPER + FORE - 0.01,
+			Math.max(Math.abs(UPPER - FORE) + 0.01, toT.length())
+		);
 		const dir = toT.clone().normalize();
 		const cosA = (UPPER * UPPER + dist * dist - FORE * FORE) / (2 * UPPER * dist);
 		const a = Math.acos(Math.min(1, Math.max(-1, cosA)));
@@ -207,7 +274,9 @@ export function createFigure({ width, height }) {
 		let perp = H.clone().sub(dir.clone().multiplyScalar(H.dot(dir)));
 		if (perp.lengthSq() < 1e-6) perp = new THREE.Vector3(A.side * -1, -0.3, 0);
 		perp.normalize();
-		const E = S.clone().add(dir.clone().multiplyScalar(UPPER * Math.cos(a))).add(perp.multiplyScalar(UPPER * Math.sin(a)));
+		const E = S.clone()
+			.add(dir.clone().multiplyScalar(UPPER * Math.cos(a)))
+			.add(perp.multiplyScalar(UPPER * Math.sin(a)));
 		const parentQ = new THREE.Quaternion();
 		A.shoulder.parent.getWorldQuaternion(parentQ);
 		const qS = new THREE.Quaternion().setFromUnitVectors(DOWN, E.clone().sub(S).normalize());
@@ -353,8 +422,8 @@ export function createFigure({ width, height }) {
 	 */
 	function frame(box, view = {}) {
 		const from = view.from ?? 'front';
-		const viewH = view.height ?? 7.6;
-		const baseY = view.centre ?? 3.3;
+		const viewH = view.height ?? 8.3;
+		const baseY = view.centre ?? 3.45;
 		const minW = (viewH * width) / height;
 		const w = Math.max(minW, box.max.x - box.min.x + 0.9);
 		const cx = w > minW + 1e-6 ? (box.min.x + box.max.x) / 2 : 0;
@@ -384,14 +453,29 @@ export function createFigure({ width, height }) {
 		defaultAlpha: 1
 	});
 
+	/** The arms' extent, from visible meshes only: hidden props must not widen the picture. */
 	function extent() {
 		root.updateMatrixWorld(true);
 		const box = new THREE.Box3();
-		for (const A of [R, L]) box.expandByObject(A.shoulder, true);
-		if (net.visible) box.expandByObject(net, true);
+		const meshBox = new THREE.Box3();
+		const visit = (o) => {
+			if (!o.visible) return;
+			if (o.isMesh) {
+				meshBox.setFromObject(o, true);
+				box.union(meshBox);
+			}
+			for (const c of o.children) visit(c);
+		};
+		for (const A of [R, L]) visit(A.shoulder);
+		if (net.visible) visit(net);
 		box.expandByPoint(new THREE.Vector3(-1.4, 0, 0));
 		box.expandByPoint(new THREE.Vector3(1.4, 0, 0));
 		return box;
+	}
+
+	/** The net beside the referee's right shoulder, its tape at `y`, the antenna nearest the body. */
+	function placeNet(y) {
+		net.position.set(-2.7, y, 0.3);
 	}
 
 	return {
@@ -411,6 +495,7 @@ export function createFigure({ width, height }) {
 		curl,
 		rest,
 		showProps,
+		placeNet,
 		snapshot,
 		blend,
 		wristAt,

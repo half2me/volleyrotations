@@ -35,7 +35,10 @@ function hold(signal, { still } = {}) {
 			const restWrists = [fig.wristAt(fig.R), fig.wristAt(fig.L)];
 			signal(fig);
 			const b = fig.snapshot();
-			for (const [A, w0] of [[fig.R, restWrists[0]], [fig.L, restWrists[1]]]) {
+			for (const [A, w0] of [
+				[fig.R, restWrists[0]],
+				[fig.L, restWrists[1]]
+			]) {
 				const w1 = fig.wristAt(A);
 				const moved = Math.hypot(w1[0] - w0[0], w1[1] - w0[1], w1[2] - w0[2]);
 				if (moved < 0.6) continue;
@@ -56,7 +59,7 @@ function hold(signal, { still } = {}) {
 }
 
 /** Frames from rest into `cycle(0)`, then `cycle(phase)` for one turn. */
-function loop(cycle, { props, pingPong = false, steps = LOOP, props2 } = {}) {
+function loop(cycle, { pingPong = false, steps = LOOP, still } = {}) {
 	return {
 		frames: (fig) => {
 			fig.rest(fig.R);
@@ -75,7 +78,7 @@ function loop(cycle, { props, pingPong = false, steps = LOOP, props2 } = {}) {
 			return [...rise, ...turn];
 		},
 		rise: 6,
-		still: 6 + Math.floor(steps / 4),
+		still: still ?? 6 + Math.floor(steps / 4),
 		loop: true,
 		pingPong
 	};
@@ -173,18 +176,21 @@ export const FIGURES = {
 		fig.shape(fig.R, 'open');
 		restArm(fig, fig.L);
 	}),
-	'change-courts': loop((fig, p) => {
-		// Forearms level, one in front of the body and one behind, turning around it.
-		const th = p * 2 * Math.PI;
-		for (const A of [fig.R, fig.L]) {
-			const a = th + (A === fig.L ? Math.PI : 0);
-			const x = 0.95 * Math.sin(a);
-			const z = 0.95 * Math.cos(a);
-			fig.reach(A, [x, SHOULDER_Y - 0.6, z], [A.side * 2.5, SHOULDER_Y - 2.2, 0]);
-			fig.orient(A, [Math.cos(a) * -A.side, 0, Math.sin(a) * A.side], [0, -1, 0]);
-			fig.shape(A, 'open', 0.4);
-		}
-	}, { steps: 16 }),
+	'change-courts': loop(
+		(fig, p) => {
+			// Forearms level, one in front of the body and one behind, turning around it.
+			const th = p * 2 * Math.PI;
+			for (const A of [fig.R, fig.L]) {
+				const a = th + (A === fig.L ? Math.PI : 0);
+				const x = 0.95 * Math.sin(a);
+				const z = 0.95 * Math.cos(a);
+				fig.reach(A, [x, SHOULDER_Y - 0.6, z], [A.side * 2.5, SHOULDER_Y - 2.2, 0]);
+				fig.orient(A, [Math.cos(a) * -A.side, 0, Math.sin(a) * A.side], [0, -1, 0]);
+				fig.shape(A, 'open', 0.4);
+			}
+		},
+		{ steps: 16, still: 8 }
+	),
 	'time-out': hold((fig) => tee(fig)),
 	substitution: loop((fig, p) => {
 		// Fists rolling around each other in front of the chest.
@@ -203,7 +209,10 @@ export const FIGURES = {
 	expulsion: raiseCard(['right:yellow', 'right:redFanned']),
 	disqualification: withProps(
 		hold((fig) => {
-			for (const [A, tilt] of [[fig.R, 0.3], [fig.L, 0.3]]) {
+			for (const [A, tilt] of [
+				[fig.R, 0.3],
+				[fig.L, 0.3]
+			]) {
 				up(fig, A, { tilt });
 				fig.orient(A, [A.side * 0.12, 1, 0.1], [0, 0, 1]);
 				fig.shape(A, 'pinch');
@@ -214,14 +223,18 @@ export const FIGURES = {
 	'end-of-set': crossed,
 	'not-tossed': hold((fig) => {
 		// Arm stretched forward and lifted, palm up.
-		fig.reach(fig.R, [-1.5, SHOULDER_Y + 0.9, 1.9], [-3, SHOULDER_Y - 1.2, 0.3]);
-		fig.orient(fig.R, [-0.45, 0.4, 0.8], [0.2, 1, -0.3]);
+		fig.reach(fig.R, [-1.05, SHOULDER_Y + 0.75, 2.3], [-3, SHOULDER_Y - 1.4, 0.6]);
+		fig.orient(fig.R, [-0.2, 0.55, 1], [0, 1, -0.5]);
 		fig.shape(fig.R, 'open');
 		restArm(fig, fig.L);
 	}),
 	'delay-serve': hold((fig) => {
 		for (const A of [fig.R, fig.L]) {
-			fig.reach(A, [A.side * (SHOULDER_X + 1.0), SHOULDER_Y + 2.1, 0.3], [A.side * 4, SHOULDER_Y, 0.4]);
+			fig.reach(
+				A,
+				[A.side * (SHOULDER_X + 1.0), SHOULDER_Y + 2.1, 0.3],
+				[A.side * 4, SHOULDER_Y, 0.4]
+			);
 			fig.straight(A, [0, 0, 1]);
 			fig.shape(A, 'four');
 		}
@@ -235,7 +248,11 @@ export const FIGURES = {
 	'position-fault': loop((fig, p) => {
 		// A forefinger drawing a circle at waist height.
 		const th = p * 2 * Math.PI;
-		fig.reach(fig.R, [-0.55 + 0.4 * Math.cos(th), SHOULDER_Y - 1.75, 1.35 + 0.35 * Math.sin(th)], [-2.2, SHOULDER_Y - 2.2, 0.6]);
+		fig.reach(
+			fig.R,
+			[-0.55 + 0.4 * Math.cos(th), SHOULDER_Y - 1.75, 1.35 + 0.35 * Math.sin(th)],
+			[-2.2, SHOULDER_Y - 2.2, 0.6]
+		);
 		fig.orient(fig.R, [0.1, -1, 0.3], [0, -0.3, 1]);
 		fig.shape(fig.R, 'point');
 		fig.rest(fig.L);
@@ -255,13 +272,16 @@ export const FIGURES = {
 			fig.shape(A, 'open');
 		}
 	}),
-	catch: { ...hold((fig) => {
-		// Forearm lifted slowly, palm up.
-		fig.reach(fig.R, [-1.65, SHOULDER_Y - 0.5, 1.6], [-3, SHOULDER_Y - 1.6, 0.6]);
-		fig.orient(fig.R, [-0.6, 0.2, 0.75], [0.2, 1, -0.2]);
-		fig.shape(fig.R, 'open');
-		restArm(fig, fig.L);
-	}), slow: true },
+	catch: {
+		...hold((fig) => {
+			// Forearm lifted slowly, palm up.
+			fig.reach(fig.R, [-1.2, SHOULDER_Y - 0.55, 2.1], [-3, SHOULDER_Y - 1.8, 0.6]);
+			fig.orient(fig.R, [-0.25, 0.3, 1], [0, 1, -0.3]);
+			fig.shape(fig.R, 'open');
+			restArm(fig, fig.L);
+		}),
+		slow: true
+	},
 	'double-contact': hold((fig) => {
 		up(fig, fig.R, { tilt: 0.35 });
 		fig.shape(fig.R, 'two');
@@ -278,6 +298,7 @@ export const FIGURES = {
 			fig.reach(fig.R, [-2.3, SHOULDER_Y + 1.45, 0.6], [-3.2, SHOULDER_Y - 0.6, 0.3]);
 			fig.straight(fig.R, [0, 0, 1]);
 			fig.shape(fig.R, 'open', 0.4);
+			fig.placeNet(SHOULDER_Y + 0.95);
 			restArm(fig, fig.L);
 		}),
 		['net']
@@ -288,6 +309,7 @@ export const FIGURES = {
 			fig.reach(fig.R, [-2.1, SHOULDER_Y + 1.75, 0.5], [-3.2, SHOULDER_Y - 0.4, 0.3]);
 			fig.orient(fig.R, [-1, 0, 0], [0, -1, 0.2]);
 			fig.shape(fig.R, 'open', 0.4);
+			fig.placeNet(SHOULDER_Y + 1.35);
 			restArm(fig, fig.L);
 		}),
 		['net']
@@ -322,7 +344,11 @@ export const FIGURES = {
 	),
 	'double-fault': hold((fig) => {
 		for (const A of [fig.R, fig.L]) {
-			fig.reach(A, [A.side * (SHOULDER_X + 0.55), SHOULDER_Y + 1.0, 0.9], [A.side * 2.6, SHOULDER_Y - 1.6, 0.8]);
+			fig.reach(
+				A,
+				[A.side * (SHOULDER_X + 0.55), SHOULDER_Y + 1.0, 0.9],
+				[A.side * 2.6, SHOULDER_Y - 1.6, 0.8]
+			);
 			fig.orient(A, [A.side * 0.1, 1, 0.1], [A.side * -1, 0, 0.3]);
 			fig.shape(A, 'thumb');
 		}
@@ -334,8 +360,8 @@ export const FIGURES = {
 			fig.reach(fig.L, [-0.2, SHOULDER_Y - 0.75, 1.3], [2.2, SHOULDER_Y - 1.6, 0.6]);
 			fig.orient(fig.L, [-1, 0, 0.2], [0, 0, -1]);
 			fig.shape(fig.L, 'fist');
-			fig.reach(fig.R, [-0.9, SHOULDER_Y - 0.4, 1.3], [-2.4, SHOULDER_Y - 1.4, 0.5]);
-			fig.orient(fig.R, [1, -0.3, 0], [0, -1, 0.1]);
+			fig.reach(fig.R, [-0.95, SHOULDER_Y - 0.35, 1.45], [-2.4, SHOULDER_Y - 1.4, 0.5]);
+			fig.orient(fig.R, [1, -0.35, 0], [0, -0.45, 1]);
 			fig.shape(fig.R, 'pinch');
 		}),
 		['right:yellow']
@@ -398,7 +424,11 @@ export const FIGURES = {
 					frames: (fig) => {
 						const SHAPES = { one: 'point', two: 'two', fist: 'fist', open: 'open' };
 						const place = (A, kind) => {
-							fig.reach(A, [A.side * 0.55, SHOULDER_Y - 1.85, -0.55], [A.side * 3, SHOULDER_Y - 1.6, 0.4]);
+							fig.reach(
+								A,
+								[A.side * 0.55, SHOULDER_Y - 1.85, -0.55],
+								[A.side * 3, SHOULDER_Y - 1.6, 0.4]
+							);
 							fig.orient(A, [A.side * 0.15, -1, -0.1], [0, 0, -1]);
 							fig.shape(A, kind);
 						};

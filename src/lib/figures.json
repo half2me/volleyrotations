@@ -7,7 +7,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"substitution": {
 		"frames": 18,
@@ -17,7 +17,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"ball-out": {
 		"frames": 10,
@@ -27,7 +27,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"double-contact": {
 		"frames": 10,
@@ -37,7 +37,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"flag-out": {
 		"frames": 10,
@@ -47,7 +47,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-one-two": {
 		"frames": 6,
@@ -57,7 +57,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"team-to-serve": {
 		"frames": 10,
@@ -67,7 +67,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"authorise-serve": {
 		"frames": 10,
@@ -77,17 +77,17 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"change-courts": {
 		"frames": 22,
 		"rise": 6,
-		"still": 10,
+		"still": 8,
 		"loop": true,
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"warning": {
 		"frames": 10,
@@ -97,7 +97,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"penalty": {
 		"frames": 10,
@@ -107,7 +107,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"expulsion": {
 		"frames": 10,
@@ -117,7 +117,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"disqualification": {
 		"frames": 10,
@@ -127,7 +127,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"end-of-set": {
 		"frames": 10,
@@ -137,7 +137,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"not-tossed": {
 		"frames": 10,
@@ -147,7 +147,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"delay-serve": {
 		"frames": 10,
@@ -157,7 +157,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"block-fault": {
 		"frames": 10,
@@ -167,7 +167,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"position-fault": {
 		"frames": 18,
@@ -177,7 +177,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"ball-in": {
 		"frames": 10,
@@ -187,7 +187,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"catch": {
 		"frames": 10,
@@ -197,7 +197,7 @@
 		"pingPong": false,
 		"slow": true,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"four-hits": {
 		"frames": 10,
@@ -207,7 +207,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"net-touch": {
 		"frames": 10,
@@ -217,7 +217,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"reach-over": {
 		"frames": 10,
@@ -227,7 +227,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"attack-fault": {
 		"frames": 10,
@@ -237,7 +237,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"penetration": {
 		"frames": 10,
@@ -247,7 +247,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"double-fault": {
 		"frames": 10,
@@ -257,7 +257,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"ball-touched": {
 		"frames": 18,
@@ -267,7 +267,7 @@
 		"pingPong": true,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"delay": {
 		"frames": 10,
@@ -277,7 +277,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"flag-in": {
 		"frames": 10,
@@ -287,7 +287,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"flag-touched": {
 		"frames": 10,
@@ -297,7 +297,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"flag-antenna": {
 		"frames": 18,
@@ -307,7 +307,7 @@
 		"pingPong": true,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"flag-unsure": {
 		"frames": 10,
@@ -317,7 +317,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-one-one": {
 		"frames": 6,
@@ -327,7 +327,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-one-fist": {
 		"frames": 6,
@@ -337,7 +337,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-one-open": {
 		"frames": 6,
@@ -347,7 +347,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-two-one": {
 		"frames": 6,
@@ -357,7 +357,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-two-two": {
 		"frames": 6,
@@ -367,7 +367,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-two-fist": {
 		"frames": 6,
@@ -377,7 +377,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-two-open": {
 		"frames": 6,
@@ -387,7 +387,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-fist-one": {
 		"frames": 6,
@@ -397,7 +397,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-fist-two": {
 		"frames": 6,
@@ -407,7 +407,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-fist-fist": {
 		"frames": 6,
@@ -417,7 +417,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-fist-open": {
 		"frames": 6,
@@ -427,7 +427,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-open-one": {
 		"frames": 6,
@@ -437,7 +437,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-open-two": {
 		"frames": 6,
@@ -447,7 +447,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-open-fist": {
 		"frames": 6,
@@ -457,7 +457,7 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	},
 	"partner-open-open": {
 		"frames": 6,
@@ -467,6 +467,6 @@
 		"pingPong": false,
 		"slow": false,
 		"width": 300,
-		"height": 420
+		"height": 450
 	}
 }

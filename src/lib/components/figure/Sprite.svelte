@@ -118,7 +118,7 @@
 		height={meta.height}
 		loading="lazy"
 		decoding="async"
-		class="absolute top-0 left-0 h-full max-w-none"
+		class="absolute top-0 left-0 h-full w-auto max-w-none"
 		style:transform="translateX({(-(frame < 0 ? meta.still : frame) * 100) / meta.frames}%)"
 	/>
 </div>

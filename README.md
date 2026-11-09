@@ -29,13 +29,15 @@ Workers static assets. It also uses Tailwind CSS 4, bits-ui, Lucide icons, Parag
 
 Requires Node 24+ and pnpm.
 
-| Command       | What it does                                                       |
-| ------------- | ------------------------------------------------------------------ |
-| `pnpm dev`    | Vite dev server (search needs a build)                             |
-| `pnpm build`  | Prerender every page to `build/`, then build the search index      |
-| `pnpm check`  | svelte-check + TypeScript                                          |
-| `pnpm test`   | Model tests, plus build, serve and the page suite (desktop, phone) |
-| `pnpm format` | Prettier                                                           |
-| `pnpm deploy` | Build and `wrangler deploy` to volleyrotations.uk                  |
+| Command        | What it does                                                       |
+| -------------- | ------------------------------------------------------------------ |
+| `pnpm dev`     | Vite dev server (search needs a build)                             |
+| `pnpm build`   | Prerender every page to `build/`, then build the search index      |
+| `pnpm check`   | svelte-check + TypeScript                                          |
+| `pnpm test`    | Model tests, plus build, serve and the page suite (desktop, phone) |
+| `pnpm format`  | Prettier                                                           |
+| `pnpm figures` | Render the hand-signal figures to sprite sheets (3D mannequin)     |
+| `pnpm og`      | Redraw the social preview images and app icons                     |
+| `pnpm deploy`  | Build and `wrangler deploy` to volleyrotations.uk                  |
 
 See `CLAUDE.md` for the conventions and how the volleyball model is laid out.

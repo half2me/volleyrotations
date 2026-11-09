@@ -20,7 +20,7 @@ mkdirSync(outDir, { recursive: true });
 /** Frame size in CSS pixels, drawn at 1.5× for crisp lines on phones. */
 const SCALE = 1.5;
 const FRAME_W = Math.round(300 * SCALE);
-const FRAME_H = Math.round(420 * SCALE);
+const FRAME_H = Math.round(450 * SCALE);
 
 const TYPES: Record<string, string> = {
 	'.html': 'text/html',
