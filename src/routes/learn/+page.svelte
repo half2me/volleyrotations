@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IndoorOnlyNotice from '#lib/components/IndoorOnlyNotice.svelte';
 	import Seo from '#lib/components/Seo.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
@@ -110,6 +111,7 @@
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.learn_title()}</h1>
 <p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.learn_lead()}</p>
+<IndoorOnlyNotice />
 <div class="mt-4 max-w-md" data-pagefind-ignore>
 	<p class="font-semibold" aria-live="polite">{m.learn_progress({ done: done.size, total })}</p>
 	<div class="mt-2 h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">

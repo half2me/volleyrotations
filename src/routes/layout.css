@@ -28,6 +28,10 @@
 	--color-court: oklch(83% 0.08 68); /* the playing floor */
 	--color-court-front: oklch(77% 0.095 58); /* the front zone, between net and attack line */
 	--color-court-line: oklch(99% 0 0);
+	--color-sand: oklch(87% 0.075 88); /* a beach court */
+	--color-sand-deep: oklch(80% 0.085 82); /* sand in shadow, the depth of a sand pit */
+	--color-net: oklch(27% 0.03 262); /* net mesh and bands' outlines */
+	--color-free: oklch(91% 0.03 80); /* the free zone around a court */
 	--color-team: oklch(31% 0.08 262); /* a player token */
 	--color-team-ink: oklch(100% 0 0);
 	--color-libero: oklch(45% 0.11 170);
@@ -49,6 +53,10 @@
 	--color-court: oklch(40% 0.06 60);
 	--color-court-front: oklch(36% 0.065 52);
 	--color-court-line: oklch(90% 0.02 80);
+	--color-sand: oklch(46% 0.06 85);
+	--color-sand-deep: oklch(38% 0.055 80);
+	--color-net: oklch(88% 0.01 80);
+	--color-free: oklch(30% 0.025 262);
 	--color-team: oklch(86% 0.06 250);
 	--color-team-ink: oklch(20% 0.04 262);
 	--color-libero: oklch(82% 0.12 168);
@@ -69,6 +77,10 @@
 		--color-court: oklch(40% 0.06 60);
 		--color-court-front: oklch(36% 0.065 52);
 		--color-court-line: oklch(90% 0.02 80);
+		--color-sand: oklch(46% 0.06 85);
+		--color-sand-deep: oklch(38% 0.055 80);
+		--color-net: oklch(88% 0.01 80);
+		--color-free: oklch(30% 0.025 262);
 		--color-team: oklch(86% 0.06 250);
 		--color-team-ink: oklch(20% 0.04 262);
 		--color-libero: oklch(82% 0.12 168);

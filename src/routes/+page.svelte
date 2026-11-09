@@ -1,4 +1,6 @@
 <script lang="ts">
+	import IconRuler from '~icons/lucide/ruler';
+	import IconSun from '~icons/lucide/sun';
 	import DailyQuestion from '#lib/components/DailyQuestion.svelte';
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
 	import Seo from '#lib/components/Seo.svelte';
@@ -34,7 +36,9 @@
 		{ path: '/overlap', icon: IconMove, title: m.overlap_title, text: m.home_overlap },
 		{ path: '/quiz', icon: IconBrain, title: m.quiz_title, text: m.home_quiz },
 		{ path: '/lineup', icon: IconClipboardList, title: m.lineup_title, text: m.home_lineup },
-		{ path: '/match', icon: IconVolleyball, title: m.match_title, text: m.home_match }
+		{ path: '/match', icon: IconVolleyball, title: m.match_title, text: m.home_match },
+		{ path: '/beach', icon: IconSun, title: m.beach_title, text: m.home_beach },
+		{ path: '/equipment', icon: IconRuler, title: m.equipment_title, text: m.home_equipment }
 	] as const;
 </script>
 

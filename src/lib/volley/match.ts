@@ -2,9 +2,13 @@ import { leagueOf, type LeagueId } from './leagues.js';
 import { rolesOf, type RoleId, type RotationNo, type SystemId } from './model.js';
 
 /**
- * A match as the tracker keeps it. Scoring follows FIVB rules 6.1–6.3: rally point, sets to 25
- * (the fifth to 15) won by two, best of five. Substitutions follow rule 15.6.
+ * A match as the tracker keeps it. Indoor scoring follows FIVB rules 6.1–6.3: rally point, sets
+ * to 25 (the fifth to 15) won by two, best of five; substitutions follow rule 15.6. Beach scoring
+ * follows the FIVB beach rules 6.2–6.3: sets to 21 (the third to 15) won by two, best of three.
  */
+export type Sport = 'indoor' | 'beach';
+export const SPORTS: readonly Sport[] = ['indoor', 'beach'];
+
 export type SetScore = { us: number; them: number };
 
 /** Who occupies one starting position this set, and what rule 15.6 still allows there. */
@@ -32,8 +36,14 @@ export type MatchState = {
 	finished: boolean;
 	/** Decides the substitution and time-out limits; matches saved before leagues mean FIVB. */
 	league?: LeagueId;
-	/** Every rally in order, for the statistics. */
+	/** Every rally in order, for the statistics. Matches saved before beach support are indoor. */
 	log: RallyRecord[];
+	sport?: Sport;
+	/**
+	 * Beach only: which of our two players served first this set, and who served last. Rule 12.2.2
+	 * of the beach rules: when we win the serve back, the player who did not serve last time serves.
+	 */
+	beach?: { first: 0 | 1; last?: 0 | 1 };
 };
 
 /** One rally: the set it was in, our rotation, whether we served, and whether we won it. */
@@ -42,6 +52,8 @@ export type RallyRecord = {
 	rotation: RotationNo;
 	serving: boolean;
 	won: boolean;
+	/** Beach only: which of our players served, on our serve. */
+	server?: 0 | 1;
 	/** Optional detail a coach adds in the detailed mode. */
 	detail?: RallyDetail;
 };
@@ -95,11 +107,14 @@ export type RallyDetail = {
 	pass?: { by: PlayerKey; rating: PassRating };
 };
 
-export const SETS_TO_WIN = 3;
+/** Sets needed to win the match: best of five indoors, best of three on the beach. */
+export const setsToWin = (sport: Sport = 'indoor') => (sport === 'beach' ? 2 : 3);
 
-export const subsPerSet = (state: Pick<MatchState, 'league'>) => leagueOf(state.league).subsPerSet;
-export const timeoutsPerSet = (state: Pick<MatchState, 'league'>) =>
-	leagueOf(state.league).timeoutsPerSet;
+export const subsPerSet = (state: Pick<MatchState, 'league' | 'sport'>) =>
+	state.sport === 'beach' ? 0 : leagueOf(state.league).subsPerSet;
+/** Beach rule 15.4.1: one time-out per team per set. */
+export const timeoutsPerSet = (state: Pick<MatchState, 'league' | 'sport'>) =>
+	state.sport === 'beach' ? 1 : leagueOf(state.league).timeoutsPerSet;
 
 export function newMatch(o: {
 	system: SystemId;
@@ -107,9 +122,16 @@ export function newMatch(o: {
 	rotation: RotationNo;
 	serving: boolean;
 	league?: LeagueId;
+	sport?: Sport;
+	/** Beach: which of our two players serves first. */
+	firstServer?: 0 | 1;
 }): MatchState {
+	const { firstServer, ...rest } = o;
 	return {
-		...o,
+		...rest,
+		...(o.sport === 'beach'
+			? { beach: { first: firstServer ?? 0, last: o.serving ? (firstServer ?? 0) : undefined } }
+			: {}),
 		sets: [{ us: 0, them: 0 }],
 		servedFirst: o.serving,
 		timeouts: { us: 0, them: 0 },
@@ -123,18 +145,24 @@ export function newMatch(o: {
 
 export const nextRotation = (r: RotationNo): RotationNo => ((r % 6) + 1) as RotationNo;
 
-export const setTarget = (setIndex: number) => (setIndex === 4 ? 15 : 25);
+/** Points needed to win a set (by two): the deciding set is shorter. */
+export const setTarget = (setIndex: number, sport: Sport = 'indoor') =>
+	sport === 'beach' ? (setIndex === 2 ? 15 : 21) : setIndex === 4 ? 15 : 25;
 
 export function setsWon(state: MatchState): SetScore {
-	const done = state.sets.filter((s, i) => setWinner(s, i) !== undefined);
+	const sport = state.sport;
 	return {
-		us: done.filter((s, i) => setWinner(s, i) === 'us').length,
-		them: done.filter((s, i) => setWinner(s, i) === 'them').length
+		us: state.sets.filter((s, i) => setWinner(s, i, sport) === 'us').length,
+		them: state.sets.filter((s, i) => setWinner(s, i, sport) === 'them').length
 	};
 }
 
-export function setWinner(s: SetScore, index: number): 'us' | 'them' | undefined {
-	const target = setTarget(index);
+export function setWinner(
+	s: SetScore,
+	index: number,
+	sport: Sport = 'indoor'
+): 'us' | 'them' | undefined {
+	const target = setTarget(index, sport);
 	if (s.us >= target && s.us - s.them >= 2) return 'us';
 	if (s.them >= target && s.them - s.us >= 2) return 'them';
 	return undefined;
@@ -142,7 +170,35 @@ export function setWinner(s: SetScore, index: number): 'us' | 'them' | undefined
 
 /** Whether the current set has been won, waiting for the next one to start. */
 export const setOver = (state: MatchState) =>
-	setWinner(state.sets[state.sets.length - 1], state.sets.length - 1) !== undefined;
+	setWinner(state.sets[state.sets.length - 1], state.sets.length - 1, state.sport) !== undefined;
+
+/**
+ * Beach rule 18.2.1: the teams switch sides after every 7 points played in sets 1 and 2, and
+ * every 5 in set 3. True when the rally just scored makes a switch due.
+ */
+export function sideSwitchDue(state: MatchState): boolean {
+	if (state.sport !== 'beach') return false;
+	const s = state.sets[state.sets.length - 1];
+	const played = s.us + s.them;
+	return played > 0 && !setOver(state) && played % (state.sets.length === 3 ? 5 : 7) === 0;
+}
+
+/**
+ * Beach rule 15.4.2: in FIVB World and Official competitions, a 30-second technical time-out when
+ * the points played in set 1 or 2 add up to 21. True right after that rally.
+ */
+export function technicalTimeoutDue(state: MatchState): boolean {
+	if (state.sport !== 'beach' || state.sets.length > 2) return false;
+	const s = state.sets[state.sets.length - 1];
+	return s.us + s.them === 21 && !setOver(state);
+}
+
+/** Beach: which of our two players serves while we hold the serve, or would on winning it back. */
+export function beachServer(state: MatchState): 0 | 1 {
+	const b = state.beach ?? { first: 0 };
+	if (state.serving) return b.last ?? b.first;
+	return b.last === undefined ? b.first : ((1 - b.last) as 0 | 1);
+}
 
 /**
  * Scores one rally. Winning the opponent's serve (a sideout) rotates us one place clockwise
@@ -154,28 +210,43 @@ export function rally(state: MatchState, winner: 'us' | 'them', detail?: RallyDe
 		i === state.sets.length - 1 ? { ...s, [winner]: s[winner] + 1 } : s
 	);
 	const sideout = winner === 'us' && !state.serving;
+	const beach = state.sport === 'beach';
 	const record: RallyRecord = {
 		set: state.sets.length,
 		rotation: state.rotation,
 		serving: state.serving,
 		won: winner === 'us',
+		...(beach && state.serving ? { server: beachServer(state) } : {}),
 		...(detail && Object.keys(detail).length ? { detail } : {})
 	};
-	const next = {
+	const next: MatchState = {
 		...state,
 		log: [...(state.log ?? []), record],
 		sets,
 		serving: winner === 'us',
-		rotation: sideout ? nextRotation(state.rotation) : state.rotation
+		rotation: sideout && !beach ? nextRotation(state.rotation) : state.rotation,
+		...(beach && sideout ? { beach: { ...state.beach!, last: beachServer(state) } } : {})
 	};
 	const won = setsWon(next);
-	return { ...next, finished: won.us === SETS_TO_WIN || won.them === SETS_TO_WIN };
+	const need = setsToWin(state.sport);
+	return { ...next, finished: won.us === need || won.them === need };
 }
 
-/** Starts the next set, from the coach's chosen rotation. Substitutions and time-outs reset. */
-export function startSet(state: MatchState, rotation: RotationNo, serving: boolean): MatchState {
+/**
+ * Starts the next set, from the coach's chosen rotation (or, on the beach, first server: the
+ * service order may change between sets). Substitutions and time-outs reset.
+ */
+export function startSet(
+	state: MatchState,
+	rotation: RotationNo,
+	serving: boolean,
+	firstServer: 0 | 1 = 0
+): MatchState {
 	return {
 		...state,
+		...(state.sport === 'beach'
+			? { beach: { first: firstServer, last: serving ? firstServer : undefined } }
+			: {}),
 		sets: [...state.sets, { us: 0, them: 0 }],
 		rotation,
 		serving,
@@ -188,10 +259,25 @@ export function startSet(state: MatchState, rotation: RotationNo, serving: boole
 }
 
 /**
- * Who serves first in the next set: in sets 2–4 the team that did not serve first in the
- * previous set (rule 12.1.2). The deciding set starts with a new toss (7.1).
+ * Who serves first in the next set: indoors, in sets 2–4 the team that did not serve first in
+ * the previous set (rule 12.1.2); the deciding set starts with a new toss (7.1). On the beach the
+ * loser of the first toss chooses in set 2 (beach rule 7.1.2.3), so this is only a default.
  */
 export const nextSetServing = (state: MatchState) => !state.servedFirst;
+
+/** Points won on each beach player's serve, out of the rallies they served. */
+export function serverStats(log: readonly RallyRecord[]): { served: number; scored: number }[] {
+	return ([0, 1] as const).map((p) => {
+		const here = log.filter((r) => r.serving && r.server === p);
+		return { served: here.length, scored: here.filter((r) => r.won).length };
+	});
+}
+
+/** Sideouts over all rallies on the opponent's serve. */
+export function sideoutTotal(log: readonly RallyRecord[]) {
+	const received = log.filter((r) => !r.serving);
+	return { received: received.length, sidedOut: received.filter((r) => r.won).length };
+}
 
 export type SubOption = { kind: 'bench'; bench: number } | { kind: 'starter' };
 
@@ -276,7 +362,6 @@ export function longestRuns(log: readonly RallyRecord[]): { us: number; them: nu
 	return best;
 }
 
-/** The rally log as CSV, one rally per row with the running score. */
 /** Adds to the detail of the last rally, for the "how did it end?" taps after a point. */
 export function annotateLast(state: MatchState, patch: RallyDetail): MatchState {
 	const log = state.log ?? [];
@@ -347,11 +432,12 @@ export function outcomeCounts(log: readonly RallyRecord[]): Partial<Record<Outco
 	return out;
 }
 
+/** The rally log as CSV, one rally per row with the running score. */
 export function logCsv(
 	log: readonly RallyRecord[],
 	playerName: (key: PlayerKey) => string = (k) => k
 ): string {
-	const rows = ['set,rally,rotation,serving,won,us,them,how,player,passer,pass'];
+	const rows = ['set,rally,rotation,serving,won,us,them,how,player,passer,pass,server'];
 	let score = { us: 0, them: 0 };
 	let set = 0;
 	let n = 0;
@@ -377,7 +463,8 @@ export function logCsv(
 				d?.how ?? '',
 				d?.by ? cell(playerName(d.by)) : '',
 				d?.pass ? cell(playerName(d.pass.by)) : '',
-				d?.pass?.rating ?? ''
+				d?.pass?.rating ?? '',
+				r.server !== undefined ? cell(playerName(`p${r.server}`)) : ''
 			].join(',')
 		);
 	}

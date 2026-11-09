@@ -31,7 +31,10 @@
 		PLAYER_OUTCOMES,
 		WIN_OUTCOMES,
 		annotateLast,
+		beachServer,
 		courtRoles,
+		sideSwitchDue,
+		technicalTimeoutDue,
 		subsPerSet,
 		timeoutsPerSet,
 		newMatch,
@@ -50,6 +53,7 @@
 		type PlayerKey,
 		type RallyRecord,
 		type SetScore,
+		type Sport,
 		type SubOption
 	} from '#lib/volley/match.js';
 	import {
@@ -75,6 +79,8 @@
 		opponent: string;
 		/** Whether the coach records how each rally ended; off unless chosen. */
 		detailed?: boolean;
+		/** Beach: our two players' names, which the stats key as `p0` and `p1`. */
+		pair?: [string, string];
 	};
 	const saved = new Persisted<Saved>('vr:match', { history: [], opponent: '' });
 
@@ -85,6 +91,7 @@
 		us: string;
 		them: string;
 		system: SystemId;
+		sport?: Sport;
 		sets: SetScore[];
 		log: RallyRecord[];
 		names: Record<PlayerKey, string>;
@@ -103,22 +110,52 @@
 	let opponent = $state('');
 	let firstServe = $state(true);
 	let looseSystem = $state(DEFAULT_OPTIONS.system);
+	let setupSport: Sport = $derived(explorerPrefs.current.sport ?? 'indoor');
+	let pair: [string, string] = $state(['', '']);
+	let firstServer: 0 | 1 = $state(0);
 
 	const setupTeam = $derived(teams.current.list.find((t) => t.id === teamId));
 	// Follows the chosen team's starting rotation until the reader picks another.
 	let startRotation: RotationNo = $derived(setupTeam?.start ?? 1);
 	let setupLeague: LeagueId = $derived(setupTeam?.league ?? explorerPrefs.current.league);
 
+	const pairNames = $derived(
+		[0, 1].map((i) => saved.current.pair?.[i]?.trim() || m.beach_player_n({ n: i + 1 }))
+	);
 	const team: Team = $derived(
 		teams.current.list.find((t) => t.id === saved.current.teamId) ?? {
-			...newTeam(m.match_us()),
+			...newTeam(
+				saved.current.match?.sport === 'beach'
+					? saved.current.pair?.some((n) => n.trim())
+						? pairNames.join(' / ')
+						: m.match_us()
+					: m.match_us()
+			),
 			system: saved.current.match?.system ?? looseSystem,
 			libero: saved.current.match?.libero ?? true
 		}
 	);
 	const match = $derived(saved.current.match);
+	const beach = $derived(match?.sport === 'beach');
 
 	function begin() {
+		if (setupSport === 'beach') {
+			saved.set({
+				detailed: saved.current.detailed,
+				pair: [pair[0].trim(), pair[1].trim()],
+				opponent: opponent.trim(),
+				history: [],
+				match: newMatch({
+					system: '5-1',
+					libero: false,
+					rotation: 1,
+					serving: firstServe,
+					sport: 'beach',
+					firstServer
+				})
+			});
+			return;
+		}
 		const t = setupTeam;
 		saved.set({
 			detailed: saved.current.detailed,
@@ -164,6 +201,7 @@
 				us: team.name,
 				them: saved.current.opponent || m.match_them(),
 				system: match.system,
+				sport: match.sport,
 				sets: match.sets,
 				log: match.log,
 				names: Object.fromEntries([...keys].map((k) => [k, playerName(k)]))
@@ -194,6 +232,8 @@
 	}
 
 	function playerName(key: PlayerKey): string {
+		const p = key.match(/^p([01])$/);
+		if (p) return pairNames[Number(p[1])];
 		const bench = key.match(/^b(\d+)$/);
 		if (bench) {
 			const i = Number(bench[1]);
@@ -208,7 +248,13 @@
 			passBy !== undefined && passRating !== undefined
 				? { pass: { by: passBy, rating: passRating } }
 				: undefined;
-		const serverKey = match.serving && server ? occupantKey(server.role) : undefined;
+		const serverKey = !match.serving
+			? undefined
+			: beach
+				? `p${beachServer(match)}`
+				: server
+					? occupantKey(server.role)
+					: undefined;
 		const court = courtPlayers;
 		apply(rally(match, winner, saved.current.detailed ? detail : undefined));
 		passBy = undefined;
@@ -281,8 +327,15 @@
 	);
 
 	const courtPlayers = $derived(
-		placed.map((p) => ({ key: occupantKey(p.role), label: tokens[p.role] ?? roleShort(p.role) }))
+		beach
+			? pairNames.map((name, i) => ({ key: `p${i}`, label: name }))
+			: placed.map((p) => ({
+					key: occupantKey(p.role),
+					label: tokens[p.role] ?? roleShort(p.role)
+				}))
 	);
+	const switchSides = $derived(match ? sideSwitchDue(match) : false);
+	const technicalTimeout = $derived(match ? technicalTimeoutDue(match) : false);
 
 	const current = $derived(match?.sets.at(-1) ?? { us: 0, them: 0 });
 	const setIndex = $derived((match?.sets.length ?? 1) - 1);
@@ -292,6 +345,7 @@
 	// Next set: defaults the reader can change before starting it.
 	let nextRotation: RotationNo = $derived(team.start);
 	let nextServing = $derived(match ? nextSetServing(match) : true);
+	let nextFirstServer: 0 | 1 = $derived(match?.beach?.first ?? 0);
 
 	// Substitutions
 	let subOpen = $state(false);
@@ -327,34 +381,58 @@
 		}}
 	>
 		<h2 class="text-xl font-bold">{m.match_new()}</h2>
-		<label class="block">
-			<span class="eyebrow">{m.lineup_team()}</span>
-			<select class="field mt-1" bind:value={teamId}>
-				<option value={undefined}>{m.match_no_team()}</option>
-				{#each teams.current.list as t (t.id)}
-					<option value={t.id}>{t.name} ({systemName(t.system)})</option>
+		<ChipGroup
+			legend={m.sport_label()}
+			options={[
+				{ value: 'indoor', label: m.sport_indoor() },
+				{ value: 'beach', label: m.sport_beach() }
+			]}
+			bind:value={setupSport}
+		/>
+		{#if setupSport === 'beach'}
+			<p class="text-sm text-ink-soft">{m.match_beach_rules()}</p>
+			<div class="grid gap-3 sm:grid-cols-2">
+				{#each [0, 1] as i (i)}
+					<label class="block">
+						<span class="eyebrow">{m.beach_player_n({ n: i + 1 })}</span>
+						<input
+							class="field mt-1"
+							bind:value={pair[i]}
+							placeholder={m.beach_player_n({ n: i + 1 })}
+						/>
+					</label>
 				{/each}
-			</select>
-		</label>
-		{#if !setupTeam}
-			<ChipGroup
-				legend={m.label_system()}
-				options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
-				bind:value={looseSystem}
-			/>
+			</div>
+		{:else}
+			<label class="block">
+				<span class="eyebrow">{m.lineup_team()}</span>
+				<select class="field mt-1" bind:value={teamId}>
+					<option value={undefined}>{m.match_no_team()}</option>
+					{#each teams.current.list as t (t.id)}
+						<option value={t.id}>{t.name} ({systemName(t.system)})</option>
+					{/each}
+				</select>
+			</label>
+			{#if !setupTeam}
+				<ChipGroup
+					legend={m.label_system()}
+					options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
+					bind:value={looseSystem}
+				/>
+				<p class="text-sm text-ink-soft">
+					{m.match_team_hint()}
+					<a class="text-accent underline" href={href('/lineup')}>{m.lineup_title()}</a>
+				</p>
+			{/if}
+			<div><LeagueSelect bind:value={setupLeague} /></div>
 			<p class="text-sm text-ink-soft">
-				{m.match_team_hint()}
-				<a class="text-accent underline" href={href('/lineup')}>{m.lineup_title()}</a>
+				{m.match_league_limits({
+					subs: leagueOf(setupLeague).subsPerSet,
+					timeouts: leagueOf(setupLeague).timeoutsPerSet
+				})}
+				{#if setupLeague === 'ncaa'}{m.match_ncaa_note()}{/if}
 			</p>
 		{/if}
-		<div><LeagueSelect bind:value={setupLeague} /></div>
-		<p class="text-sm text-ink-soft">
-			{m.match_league_limits({
-				subs: leagueOf(setupLeague).subsPerSet,
-				timeouts: leagueOf(setupLeague).timeoutsPerSet
-			})}
-			{#if setupLeague === 'ncaa'}{m.match_ncaa_note()}{/if}
-		</p>
 		<label class="block">
 			<span class="eyebrow">{m.match_opponent()}</span>
 			<input class="field mt-1" bind:value={opponent} placeholder={m.match_them()} />
@@ -367,11 +445,22 @@
 			]}
 			bind:value={firstServe}
 		/>
-		<ChipGroup
-			legend={m.lineup_start()}
-			options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
-			bind:value={startRotation}
-		/>
+		{#if setupSport === 'beach'}
+			<ChipGroup
+				legend={m.beach_first_server()}
+				options={[0, 1].map((i) => ({
+					value: i as 0 | 1,
+					label: pair[i].trim() || m.beach_player_n({ n: i + 1 })
+				}))}
+				bind:value={firstServer}
+			/>
+		{:else}
+			<ChipGroup
+				legend={m.lineup_start()}
+				options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
+				bind:value={startRotation}
+			/>
+		{/if}
 		<div>
 			<ChipGroup
 				legend={m.detailed_label()}
@@ -399,8 +488,8 @@
 		{:else}
 			<ul class="mt-3 space-y-3">
 				{#each archive.current.list as a (a.id)}
-					{@const won = a.sets.filter((s, i) => setWinner(s, i) === 'us').length}
-					{@const lost = a.sets.filter((s, i) => setWinner(s, i) === 'them').length}
+					{@const won = a.sets.filter((s, i) => setWinner(s, i, a.sport) === 'us').length}
+					{@const lost = a.sets.filter((s, i) => setWinner(s, i, a.sport) === 'them').length}
 					<li class="card">
 						<div class="flex flex-wrap items-center justify-between gap-2">
 							<p>
@@ -433,6 +522,7 @@
 								<MatchReport
 									log={a.log}
 									system={a.system}
+									sport={a.sport}
 									playerName={(k) => a.names[k] ?? k}
 									filename="{a.us} - {a.them}.csv"
 									headingLevel={3}
@@ -452,7 +542,7 @@
 			<!-- Scoreboard -->
 			<section class="card" aria-label={m.match_score()}>
 				<p class="eyebrow">
-					{m.match_set({ n: setIndex + 1 })} · {m.match_to({ n: setTarget(setIndex) })}
+					{m.match_set({ n: setIndex + 1 })} · {m.match_to({ n: setTarget(setIndex, match.sport) })}
 				</p>
 				<div class="mt-2 grid grid-cols-2 gap-3 text-center">
 					{#each [{ side: 'us', name: us, points: current.us, sets: won.us, serve: match.serving }, { side: 'them', name: them, points: current.them, sets: won.them, serve: !match.serving }] as t (t.side)}
@@ -501,9 +591,12 @@
 					<h2 class="text-xl font-bold">
 						{m.match_set_over({
 							n: setIndex + 1,
-							team: setWinner(current, setIndex) === 'us' ? us : them
+							team: setWinner(current, setIndex, match.sport) === 'us' ? us : them
 						})}
 					</h2>
+					{#if beach && match.sets.length === 1}<p class="text-sm text-ink-soft">
+							{m.match_beach_second_set()}
+						</p>{/if}
 					<ChipGroup
 						legend={m.match_first_serve()}
 						options={[
@@ -512,12 +605,22 @@
 						]}
 						bind:value={nextServing}
 					/>
-					{#if match.sets.length === 4}<p class="text-sm text-ink-soft">{m.match_toss()}</p>{/if}
-					<ChipGroup
-						legend={m.lineup_start()}
-						options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
-						bind:value={nextRotation}
-					/>
+					{#if match.sets.length === (beach ? 2 : 4)}<p class="text-sm text-ink-soft">
+							{m.match_toss()}
+						</p>{/if}
+					{#if beach}
+						<ChipGroup
+							legend={m.beach_first_server()}
+							options={[0, 1].map((i) => ({ value: i as 0 | 1, label: pairNames[i] }))}
+							bind:value={nextFirstServer}
+						/>
+					{:else}
+						<ChipGroup
+							legend={m.lineup_start()}
+							options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
+							bind:value={nextRotation}
+						/>
+					{/if}
 					<div class="flex flex-wrap gap-2">
 						<button type="button" class="btn-secondary" onclick={undo}>
 							<IconUndo class="size-4" aria-hidden="true" />{m.match_undo()}
@@ -525,7 +628,7 @@
 						<button
 							type="button"
 							class="btn-primary"
-							onclick={() => apply(startSet(match, nextRotation, nextServing))}
+							onclick={() => apply(startSet(match, nextRotation, nextServing, nextFirstServer))}
 						>
 							{m.match_next_set({ n: setIndex + 2 })}
 						</button>
@@ -544,6 +647,25 @@
 						onclick={() => point('them')}>{m.match_point({ team: them })}</button
 					>
 				</div>
+				{#if switchSides || technicalTimeout}
+					<div class="mt-3 space-y-2" role="status">
+						{#if switchSides}
+							<p
+								class="animate-pop flex items-center gap-2 rounded-xl bg-accent px-3 py-2 font-bold text-accent-ink"
+							>
+								<IconArrowLeftRight class="size-5" aria-hidden="true" />{m.beach_switch_sides()}
+							</p>
+						{/if}
+						{#if technicalTimeout}
+							<p class="flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm">
+								<IconTimer
+									class="size-5 shrink-0"
+									aria-hidden="true"
+								/>{m.beach_technical_timeout()}
+							</p>
+						{/if}
+					</div>
+				{/if}
 				{#if saved.current.detailed && !match.serving}
 					<div class="mt-3" aria-live="polite">
 						<p class="text-sm font-medium">{m.pass_prompt()}</p>
@@ -638,10 +760,12 @@
 							})}
 						</button>
 					{/each}
-					<button type="button" class="btn-secondary" onclick={() => (subOpen = true)}>
-						<IconArrowLeftRight class="size-4" aria-hidden="true" />
-						{m.match_subs({ used: match.subCount, max: subsPerSet(match) })}
-					</button>
+					{#if !beach}
+						<button type="button" class="btn-secondary" onclick={() => (subOpen = true)}>
+							<IconArrowLeftRight class="size-4" aria-hidden="true" />
+							{m.match_subs({ used: match.subCount, max: subsPerSet(match) })}
+						</button>
+					{/if}
 				</div>
 			{/if}
 
@@ -650,39 +774,71 @@
 			</button>
 		</div>
 
-		<section class="min-w-0" aria-labelledby="court-heading">
-			<h2 id="court-heading" class="font-bold">{rotationLabel(match.rotation, match.system)}</h2>
-			<p class="text-sm text-ink-soft">
-				{match.serving
-					? m.match_server({ name: server ? label(server.role) : '' })
-					: m.match_receiving()}
-			</p>
-			<div class="mt-2">
-				<FormationCourt
-					{placed}
-					names={tokens}
-					label="{rotationLabel(match.rotation, match.system)}, {match.serving
-						? m.we_serve()
-						: m.we_receive()}"
-				/>
-			</div>
-			<ul class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-				{#each placed as p (p.role)}
-					<li class="truncate">
-						<span class="font-semibold">{p.zone}</span> · {label(p.role)}
-						{#if p.replaces}<span class="text-ink-soft">
-								({m.match_for({ name: label(p.replaces) })})</span
-							>{/if}
-					</li>
-				{/each}
-			</ul>
-		</section>
+		{#if beach}
+			{@const next = beachServer(match)}
+			<section class="card min-w-0" aria-labelledby="serve-heading">
+				<h2 id="serve-heading" class="font-bold">{m.beach_serve_order()}</h2>
+				<p class="mt-1 text-sm text-ink-soft">
+					{match.serving
+						? m.beach_serving_now({ name: pairNames[next] })
+						: m.beach_serves_next({ name: pairNames[next] })}
+				</p>
+				<ol class="mt-3 space-y-2">
+					{#each [match.beach?.first ?? 0, 1 - (match.beach?.first ?? 0)] as i (i)}
+						<li
+							class="flex min-h-11 items-center gap-2 rounded-xl border px-3 {i === next
+								? 'border-accent font-semibold'
+								: 'border-line'}"
+						>
+							{#if i === next}<IconVolleyball class="size-4 text-accent" aria-hidden="true" />{/if}
+							{pairNames[i]}
+						</li>
+					{/each}
+				</ol>
+				<p class="mt-3 text-sm text-ink-soft">
+					{m.beach_next_switch({
+						n:
+							(match.sets.length === 3 ? 5 : 7) -
+							((current.us + current.them) % (match.sets.length === 3 ? 5 : 7))
+					})}
+				</p>
+			</section>
+		{:else}
+			<section class="min-w-0" aria-labelledby="court-heading">
+				<h2 id="court-heading" class="font-bold">{rotationLabel(match.rotation, match.system)}</h2>
+				<p class="text-sm text-ink-soft">
+					{match.serving
+						? m.match_server({ name: server ? label(server.role) : '' })
+						: m.match_receiving()}
+				</p>
+				<div class="mt-2">
+					<FormationCourt
+						{placed}
+						names={tokens}
+						label="{rotationLabel(match.rotation, match.system)}, {match.serving
+							? m.we_serve()
+							: m.we_receive()}"
+					/>
+				</div>
+				<ul class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+					{#each placed as p (p.role)}
+						<li class="truncate">
+							<span class="font-semibold">{p.zone}</span> · {label(p.role)}
+							{#if p.replaces}<span class="text-ink-soft">
+									({m.match_for({ name: label(p.replaces) })})</span
+								>{/if}
+						</li>
+					{/each}
+				</ul>
+			</section>
+		{/if}
 	</div>
 
 	<div class="mt-10">
 		<MatchReport
 			log={match.log ?? []}
 			system={match.system}
+			sport={match.sport}
 			{playerName}
 			filename="{team.name} - {saved.current.opponent || m.match_them()}.csv"
 		/>

@@ -2,6 +2,7 @@ import { Persisted } from '#lib/persisted.svelte.js';
 import { teamPlaybook, type Team } from '#lib/teams.svelte.js';
 import { DEFAULT_OPTIONS, type Options } from '#lib/volley/formations.js';
 import { leagueOf, type LeagueId } from '#lib/volley/leagues.js';
+import type { Sport } from '#lib/volley/match.js';
 import type { RoleId } from '#lib/volley/model.js';
 
 export type ExplorerPrefs = Options & {
@@ -11,6 +12,8 @@ export type ExplorerPrefs = Options & {
 	team?: string;
 	/** Whether the reader has picked where they play, so the site stops asking. */
 	rulesChosen?: boolean;
+	/** Indoor or beach: beach hides the indoor rule sets and points the rotation tools elsewhere. */
+	sport?: Sport;
 };
 
 /** The explorer's choices, shared with the quiz so both start from the reader's own setup. */

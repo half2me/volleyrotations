@@ -8,37 +8,47 @@
 		outcomeCounts,
 		playerStats,
 		rotationStats,
+		serverStats,
+		sideoutTotal,
 		type PlayerKey,
-		type RallyRecord
+		type RallyRecord,
+		type Sport
 	} from '#lib/volley/match.js';
 	import type { SystemId } from '#lib/volley/model.js';
 	import IconDownload from '~icons/lucide/download';
 
 	/**
-	 * A match's statistics: sideout and points on serve per rotation, the longest runs and, when the
-	 * coach recorded how rallies ended, each player's points, errors and passing.
+	 * A match's statistics: sideout and points on serve per rotation (on the beach, per server), the
+	 * longest runs and, when the coach recorded how rallies ended, each player's points, errors and
+	 * passing.
 	 */
 	let {
 		log,
 		system,
+		sport = 'indoor',
 		playerName,
 		filename,
 		headingLevel = 2
 	}: {
 		log: readonly RallyRecord[];
 		system: SystemId;
+		sport?: Sport;
 		playerName: (key: PlayerKey) => string;
 		filename: string;
 		headingLevel?: 2 | 3;
 	} = $props();
 
 	const stats = $derived(rotationStats(log));
+	const beach = $derived(sport === 'beach');
+	const servers = $derived(serverStats(log));
+	const sideout = $derived(sideoutTotal(log));
 	const runs = $derived(longestRuns(log));
 	/** The rotation with the lowest sideout rate, once it has a few receptions to judge by. */
 	const weakest = $derived(
-		stats
-			.filter((r) => r.received >= 3)
-			.sort((a, b) => a.sidedOut / a.received - b.sidedOut / b.received)[0]
+		!beach &&
+			stats
+				.filter((r) => r.received >= 3)
+				.sort((a, b) => a.sidedOut / a.received - b.sidedOut / b.received)[0]
 	);
 	const players = $derived(
 		[...playerStats(log)].sort(
@@ -76,43 +86,75 @@
 	<svelte:element this={`h${headingLevel}`} id="{id}-rot" class="text-xl font-bold"
 		>{m.stats_title()}</svelte:element
 	>
-	<p class="mt-1 text-sm text-ink-soft">{m.stats_help()}</p>
-	<table class="mt-3 w-full max-w-xl table-fixed border-collapse text-sm">
-		<thead>
-			<tr class="text-left text-ink-soft">
-				<th scope="col" class="py-1 pr-2 font-medium">{m.label_rotation()}</th>
-				<th scope="col" class="py-1 pr-2 font-medium">{m.stats_sideout()}</th>
-				<th scope="col" class="py-1 pr-2 font-medium">{m.stats_on_serve()}</th>
-				{#if anyPasses}<th scope="col" class="py-1 font-medium" title={m.stats_pass_long()}
-						>{m.stats_pass()}</th
-					>{/if}
-			</tr>
-		</thead>
-		<tbody>
-			{#each stats as r (r.rotation)}
-				<tr class="border-t border-line">
-					<th scope="row" class="py-1.5 pr-2 text-left font-medium"
-						>{rotationLabel(r.rotation, system)}</th
-					>
-					<td class="py-1.5 pr-2 tabular-nums">
-						{pct(r.sidedOut, r.received)}
-						<span class="text-ink-soft">({r.sidedOut}/{r.received})</span>
-					</td>
-					<td class="py-1.5 pr-2 tabular-nums">
-						{pct(r.scored, r.served)}
-						<span class="text-ink-soft">({r.scored}/{r.served})</span>
-					</td>
-					{#if anyPasses}
-						{@const p = passByRotation[r.rotation]}
-						<td class="py-1.5 tabular-nums"
-							>{avg(p.total, p.n)}
-							{#if p.n}<span class="text-ink-soft">({p.n})</span>{/if}</td
-						>
-					{/if}
+	{#if beach}
+		<p class="mt-1 text-sm text-ink-soft">{m.stats_beach_help()}</p>
+		<table class="mt-3 w-full max-w-md table-fixed border-collapse text-sm">
+			<thead>
+				<tr class="text-left text-ink-soft">
+					<th scope="col" class="py-1 pr-2 font-medium">{m.stats_server()}</th>
+					<th scope="col" class="py-1 font-medium">{m.stats_on_serve()}</th>
 				</tr>
-			{/each}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				{#each servers as r, i (i)}
+					<tr class="border-t border-line">
+						<th scope="row" class="truncate py-1.5 pr-2 text-left font-medium"
+							>{playerName(`p${i}`)}</th
+						>
+						<td class="py-1.5 tabular-nums">
+							{pct(r.scored, r.served)}
+							<span class="text-ink-soft">({r.scored}/{r.served})</span>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+		<p class="mt-3 text-sm">
+			{m.stats_sideout()}:
+			<span class="tabular-nums"
+				>{pct(sideout.sidedOut, sideout.received)}
+				<span class="text-ink-soft">({sideout.sidedOut}/{sideout.received})</span></span
+			>
+		</p>
+	{:else}
+		<p class="mt-1 text-sm text-ink-soft">{m.stats_help()}</p>
+		<table class="mt-3 w-full max-w-xl table-fixed border-collapse text-sm">
+			<thead>
+				<tr class="text-left text-ink-soft">
+					<th scope="col" class="py-1 pr-2 font-medium">{m.label_rotation()}</th>
+					<th scope="col" class="py-1 pr-2 font-medium">{m.stats_sideout()}</th>
+					<th scope="col" class="py-1 pr-2 font-medium">{m.stats_on_serve()}</th>
+					{#if anyPasses}<th scope="col" class="py-1 font-medium" title={m.stats_pass_long()}
+							>{m.stats_pass()}</th
+						>{/if}
+				</tr>
+			</thead>
+			<tbody>
+				{#each stats as r (r.rotation)}
+					<tr class="border-t border-line">
+						<th scope="row" class="py-1.5 pr-2 text-left font-medium"
+							>{rotationLabel(r.rotation, system)}</th
+						>
+						<td class="py-1.5 pr-2 tabular-nums">
+							{pct(r.sidedOut, r.received)}
+							<span class="text-ink-soft">({r.sidedOut}/{r.received})</span>
+						</td>
+						<td class="py-1.5 pr-2 tabular-nums">
+							{pct(r.scored, r.served)}
+							<span class="text-ink-soft">({r.scored}/{r.served})</span>
+						</td>
+						{#if anyPasses}
+							{@const p = passByRotation[r.rotation]}
+							<td class="py-1.5 tabular-nums"
+								>{avg(p.total, p.n)}
+								{#if p.n}<span class="text-ink-soft">({p.n})</span>{/if}</td
+							>
+						{/if}
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	{/if}
 	<p class="mt-3 text-sm">{m.stats_runs({ us: runs.us, them: runs.them })}</p>
 	{#if weakest}
 		<p class="mt-1 text-sm">

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IndoorOnlyNotice from '#lib/components/IndoorOnlyNotice.svelte';
 	import LeagueSelect from '#lib/components/LeagueSelect.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
@@ -182,6 +183,7 @@
 <div class="print:hidden">
 	<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.explorer_title()}</h1>
 	<p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.explorer_lead()}</p>
+	<IndoorOnlyNotice />
 
 	{#if teams.current.list.length}
 		<div class="mt-8" data-pagefind-ignore>

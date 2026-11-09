@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IndoorOnlyNotice from '#lib/components/IndoorOnlyNotice.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
 	import PlayerCard from '#lib/components/PlayerCard.svelte';
@@ -149,6 +150,7 @@
 <div class="print:hidden">
 	<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.lineup_title()}</h1>
 	<p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.lineup_lead()}</p>
+	<IndoorOnlyNotice />
 	<div aria-live="polite" data-pagefind-ignore>
 		{#if incoming}
 			<div class="card mt-6 flex flex-wrap items-center gap-3 border-accent">

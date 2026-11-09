@@ -22,7 +22,9 @@
 		{ path: '/rules/signals', title: m.signals_title, text: m.signals_description },
 		{ path: '/guides/scoring', title: m.guide_scoring, text: m.guide_scoring_summary },
 		{ path: '/guides/leagues', title: m.guide_leagues, text: m.guide_leagues_summary },
-		{ path: '/guides/sitting', title: m.guide_sitting, text: m.guide_sitting_summary }
+		{ path: '/guides/sitting', title: m.guide_sitting, text: m.guide_sitting_summary },
+		{ path: '/beach', title: m.beach_title, text: m.beach_description },
+		{ path: '/equipment', title: m.equipment_title, text: m.equipment_description }
 	] as const;
 	const yesNo = (v: boolean) => (v ? m.yes() : m.no());
 </script>

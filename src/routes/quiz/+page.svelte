@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IndoorOnlyNotice from '#lib/components/IndoorOnlyNotice.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import QuizQuestion from '#lib/components/QuizQuestion.svelte';
 	import Seo from '#lib/components/Seo.svelte';
@@ -88,6 +89,7 @@
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.quiz_title()}</h1>
 <p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.quiz_lead()}</p>
+<IndoorOnlyNotice />
 
 <div class="mt-6 flex flex-wrap items-end justify-between gap-4" data-pagefind-ignore>
 	<ChipGroup

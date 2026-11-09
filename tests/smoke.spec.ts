@@ -291,3 +291,36 @@ test('a practice plan keeps its drills and runs a timer', async ({ page }) => {
 		page.getByText(/Wash table \(one-way\) · 10:00|Wash table \(one-way\) · 9:5\d/)
 	).toBeVisible();
 });
+
+test('the match tracker scores a beach match with the serve order and side switches', async ({
+	page
+}) => {
+	await open(page, '/match');
+	await page.locator('label').getByText('Beach', { exact: true }).click();
+	await page.getByRole('textbox', { name: 'Player 1' }).fill('Anna');
+	await page.getByRole('textbox', { name: 'Player 2' }).fill('Bea');
+	await page.locator('label').getByText('They serve', { exact: true }).click();
+	await page.locator('label').getByText('Bea', { exact: true }).click();
+	await page.getByRole('button', { name: 'Start match' }).click();
+	await expect(page.getByText('Set 1 · to 21')).toBeVisible();
+	await expect(page.getByText(/When you win the serve back, Bea serves/)).toBeVisible();
+	await page.getByRole('button', { name: /^Point Anna/ }).click();
+	await expect(page.getByText('Bea serves.')).toBeVisible();
+	for (let i = 0; i < 6; i++) await page.getByRole('button', { name: 'Point Them' }).click();
+	await expect(page.getByText('Switch sides now')).toBeVisible();
+	await expect(page.getByRole('button', { name: /Substitutions/ })).toHaveCount(0);
+	await page.getByRole('button', { name: /^Point Anna/ }).click();
+	await expect(page.getByText('Anna serves.')).toBeVisible();
+});
+
+test('choosing beach in the header points the rotation tools to the beach page', async ({
+	page
+}) => {
+	await open(page, '/explorer');
+	await page.getByRole('button', { name: /Where you play/ }).click();
+	await page.getByRole('button', { name: 'Beach', exact: true }).click();
+	await page.keyboard.press('Escape');
+	await expect(page.getByRole('note')).toContainText('You picked beach');
+	await page.getByRole('button', { name: 'Switch to indoor' }).click();
+	await expect(page.getByRole('note')).toHaveCount(0);
+});

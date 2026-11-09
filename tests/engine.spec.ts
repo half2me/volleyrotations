@@ -12,17 +12,22 @@ import {
 } from '../src/lib/volley/formations.ts';
 import {
 	annotateLast,
+	beachServer,
 	logCsv,
 	longestRuns,
 	newMatch,
 	playerStats,
 	rally,
 	rotationStats,
+	serverStats,
 	setOver,
 	setWinner,
+	sideSwitchDue,
+	startSet,
 	subOptions,
 	subsPerSet,
 	substitute,
+	technicalTimeoutDue,
 	timeoutsPerSet
 } from '../src/lib/volley/match.ts';
 import { ROLE_KIND, ROTATIONS, setterOf, SYSTEM, SYSTEMS, ZONES } from '../src/lib/volley/model.ts';
@@ -169,6 +174,54 @@ test('a set needs 25 points and a two-point lead, the fifth set 15', () => {
 	expect(setOver(s)).toBe(true);
 	expect(setWinner({ us: 15, them: 13 }, 4)).toBe('us');
 	expect(setWinner({ us: 15, them: 13 }, 3)).toBeUndefined();
+});
+
+test('beach sets go to 21, the third to 15, and two sets win the match', () => {
+	let s = newMatch({ system: '5-1', libero: false, rotation: 1, serving: true, sport: 'beach' });
+	for (let i = 0; i < 20; i++) s = rally(rally(s, 'us'), 'them');
+	s = rally(rally(s, 'us'), 'us');
+	expect(setWinner(s.sets[0], 0, 'beach')).toBe('us');
+	expect(setWinner({ us: 15, them: 13 }, 2, 'beach')).toBe('us');
+	expect(setWinner({ us: 15, them: 13 }, 1, 'beach')).toBeUndefined();
+	s = startSet(s, 1, true);
+	for (let i = 0; i < 21; i++) s = rally(s, 'us');
+	expect(s.finished).toBe(true);
+	expect(subsPerSet(s)).toBe(0);
+	expect(timeoutsPerSet(s)).toBe(1);
+});
+
+test('beach serve passes to the partner who did not serve last, and sides switch every 7 or 5', () => {
+	let s = newMatch({
+		system: '5-1',
+		libero: false,
+		rotation: 1,
+		serving: false,
+		sport: 'beach',
+		firstServer: 1
+	});
+	// Receiving first: the chosen first server serves when we win the serve.
+	expect(beachServer(s)).toBe(1);
+	s = rally(s, 'us');
+	expect(beachServer(s)).toBe(1);
+	s = rally(s, 'us');
+	expect(s.log.at(-1)!.server).toBe(1);
+	s = rally(s, 'them');
+	s = rally(s, 'us');
+	expect(beachServer(s)).toBe(0);
+	expect(s.rotation).toBe(1);
+	while (s.sets[0].us + s.sets[0].them < 7) s = rally(s, 'them');
+	expect(sideSwitchDue(s)).toBe(true);
+	s = rally(s, 'them');
+	expect(sideSwitchDue(s)).toBe(false);
+	expect(serverStats(s.log)[1]).toEqual({ served: 2, scored: 1 });
+});
+
+test('the beach technical time-out comes at 21 points played in sets 1 and 2 only', () => {
+	let s = newMatch({ system: '5-1', libero: false, rotation: 1, serving: true, sport: 'beach' });
+	for (let i = 0; i < 10; i++) s = rally(rally(s, 'us'), 'them');
+	expect(technicalTimeoutDue(s)).toBe(false);
+	s = rally(s, 'us');
+	expect(technicalTimeoutDue(s)).toBe(true);
 });
 
 test('substitutions follow rule 15.6', () => {

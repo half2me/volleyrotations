@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IndoorOnlyNotice from '#lib/components/IndoorOnlyNotice.svelte';
 	import LeagueSelect from '#lib/components/LeagueSelect.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import DragCourt from '#lib/components/court/DragCourt.svelte';
@@ -96,6 +97,7 @@
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.overlap_title()}</h1>
 <p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.overlap_lead()}</p>
+<IndoorOnlyNotice />
 
 <div class="mt-8 grid gap-4 sm:grid-cols-2" data-pagefind-ignore>
 	<div>

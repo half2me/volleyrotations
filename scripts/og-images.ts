@@ -30,6 +30,8 @@ const KEYS: Record<string, [string, string]> = {
 	'/drills': ['drills_title', 'drills_description'],
 	'/rules/situations': ['situations_title', 'situations_description'],
 	'/rules/signals': ['signals_title', 'signals_description'],
+	'/beach': ['beach_title', 'beach_description'],
+	'/equipment': ['equipment_title', 'equipment_description'],
 	'/explorer': ['explorer_title', 'explorer_description'],
 	'/overlap': ['overlap_title', 'overlap_description'],
 	'/quiz': ['quiz_title', 'quiz_description'],
@@ -65,7 +67,11 @@ function textFor(path: string, locale: string) {
 	const eyebrow =
 		path === '/' || path === '/guides' || path === '/search'
 			? ''
-			: path === '/learn' || path === '/drills' || path.startsWith('/rules')
+			: path === '/learn' ||
+				  path === '/drills' ||
+				  path === '/beach' ||
+				  path === '/equipment' ||
+				  path.startsWith('/rules')
 				? EYEBROW[locale].guide
 				: EYEBROW[locale].tool;
 	return { title: messages[locale][t], description: messages[locale][d], eyebrow };
