@@ -5,6 +5,7 @@ description: The 5-player W, 4-player U and 3-player serve-receive formations, h
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # Serve-receive formations
@@ -31,6 +32,8 @@ Every formation must be legal at the moment of the serve. Under FIVB rules the r
 
 Three players stand in a line across the court, roughly 4 to 5 metres from the net, and two more stand deeper, in the gaps between them. Seen from above it looks like a W. The setter is at the net; in a 6-6 or 4-2 the setter is always front row, in a 6-2 always back row, and in a 5-1 back row in Rotations 1–3 and front row in 4–6. When the setter starts in zone 6 or 5 and hides at the net, the front-row player in their column must not stand further from the net than them (level is allowed), so that player stays at the net and a W has four passers in those rotations. From zone 1 the setter can hide behind the zone 2 passer along the right sideline.
 
+<RotationFigure rotation={1} formation={5} you="S" caption="5-player W in Rotation 1: three passers across the court about 4–5 m from the net, two deeper in the gaps. The setter (S) starts behind the zone 2 passer on the right sideline and runs to the target as the serve is hit." />
+
 - **Pros:** easy to learn, covers short serves well, and nobody has to cover a big area.
 - **Cons:** many players means many **seams** (the gaps between passers), and weak passers cannot hide. The front three in the W also have to get ready to attack after passing.
 - **Good for:** beginners, recreational teams, and against short serves.
@@ -39,6 +42,8 @@ Three players stand in a line across the court, roughly 4 to 5 metres from the n
 
 Four passers stand in a shallow curve, open towards the net: two wide near the sidelines, two deeper in the middle. The setter and one front-row player, usually the middle blocker, stay at the net.
 
+<RotationFigure rotation={1} formation={4} caption="4-player U in Rotation 1: two passers wide, two deeper in the middle. The middle blocker (MB1) stays at the net, free to start the quick attack, and the setter (S) hides behind the zone 2 passer." />
+
 - **Pros:** fewer seams than the W, and the middle is free to start the quick attack.
 - **Cons:** each passer covers more court. Short serves to the middle can be a problem.
 - **Good for:** teams with four reasonable passers, or a 4-2.
@@ -46,6 +51,8 @@ Four passers stand in a shallow curve, open towards the net: two wide near the s
 ## 3-player
 
 The libero and the two outside hitters split the court into three lanes. The setter, the opposite and the middle blocker hide near the net or at the edges.
+
+<RotationFigure rotation={1} formation={3} you="L" area caption="3-player receive in Rotation 1: the libero (L) and the two outside hitters split the court into three lanes; the shaded area is the libero's. The setter, the middle and the opposite hide at the net or behind a passer." />
 
 - **Pros:** only your best passers touch the serve. The opposite and middle can focus completely on attacking.
 - **Cons:** each passer covers about three metres of width and the full depth, which takes good movement and reading of the server.
@@ -73,6 +80,8 @@ Whatever your rules are, the one that matters most is: **decide before the serve
 ## Where the setter goes
 
 The setter's target is the same in every formation: just right of the middle, close to the net. From the back row the setter starts as near as the overlap rule allows, often tucked behind the front-row player in the same column, and runs to the target the moment the serve is hit. From the front row, the setter can wait at the net. Passers aim for the target, not for the setter: if the setter is late, the ball still goes to the right place.
+
+<RotationFigure rotation={2} you="S" caption="Rotation 2: the setter (S) in zone 6 starts right behind the zone 3 player, as near the target as the rule allows, and takes a step up as the serve is hit." />
 
 ## Switching between formations
 

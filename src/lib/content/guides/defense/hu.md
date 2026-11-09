@@ -5,6 +5,7 @@ description: A hátsós (6-os hátul), a forgó és a sarkos (6-os elöl) védek
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # Védekezési rendszerek a röplabdában
@@ -32,6 +33,8 @@ description: A hátsós (6-os hátul), a forgó és a sarkos (6-os elöl) védek
 
 Mielőtt az ellenfél támad, a csapat **alapállásban** vár: a sáncolók a hálónál szétosztva, a hátsó sor a saját területe közepén, mozdulásra készen. Amikor az ellenfél feladója elengedi a labdát, mindenki a támadásnak megfelelő helyére fut. Az alapállás csapatonként eltér; az oldal eszközeiben a szokásos posztváltást követi: a nyitásfogadó ütő balra, a center középre, a feladó vagy a feladó átló jobbra sáncol, hátul a liberó balra, a nyitásfogadó ütő hátsó középen, a feladó vagy a feladó átló jobb hátul áll.
 
+<RotationFigure rotation={4} phase="base" caption="Alapállás a 4. forgásban, amíg az ellenfél fogad és felad: három sáncoló szétosztva a hálónál, a liberó (L) bal hátul, a nyitásfogadó ütő (NY1) hátsó középen, a feladó átló (Á) jobb hátul." />
+
 ## Sáncfeladatok
 
 Az első sorban szokásos helycserével:
@@ -54,6 +57,8 @@ Ha az ellenfél a saját bal oldaláról (a ti jobb oldalatok felől) támad:
 - **Bal hátsó (5-ös hely):** az átlót védi, mélyen.
 - **Sáncon kívüli (bal első):** a támadóvonal környékére lép vissza a rövid átlóra és a rövid labdákra.
 
+<RotationFigure rotation={4} phase="defense" defense="perimeter" attackFrom="outside" caption="6-os hátul rendszer az ellenfél nyitásfogadó ütője ellen, aki a mi jobb oldalunkon támad: a feladó és a center sáncol, a jobb hátsó (Á) az egyenest védi, a hátsó középső (NY1) mélyre megy, a bal hátsó (L) az átlót veszi, a sáncon kívüli (NY2) a támadóvonalhoz lép vissza." />
+
 A másik oldalról jövő támadásnál minden tükrözve van.
 
 - **Előnyök:** erős támadók ellen jó, a mély pályát jól lefedi.
@@ -68,11 +73,15 @@ A hátsó sor a támadás felé **forog**:
 - A **bal hátsó (5-ös hely)** a mély közép felé csúszik.
 - A **sáncon kívüli** visszalép a rövid átlóra.
 
+<RotationFigure rotation={4} phase="defense" defense="rotational" attackFrom="outside" caption="Forgó védekezés ugyanez ellen a támadás ellen: a jobb hátsó (Á) a sánc mögé jön az ejtésekre, a hátsó középső (NY1) mélyen az egyenesre forog, a bal hátsó (L) a mély közép felé csúszik, a sáncon kívüli (NY2) a rövid átlót fedi." />
+
 Előnye, hogy nagyon jó az ejtések és a lassított ütések ellen, és a sánc mögötti védő korán a helyén van. Hátránya, hogy a mély átlós sarok és a mély közép nyitva maradhat, és a játékosoknak többet kell mozogniuk. Középről érkező támadás ellen ugyanúgy játszik, mint a hátsós rendszer.
 
 ## Sarkos rendszer: 6-os elöl (middle-up)
 
 A **hátsó középső** (6-os hely) előrejön közvetlenül a sánc mögé, nagyjából a támadóvonalig, és minden ejtést ő vesz. A két szélső védő (1-es és 5-ös hely) a mély egyenest és a mély átlót védi.
+
+<RotationFigure rotation={4} phase="defense" defense="middle-up" attackFrom="outside" caption="6-os elöl ugyanez ellen a támadás ellen: a hátsó középső (NY1) közvetlenül a sánc mögött áll az ejtésekre, a két szélső védő a mély egyenest és a mély átlót védi; a mély közép üres." />
 
 - **Előnyök:** könnyű megtanulni, ideális sokat ejtő csapatok ellen. Amatőr és utánpótlás szinten gyakori.
 - **Hátrányok:** a pálya mély közepe üres, oda leeshet egy sánc fölött ütött erős labda vagy egy mély lassított ütés.
@@ -88,6 +97,8 @@ Amikor a ti csapatotok támad, a labda az ellenfél sáncáról egyenesen vissza
 - **Belső kör:** két-három játékos (gyakran a feladó, a center, aki nem kapta a labdát, és az ütő mögötti hátsó sorköteles) szoros félkört alkot, egy-két méterre az ütőtől.
 - **Külső kör:** a többiek hátrébb töltik ki a réseket.
 - Mindenki alacsonyan, a sáncot figyeli, nem az ütőt.
+
+<RotationFigure rotation={2} phase="cover" setTo="left" caption="A balról támadó nyitásfogadó ütő (NY2) biztosítása: a liberó, a center és a feladó alkotja a belső kört, a feladó átló és a másik nyitásfogadó ütő mélyebben biztosít." />
 
 Sokan „3-2-es” biztosításnak hívják: három közel, kettő mögöttük.
 

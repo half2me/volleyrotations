@@ -5,6 +5,7 @@ description: Where to stand while your hitter attacks, what changes on a free ba
 
 <script>
 	import Callout from '#lib/components/Callout.svelte';
+	import RotationFigure from '#lib/components/guide/RotationFigure.svelte';
 </script>
 
 # Hitter coverage, free balls and down balls
@@ -23,6 +24,8 @@ The pattern most coaching manuals teach is **three close, two deep**: the three 
 
 </Callout>
 
+<RotationFigure rotation={2} phase="cover" setTo="left" caption="Three close, two deep: the outside hitter (OH2) attacks from the left; the libero, the middle and the setter crouch around them, the opposite and the other outside cover the deeper court." />
+
 Tips for covering:
 
 - Get there before the hitter jumps, then stop. Moving while the ball comes off the block makes it impossible to play.
@@ -37,11 +40,15 @@ A free ball is an easy ball the opponent cannot attack: a pass or a set sent ove
 - Front-row hitters drop off the net to behind the 3 m line, so they can pass and still approach.
 - Everyone but the setter becomes a passer, usually in a five-player W like serve receive.
 
+<RotationFigure rotation={4} phase="defense" incoming="free" caption="Free ball in Rotation 4: the setter (S) goes to the target, the front-row hitters drop behind the attack line and the five passers form a W." />
+
 This is the standard teaching ([Joel Dearing, _Volleyball Fundamentals_, Human Kinetics](https://us.humankinetics.com/blogs/excerpt/creating-the-w-formation)). USA Volleyball's John Kessel argues against over-drilling it, because in real rallies the free-ball call comes late ([Stop teaching free balls](https://usavolleyball.org/resource/stop-teaching-free-balls/)), but knowing the shape still helps.
 
 ## Down ball
 
 A down ball is hit by an opponent who is standing, or without a full jump and swing. It comes over flatter and slower than a spike. On the **“down!”** call, blockers stay at the net but do not jump or raise their hands above the net ([The Art of Coaching Volleyball glossary](https://www.theartofcoachingvolleyball.com/volleyball-glossary/)), and everyone else stays low and deep to dig. Teams position their back row differently here; the explorer keeps it in a deep base.
+
+<RotationFigure rotation={4} phase="defense" incoming="down" caption="Down ball in Rotation 4: the three blockers stay at the net without jumping, the back row waits low and deep." />
 
 ## When the setter digs the first ball
 
@@ -51,5 +58,7 @@ If the setter plays the first ball, someone else must set. Most teams name a bac
 - **Otherwise the right-front player**, or another front-row player, who then does not attack.
 
 A front-row setter who only touched the ball on the block may still set it: a block touch is not one of the team's three contacts ([FIVB rule 14.4.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf)).
+
+<RotationFigure rotation={1} phase="attack" serving={true} setterDug={true} you="L" caption="The setter (S) dug the first ball in zone 1, so the libero (L) sets from behind the attack line while the three front-row hitters approach." />
 
 Choose **First ball dug by: The setter** in the explorer's attack moment, when your team serves, to see it.
