@@ -1,7 +1,17 @@
 <script lang="ts">
+	import PlayInHungary from '#lib/components/PlayInHungary.svelte';
 	import Seo from '#lib/components/Seo.svelte';
 	import { site } from '#lib/config.js';
-	import { DRILLS, DRILL_TOPICS, type DrillTopic } from '#lib/drills.js';
+	import {
+		BEACH_DRILLS,
+		BEACH_DRILL_TOPICS,
+		DRILLS,
+		DRILL_TOPICS,
+		type DrillTopic
+	} from '#lib/drills.js';
+	import ChipGroup from '#lib/components/ChipGroup.svelte';
+	import { explorerPrefs } from '#lib/prefs.svelte.js';
+	import type { Sport } from '#lib/volley/match.js';
 	import { href } from '#lib/i18n.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { getLocale } from '#lib/paraglide/runtime.js';
@@ -16,6 +26,11 @@
 	$effect(() => plan.load());
 
 	const lang = $derived(getLocale() as 'en' | 'hu');
+	$effect(() => explorerPrefs.load());
+	// Starts on the reader's sport; switching here does not change the site-wide choice.
+	let sport: Sport = $derived(explorerPrefs.current.sport ?? 'indoor');
+	const topics = $derived(sport === 'beach' ? BEACH_DRILL_TOPICS : DRILL_TOPICS);
+	const drills = $derived(sport === 'beach' ? BEACH_DRILLS : DRILLS);
 	const topicName = (t: DrillTopic) =>
 		({
 			sideout: m.drills_sideout,
@@ -23,7 +38,13 @@
 			'free-ball': m.drills_free_ball,
 			coverage: m.drills_coverage,
 			setter: m.drills_setter,
-			serving: m.drills_serving
+			serving: m.drills_serving,
+			'beach-receive': m.drills_beach_receive,
+			'beach-setting': m.drills_beach_setting,
+			'beach-shots': m.drills_beach_shots,
+			'beach-block-defence': m.drills_beach_block,
+			'beach-serving': m.drills_beach_serving,
+			'beach-games': m.drills_beach_games
 		})[t]();
 </script>
 
@@ -41,13 +62,24 @@
 	<a class="text-accent underline" href={href('/match')}>{m.nav_match()}</a>
 </p>
 
+<div class="mt-6" data-pagefind-ignore>
+	<ChipGroup
+		legend={m.sport_label()}
+		options={[
+			{ value: 'indoor', label: m.sport_indoor() },
+			{ value: 'beach', label: m.sport_beach() }
+		]}
+		bind:value={sport}
+	/>
+</div>
+
 <div class="mt-8"><PracticePlan {plan} /></div>
 
-{#each DRILL_TOPICS as topic (topic)}
+{#each topics as topic (topic)}
 	<section class="mt-10 max-w-3xl" id={topic} aria-labelledby="{topic}-heading">
 		<h2 id="{topic}-heading" class="text-2xl font-bold tracking-tight">{topicName(topic)}</h2>
 		<ul class="mt-4 space-y-3">
-			{#each DRILLS.filter((d) => d.topic === topic) as d (d.id)}
+			{#each drills.filter((d) => d.topic === topic) as d (d.id)}
 				<li class="card">
 					<h3 class="font-bold">{d.name}</h3>
 					<p class="mt-1 text-ink-soft">{d.purpose[lang]}</p>
@@ -77,3 +109,5 @@
 		</ul>
 	</section>
 {/each}
+
+<div class="mt-12 max-w-3xl"><PlayInHungary /></div>

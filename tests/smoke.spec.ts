@@ -324,3 +324,22 @@ test('choosing beach in the header points the rotation tools to the beach page',
 	await page.getByRole('button', { name: 'Switch to indoor' }).click();
 	await expect(page.getByRole('note')).toHaveCount(0);
 });
+
+test('the beach quiz explains each answer and keeps a score', async ({ page }) => {
+	await open(page, '/beach/quiz');
+	const first = page.getByRole('listitem').filter({ hasText: 'first set of a beach match' });
+	await first.getByRole('button', { name: '21', exact: true }).click();
+	await expect(first.getByText('Correct!')).toBeVisible();
+	await expect(page.getByText(/1 of 1 right so far/)).toBeVisible();
+	await expect(first.getByRole('link', { name: 'Beach rule 6.2' })).toBeVisible();
+});
+
+test('the signals and drills pages switch to their beach versions', async ({ page }) => {
+	await open(page, '/rules/signals');
+	await page.locator('label').getByText('Beach', { exact: true }).click();
+	await expect(page.getByText('One hand raised with five fingers spread.')).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Substitution', exact: true })).toHaveCount(0);
+	await open(page, '/drills');
+	await page.locator('label').getByText('Beach', { exact: true }).click();
+	await expect(page.getByRole('heading', { name: 'Split the passers' })).toBeVisible();
+});

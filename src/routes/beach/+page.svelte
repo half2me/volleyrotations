@@ -1,5 +1,6 @@
 <script lang="ts">
 	import PartnerSignal, { type HandSign } from '#lib/components/PartnerSignal.svelte';
+	import PlayInHungary from '#lib/components/PlayInHungary.svelte';
 	import Seo from '#lib/components/Seo.svelte';
 	import CourtDiagram from '#lib/components/equipment/CourtDiagram.svelte';
 	import { BEACH_RULES_PDF, DIFFERENCES, RULES_PDF } from '#lib/beach.js';
@@ -158,12 +159,20 @@
 	</p>
 </section>
 
+<div class="mt-12"><PlayInHungary /></div>
+
 <section class="mt-12" aria-labelledby="tools-heading">
 	<h2 id="tools-heading" class="text-2xl font-bold tracking-tight">{m.beach_tools_title()}</h2>
 	<ul class="mt-4 grid gap-3 sm:grid-cols-2">
 		<li class="card">
 			<a class="font-bold text-accent underline" href={href('/match')}>{m.match_title()}</a>
 			<p class="mt-1 text-sm">{m.beach_tool_match()}</p>
+		</li>
+		<li class="card">
+			<a class="font-bold text-accent underline" href={href('/beach/quiz')}
+				>{m.beach_quiz_title()}</a
+			>
+			<p class="mt-1 text-sm">{m.beach_tool_quiz()}</p>
 		</li>
 		<li class="card">
 			<a class="font-bold text-accent underline" href={href('/equipment')}>{m.equipment_title()}</a>

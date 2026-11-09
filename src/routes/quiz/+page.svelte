@@ -89,7 +89,7 @@
 
 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{m.quiz_title()}</h1>
 <p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.quiz_lead()}</p>
-<IndoorOnlyNotice />
+<IndoorOnlyNotice quiz />
 
 <div class="mt-6 flex flex-wrap items-end justify-between gap-4" data-pagefind-ignore>
 	<ChipGroup

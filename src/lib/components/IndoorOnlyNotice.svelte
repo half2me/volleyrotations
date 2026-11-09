@@ -8,6 +8,7 @@
 	 * Shown on the rotation tools when the reader has picked beach: rotations, positions and the
 	 * overlap rule only exist indoors, so these tools would teach a beach player nothing true.
 	 */
+	let { quiz = false }: { quiz?: boolean } = $props();
 	$effect(() => explorerPrefs.load());
 </script>
 
@@ -20,7 +21,11 @@
 		<IconSun class="size-6 shrink-0 text-accent" aria-hidden="true" />
 		<p class="text-sm">{m.indoor_only_notice()}</p>
 		<div class="flex shrink-0 flex-wrap gap-2">
-			<a class="btn-secondary" href={href('/beach')}>{m.beach_title()}</a>
+			{#if quiz}
+				<a class="btn-secondary" href={href('/beach/quiz')}>{m.indoor_only_quiz()}</a>
+			{:else}
+				<a class="btn-secondary" href={href('/beach')}>{m.beach_title()}</a>
+			{/if}
 			<button
 				type="button"
 				class="btn-ghost"

@@ -217,11 +217,16 @@
 			{@render finger(-3.6, 15, -18)}
 			{@render finger(3.6, 15, 18)}
 			<path d="M -1 16 q 1 3 2 0" fill="none" stroke={LINE} stroke-width="1.2" />
+		{:else if kind === 'five'}
+			{@render finger(-7.5, 12, 34)}
+			{@render finger(-2.6, 14, 11)}
+			{@render finger(2.6, 14, -11)}
+			{@render finger(7.5, 11, -34)}
 		{:else if kind === 'four'}
-			{@render finger(-7, 11, -24)}
-			{@render finger(-2.4, 13, -8)}
-			{@render finger(2.4, 13, 8)}
-			{@render finger(7, 10, 24)}
+			{@render finger(-7, 11, 24)}
+			{@render finger(-2.4, 13, 8)}
+			{@render finger(2.4, 13, -8)}
+			{@render finger(7, 10, -24)}
 		{:else}
 			<!-- Curled fingers: four knuckles along the top of the fist. -->
 			<path
@@ -255,7 +260,7 @@
 				stroke-width="1.5"
 			/>
 		{:else}
-			<g transform="translate({thumb * 8.5} 4) rotate({thumb * -48})">
+			<g transform="translate({thumb * 8.5} 4) rotate({thumb * (kind === 'five' ? -80 : -48)})">
 				<rect
 					x="-3.1"
 					y="-1"

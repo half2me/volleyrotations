@@ -15,7 +15,17 @@ export type Motion = 'sweep' | 'spin' | 'circle' | 'up' | 'down' | 'brush';
 
 /** What a hand does: open palm, pointing finger, fist, thumb up, fingers counted, or holding something. */
 export type Hand =
-	'open' | 'point' | 'fist' | 'thumb' | 'two' | 'four' | 'yellow' | 'red' | 'both-cards' | 'flag';
+	| 'open'
+	| 'point'
+	| 'fist'
+	| 'thumb'
+	| 'two'
+	| 'four'
+	| 'five'
+	| 'yellow'
+	| 'red'
+	| 'both-cards'
+	| 'flag';
 
 export type Signal = {
 	id: string;
@@ -612,4 +622,170 @@ export const FLAG_SIGNALS: Signal[] = [
 		left: { upper: 20, fore: -112 },
 		right: { upper: 20, fore: -112 }
 	}
+];
+
+/**
+ * The beach referee signals (FIVB Beach Volleyball Rules 2025–2028, Diagram 9) and flag signals
+ * (Diagram 10), in the rulebook's order. Most gestures are the indoor ones, so each entry reuses
+ * the indoor figure and replaces what differs: rules, page, who shows it, and the meaning on sand.
+ * Beach has no substitution signal, and the delay in service is five fingers, not eight.
+ */
+const indoor = (id: string) => [...REFEREE_SIGNALS, ...FLAG_SIGNALS].find((s) => s.id === id)!;
+const onSand = (id: string, change: Partial<Signal>): Signal => ({ ...indoor(id), ...change });
+
+export const BEACH_RULES_PDF =
+	'https://www.fivb.com/wp-content/uploads/2025/02/FIVB-BeachVolleyball_Rules2025_2028-EN-v01.pdf';
+
+export const BEACH_REFEREE_SIGNALS: Signal[] = [
+	onSand('authorise-serve', { rules: ['12.3'], page: 58, who: 'first' }),
+	onSand('team-to-serve', { rules: ['12.3'], page: 58, who: 'both' }),
+	onSand('change-courts', {
+		rules: ['18.2'],
+		page: 58,
+		who: 'both',
+		means: {
+			en: 'Teams switch sides: every 7 points played in sets 1 and 2, every 5 in set 3.',
+			hu: 'A csapatok térfelet cserélnek: az 1. és 2. játszmában minden 7 lejátszott pont után, a 3. játszmában 5 után.'
+		}
+	}),
+	onSand('time-out', { rules: ['15'], page: 58, who: 'both' }),
+	onSand('warning', { rules: ['20.1', '20.5'], page: 59, who: 'first' }),
+	onSand('penalty', { rules: ['20.3.1', '20.5'], page: 59, who: 'first' }),
+	onSand('expulsion', {
+		rules: ['20.3.2', '20.5'],
+		page: 59,
+		who: 'first',
+		means: {
+			en: 'The player must leave the playing area, and with only two players the team is declared incomplete for the set.',
+			hu: 'A játékosnak el kell hagynia a játékteret, és mivel csak ketten vannak, a csapatot hiányosnak nyilvánítják a játszmára.'
+		}
+	}),
+	onSand('disqualification', {
+		rules: ['20.3.3', '20.5'],
+		page: 59,
+		who: 'first',
+		means: {
+			en: 'The player must leave the playing area, and the team is declared incomplete for the match.',
+			hu: 'A játékosnak el kell hagynia a játékteret, és a csapatot hiányosnak nyilvánítják a mérkőzésre.'
+		}
+	}),
+	onSand('end-of-set', { rules: ['6.2', '6.3'], page: 60, who: 'first' }),
+	onSand('not-tossed', { rules: ['12.4.1'], page: 60, who: 'first' }),
+	onSand('delay-serve', {
+		rules: ['12.4.4'],
+		page: 60,
+		who: 'first',
+		gesture: {
+			en: 'One hand raised with five fingers spread.',
+			hu: 'Az egyik kéz felemelve, öt ujj szétterpesztve.'
+		},
+		means: {
+			en: 'The server took longer than 5 seconds after the whistle.',
+			hu: 'A nyitó a sípszó után 5 másodpercnél tovább várt.'
+		},
+		hands: { right: 'five' },
+		left: { upper: 8, fore: 8 },
+		right: { upper: 120, fore: 170 },
+		fingers: '5'
+	}),
+	onSand('block-fault', {
+		rules: ['12.5', '14.5', '14.6.3'],
+		page: 60,
+		who: 'first',
+		means: {
+			en: 'A player blocked the serve, blocked illegally, or screened the server.',
+			hu: 'Egy játékos sáncolta a nyitást, szabálytalanul sáncolt, vagy eltakarta a nyitót.'
+		}
+	}),
+	onSand('position-fault', {
+		rules: ['7.7.1', '12.6.1.1'],
+		page: 61,
+		who: 'both',
+		means: {
+			en: 'On the beach this means the wrong player served: there are no positions to fault, only the serve order.',
+			hu: 'Strandon ez azt jelenti, hogy nem a soron következő játékos nyitott: kötött helyek nincsenek, csak a nyitási sorrend.'
+		}
+	}),
+	onSand('ball-in', { rules: ['8.3'], page: 61, who: 'both' }),
+	onSand('ball-out', { rules: ['8.4'], page: 61, who: 'both' }),
+	onSand('catch', { rules: ['9.3.3'], page: 61, who: 'first' }),
+	onSand('double-contact', {
+		rules: ['9.3.4'],
+		page: 62,
+		who: 'both',
+		means: {
+			en: 'A player touched the ball twice in a row. On the team’s first hit it is allowed in one action, but not with an overhand finger pass.',
+			hu: 'Egy játékos kétszer egymás után érintette a labdát. A csapat első érintésénél egy mozdulaton belül megengedett, de kosárérintéssel nem.'
+		}
+	}),
+	onSand('four-hits', {
+		rules: ['9.3.1'],
+		page: 62,
+		who: 'first',
+		means: {
+			en: 'A team touched the ball four times before sending it over. On the beach a block touch counts as one of the three.',
+			hu: 'Egy csapat négyszer érintette a labdát, mielőtt átjátszotta. Strandon a sáncérintés is beleszámít a háromba.'
+		}
+	}),
+	onSand('net-touch', { rules: ['11.4.3', '12.6.2.1'], page: 62, who: 'both' }),
+	onSand('reach-over', { rules: ['11.4.1', '13.2.1'], page: 62, who: 'first' }),
+	onSand('attack-fault', {
+		rules: ['13.2.3', '13.2.4', '13.2.5'],
+		page: 63,
+		who: 'first',
+		means: {
+			en: 'An illegal attack: an open-hand tip, an overhand pass over the net not straight out from the shoulders (unless setting the partner), or an attack on the serve while it is entirely above the net.',
+			hu: 'Szabálytalan támadás: nyitott kezes ejtés, a vállak vonalára nem merőleges kosárérintéses átjátszás (kivéve, ha a társának akart feladni), vagy a nyitás leütése, amíg teljes terjedelmével a háló felett van.'
+		}
+	}),
+	onSand('penetration', {
+		rules: ['8.4.5', '11.2.1', '12.4.3'],
+		page: 63,
+		who: 'both',
+		name: {
+			en: 'Interference under the net, ball under the net, or foot fault at the serve',
+			hu: 'Zavarás a háló alatt, labda a háló alatt, vagy lépéshiba nyitáskor'
+		},
+		gesture: {
+			en: 'Pointing at the court under the net, or at the line concerned.',
+			hu: 'A háló alatti pályarészre vagy az érintett vonalra mutat.'
+		},
+		means: {
+			en: 'A player crossed under the net and interfered with the opponents, the ball passed completely under the net, or the server touched the court or the ground outside the service zone.',
+			hu: 'Egy játékos a háló alatt átjutva zavarta az ellenfelet, a labda teljesen átment a háló alatt, vagy a nyitó a pályát vagy a nyitási zónán kívüli talajt érintette.'
+		}
+	}),
+	onSand('double-fault', { rules: ['6.1.2.2', '12.4.5'], page: 63, who: 'both' }),
+	onSand('ball-touched', {
+		rules: ['14.6.4'],
+		page: 63,
+		who: 'first',
+		means: {
+			en: 'The ball went out off a player, for example off the block: that team loses the rally.',
+			hu: 'A labda egy játékosról, például a sáncról ment ki: az ő csapata veszíti el a labdamenetet.'
+		}
+	}),
+	onSand('delay', { rules: ['15.5.5', '16.2.2', '16.2.3'], page: 64, who: 'first' })
+];
+
+export const BEACH_FLAG_SIGNALS: Signal[] = [
+	onSand('flag-in', { rules: ['8.3', '28.2.1.1'], page: 65 }),
+	onSand('flag-out', { rules: ['8.4.1', '28.2.1.1'], page: 65 }),
+	onSand('flag-touched', {
+		rules: ['28.2.1.2'],
+		page: 65,
+		means: {
+			en: 'A player touched the ball before it went out.',
+			hu: 'Egy játékos hozzáért a labdához, mielőtt kiment.'
+		}
+	}),
+	onSand('flag-antenna', {
+		rules: ['8.4.2', '8.4.3', '8.4.4', '12.4.3'],
+		page: 65,
+		means: {
+			en: 'The ball crossed outside the antenna or touched an object outside the court, or a player made a foot fault at the serve.',
+			hu: 'A labda az antennán kívül ment át, vagy a pályán kívüli tárgyat érintett, vagy egy játékos lépéshibát vétett nyitáskor.'
+		}
+	}),
+	onSand('flag-unsure', { rules: [], page: 66 })
 ];

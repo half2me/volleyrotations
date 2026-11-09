@@ -31,6 +31,7 @@ const KEYS: Record<string, [string, string]> = {
 	'/rules/situations': ['situations_title', 'situations_description'],
 	'/rules/signals': ['signals_title', 'signals_description'],
 	'/beach': ['beach_title', 'beach_description'],
+	'/beach/quiz': ['beach_quiz_title', 'beach_quiz_description'],
 	'/equipment': ['equipment_title', 'equipment_description'],
 	'/explorer': ['explorer_title', 'explorer_description'],
 	'/overlap': ['overlap_title', 'overlap_description'],

@@ -4,7 +4,19 @@
  */
 type Text = { en: string; hu: string };
 
-export type DrillTopic = 'sideout' | 'transition' | 'free-ball' | 'coverage' | 'setter' | 'serving';
+export type DrillTopic =
+	| 'sideout'
+	| 'transition'
+	| 'free-ball'
+	| 'coverage'
+	| 'setter'
+	| 'serving'
+	| 'beach-receive'
+	| 'beach-setting'
+	| 'beach-shots'
+	| 'beach-block-defence'
+	| 'beach-serving'
+	| 'beach-games';
 export const DRILL_TOPICS: readonly DrillTopic[] = [
 	'sideout',
 	'transition',
@@ -12,6 +24,14 @@ export const DRILL_TOPICS: readonly DrillTopic[] = [
 	'coverage',
 	'setter',
 	'serving'
+];
+export const BEACH_DRILL_TOPICS: readonly DrillTopic[] = [
+	'beach-receive',
+	'beach-setting',
+	'beach-shots',
+	'beach-block-defence',
+	'beach-serving',
+	'beach-games'
 ];
 
 export type Drill = {
@@ -176,5 +196,162 @@ export const DRILLS: Drill[] = [
 			label: 'The Volleyball Drill Book (Human Kinetics), via Coaches Insider',
 			url: 'https://coachesinsider.com/volleyball/serving-drills-article'
 		}
+	}
+];
+
+const FIVB_BEACH =
+	'https://www.fivb.com/wp-content/uploads/2024/03/FIVB_Beachvolley_Drill-Book_EN.pdf';
+const fivbDrill = (n: string, page: number) => ({
+	label: `FIVB Beach Volleyball Drill-book, drill ${n}`,
+	url: `${FIVB_BEACH}#page=${page}`
+});
+
+/** Beach drills for pairs and small groups, from the FIVB drill-book and Better at Beach. */
+export const BEACH_DRILLS: Drill[] = [
+	{
+		id: 'plus-three-minus-three',
+		topic: 'beach-receive',
+		name: 'Plus three, minus three',
+		purpose: {
+			en: 'Consistent serve receive to a target near the net, under game pressure.',
+			hu: 'Megbízható fogadás egy háló közeli célpontra, játékszerű nyomás alatt.'
+		},
+		how: {
+			en: 'Three players: a server behind the end line, a passer, and a catcher near the net. The passer scores a point for a pass the catcher can reach with at most one big step, and for a service error; a bad pass or an ace costs a point. First to 3 wins.',
+			hu: 'Három játékos: egy nyitó az alapvonal mögött, egy fogadó, és egy elkapó a háló közelében. A fogadó pontot kap, ha az elkapó legfeljebb egy nagy lépéssel eléri a labdát, és ha a nyitás hibás; rossz fogadásért vagy ászért pontot veszít. Aki előbb ér el 3 pontot, nyer.'
+		},
+		source: {
+			label: 'Better at Beach',
+			url: 'https://www.betteratbeach.com/beach-volleyball-drills'
+		}
+	},
+	{
+		id: 'four-great-sets',
+		topic: 'beach-setting',
+		name: '4 great sets',
+		purpose: {
+			en: 'Setting good and bad passes, and choosing between a bump set and a hand set.',
+			hu: 'Jó és rossz fogadások feladása, és a döntés az alkaros és a kosárérintéses feladás között.'
+		},
+		how: {
+			en: 'A coach throws balls to four spots as if they were passes: tight and too far across, perfect, too far off the net, and off the side of the court. The player moves from passing position and sets each one, by hand or bump, facing the target, then gets low, ready to dig a blocked ball. An extra player can attack the set.',
+			hu: 'Az edző négy helyre dobja a labdát, mintha fogadás lenne: túl közel a hálóhoz és túl messze oldalra, tökéletesen, túl messze a hálótól, illetve a pályán kívülre oldalt. A játékos a fogadóhelyéről indul, és mindegyiket kosárérintéssel vagy alkarral feladja, a célpont felé fordulva, majd mélyen leguggol, hogy a sáncról visszajövő labdát felvegye. Egy további játékos le is ütheti a feladást.'
+		},
+		source: fivbDrill('4.7', 68)
+	},
+	{
+		id: 'shot-practice',
+		topic: 'beach-shots',
+		name: 'Shot practice',
+		purpose: {
+			en: 'The approach angle and the high arm and hand position for soft shots such as the cut and the line.',
+			hu: 'A puha ejtésekhez (rövid átló, egyenes) szükséges nekifutási szög, valamint a magasan tartott kar és kéz.'
+		},
+		how: {
+			en: 'Facing the direction of a normal approach, the player tosses the ball up in front and, with a high arm swing, plays a soft shot into areas the coach marks out, from both sides of the court. The wrist, not a dropped elbow, changes the direction. A hard attack between shots keeps the arm high.',
+			hu: 'A játékos a szokásos nekifutás irányába fordulva maga elé dobja a labdát, és magas karlendítéssel puha ejtést játszik az edző által kijelölt területekre, a pálya mindkét oldaláról. Az irányt a csukló változtatja meg, nem a leeresztett könyök. Az ejtések közé iktatott erős leütés segít magasan tartani a kart.'
+		},
+		source: fivbDrill('5.2', 74)
+	},
+	{
+		id: 'high-line-cut-shot-challenge',
+		topic: 'beach-shots',
+		name: 'High line and cut shot challenge',
+		purpose: {
+			en: 'Accurate high line and cut shots into the corners, as a competition.',
+			hu: 'Pontos magas egyenes és rövid átlós ejtések a sarkokba, versenyszerűen.'
+		},
+		how: {
+			en: 'Boxes are drawn in the sand in each corner of the court. Two lines of passer-attackers play with a permanent setter; a tosser alternates balls between the lines, and each player passes, then tries to land a cut shot or high line in a box. The first to the agreed score wins.',
+			hu: 'A térfél mindegyik sarkában négyzetet rajzolnak a homokba. Két sor fogadó-támadó játszik egy állandó feladóval; a dobó felváltva dob a két sornak, és mindenki fogadás után rövid átlós vagy magas egyenes ejtéssel próbál egy négyzetbe találni. Aki előbb éri el a megbeszélt pontszámot, nyer.'
+		},
+		source: {
+			label: 'Better at Beach',
+			url: 'https://betteratbeach.com/blog/attackinginbeachvolleyball'
+		}
+	},
+	{
+		id: 'read-the-power-shot',
+		topic: 'beach-block-defence',
+		name: 'Read the power shot',
+		purpose: {
+			en: 'Reading the direction of a power attack from the attacker’s approach and body.',
+			hu: 'A leütés irányának kiolvasása a támadó nekifutásából és testtartásából.'
+		},
+		how: {
+			en: 'A thrower tosses the ball over the blocker’s back, and the attacker across the net hits it hard in the direction of their body rather than away from the block. The blocker watches the attacker’s body first, then the ball, and tries to block it. The drill-book signals this block with a closed fist.',
+			hu: 'A dobó a sáncoló háta fölött átdobja a labdát, a túloldali támadó pedig erővel, a teste irányába üti le, nem a sánc mellé. A sáncoló előbb a támadó testét, aztán a labdát figyeli, és megpróbálja megsáncolni. A gyakorlatgyűjtemény ezt a sáncot ökölbe zárt kézzel jelzi.'
+		},
+		source: fivbDrill('6.3', 85)
+	},
+	{
+		id: 'retreat-decision-drill',
+		topic: 'beach-block-defence',
+		name: 'Retreat decision drill',
+		purpose: {
+			en: 'The blocker’s choice: stay up and block, or pull off the net and defend.',
+			hu: 'A sáncoló döntése: a hálónál marad és sáncol, vagy lehúzódik a hálóról és védekezik.'
+		},
+		how: {
+			en: 'The blocker lines up on the attacker across the net, and a player at the net sets a thrown ball either tight or off the net. The blocker reads the set and either blocks or drops off; the attacker hits into the block or down the line to the retreating blocker. A back-court defender can play out the digs.',
+			hu: 'A sáncoló a háló túloldalán a támadóval szemben áll, a hálónál álló játékos pedig egy feldobott labdát vagy közel a hálóhoz, vagy attól távolabb ad fel. A sáncoló kiolvassa a feladást, és vagy sáncol, vagy lehúzódik; a támadó a sáncba vagy egyenesen a hátrahúzódó sáncolóra üt. Egy hátsó védő kijátszhatja a felvett labdákat.'
+		},
+		source: fivbDrill('6.8', 90)
+	},
+	{
+		id: 'chase-line-shot-behind-block',
+		topic: 'beach-block-defence',
+		name: 'Chase the line shot behind a block',
+		purpose: {
+			en: 'Digging the hard angle attack and chasing down the soft line shot.',
+			hu: 'Az erős átlós leütés felvétele és a puha egyenes ejtés utolérése.'
+		},
+		how: {
+			en: 'From a set at the net, an attacker plays either a hard angle attack or a soft line shot. The defender reads the attacker’s body for clues and digs the angle or chases down the line, and the blocker catches or plays the dig. The rally can be played out.',
+			hu: 'A hálónál adott feladásból a támadó vagy erős átlós leütést, vagy puha egyenes ejtést játszik. A védő a támadó testtartásából következtet, felveszi az átlós ütést vagy utoléri az egyenes ejtést, a felvett labdát pedig a sáncoló elkapja vagy kijátssza. A labdamenet végig is játszható.'
+		},
+		source: fivbDrill('7.8', 101)
+	},
+	{
+		id: 'two-person-defence-transition',
+		topic: 'beach-block-defence',
+		name: 'Two-person defence drill',
+		purpose: {
+			en: 'Defence and the transition set, for two players with no one else to train with.',
+			hu: 'Mezőnyvédekezés és átmeneti feladás két játékosnak, akik egyedül edzenek.'
+		},
+		how: {
+			en: 'One player attacks off their own toss at their partner, who defends across the net. The attacker then runs under the net and sets the partner’s dig for a transition attack, so the defender must dig high and in front. Intermediate players attack straight at the partner; advanced players attack anywhere on the court.',
+			hu: 'Az egyik játékos saját feldobásból üt a háló túloldalán védekező társára, majd átfut a háló alatt, és feladja a társ felvett labdáját egy átmeneti támadáshoz; ezért a védőnek magasra és maga elé kell felvennie a labdát. Középhaladók egyenesen a társra ütnek, haladók a pálya bármely részére.'
+		},
+		source: fivbDrill('7.10', 103)
+	},
+	{
+		id: 'split-the-passers',
+		topic: 'beach-serving',
+		name: 'Split the passers',
+		purpose: {
+			en: 'A float serve that uses the wind to land between the two passers.',
+			hu: 'Lebegtetett nyitás, amely a szelet kihasználva a két fogadó közé érkezik.'
+		},
+		how: {
+			en: 'The server aims at one passer’s inside shoulder so that the wind carries the ball back towards the other passer and causes confusion. A float serve works best because it moves more in the wind, and a deeper serve moves more. It can be played as a game of server against passers, as long as the passers do not cheat towards the middle.',
+			hu: 'A nyitó az egyik fogadó belső válla felé céloz, hogy a szél a labdát a másik fogadó felé sodorja, és zavart keltsen. A lebegtetett nyitás működik a legjobban, mert azt viszi el leginkább a szél, és a mélyebb nyitás többet mozog. Játszható nyitó a fogadók ellen játékként is, ha a fogadók nem húzódnak előre középre.'
+		},
+		source: fivbDrill('2.7', 40)
+	},
+	{
+		id: 'monarch-of-the-court',
+		topic: 'beach-games',
+		name: 'Monarch of the court',
+		purpose: {
+			en: 'A 2 v 2 game for when more than two pairs share one court.',
+			hu: '2 a 2 elleni játék arra az esetre, ha kettőnél több páros osztozik egy pályán.'
+		},
+		how: {
+			en: 'One side of the court is the points side, the other the challenger side. Pairs serve from the challenger side; if the serving pair wins the rally, they cross to the points side. Only the pair on the points side can score: a pair there that wins a rally scores and stays.',
+			hu: 'A pálya egyik térfele a pontszerző, a másik a kihívó oldal. A párosok a kihívó oldalról nyitnak; ha a nyitó páros nyeri a labdamenetet, átmegy a pontszerző oldalra. Pontot csak a pontszerző oldalon álló páros szerezhet: ha ott nyer labdamenetet, pontot kap és marad.'
+		},
+		source: fivbDrill('8.8', 120)
 	}
 ];

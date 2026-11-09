@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DRILLS } from '#lib/drills.js';
+	import { BEACH_DRILLS, DRILLS } from '#lib/drills.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import type { Persisted } from '#lib/persisted.svelte.js';
 	import IconPause from '~icons/lucide/pause';
@@ -15,7 +15,7 @@
 
 	const items = $derived(plan.current.items);
 	const total = $derived(items.reduce((sum, i) => sum + i.minutes, 0));
-	const name = (id: string) => DRILLS.find((d) => d.id === id)?.name ?? id;
+	const name = (id: string) => [...DRILLS, ...BEACH_DRILLS].find((d) => d.id === id)?.name ?? id;
 
 	let current = $state(0);
 	let left = $state(0);
