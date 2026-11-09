@@ -126,6 +126,9 @@
 	<a class="text-accent underline" href={href('/explorer')}>{m.explorer_title()}</a>
 </p>
 <p class="mt-1 text-sm text-ink-soft">
+	<a class="text-accent underline" href={href('/rules/signals/quiz')}>{m.signals_quiz_link()}</a>
+</p>
+<p class="mt-1 text-sm text-ink-soft">
 	{m.quiz_revisit_note({ n: Object.keys(score.current.misses ?? {}).length })}
 </p>
 

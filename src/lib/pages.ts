@@ -51,6 +51,7 @@ export const pages = [
 	{ path: '/drills', inNav: false },
 	{ path: '/rules/situations', inNav: false },
 	{ path: '/rules/signals', inNav: false },
+	{ path: '/rules/signals/quiz', inNav: false },
 	{ path: '/beach', inNav: false },
 	{ path: '/beach/quiz', inNav: false },
 	{ path: '/equipment', inNav: false },

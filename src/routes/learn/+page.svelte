@@ -73,6 +73,12 @@
 					tool: '/rules/signals',
 					toolLabel: m.signals_title,
 					text: m.learn_signals
+				},
+				{
+					id: 'signals-quiz',
+					tool: '/rules/signals/quiz',
+					toolLabel: m.signals_quiz_title,
+					text: m.learn_signals_quiz
 				}
 			]
 		},

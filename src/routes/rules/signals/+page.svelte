@@ -56,6 +56,9 @@
 	/>
 	{#if beach}<p class="mt-2 max-w-2xl text-sm text-ink-soft">{m.signals_beach_note()}</p>{/if}
 </div>
+<p class="mt-4">
+	<a class="btn-secondary" href={href('/rules/signals/quiz')}>{m.signals_quiz_link()}</a>
+</p>
 
 {#snippet card(s: Signal, n: number)}
 	<li class="card flex flex-col gap-4 sm:flex-row">
@@ -92,6 +95,7 @@
 </section>
 
 <p class="mt-8 text-sm text-ink-soft">
+	<a class="text-accent underline" href={href('/rules/signals/quiz')}>{m.signals_quiz_title()}</a> ·
 	<a class="text-accent underline" href={href('/rules/situations')}>{m.situations_title()}</a> ·
 	<a class="text-accent underline" href={href('/rules')}>{m.rules_title()}</a>
 </p>
