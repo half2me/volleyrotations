@@ -716,5 +716,8 @@
 	"home_beach_quiz": "Sixteen questions on the beach rules, each answer linked to its rule.",
 	"home_beach_match": "Beach match tracker",
 	"home_beach_match_text": "Sets to 21, side switches every 7 points, the serve order and stats for both players.",
-	"home_learn_title": "Learning path"
+	"home_learn_title": "Learning path",
+	"update_available": "A new version is ready.",
+	"update_reload": "Reload",
+	"update_later": "Later"
 }

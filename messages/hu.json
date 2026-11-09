@@ -716,5 +716,8 @@
 	"home_beach_quiz": "Tizenhat kérdés a strandszabályokról, minden válasz a szabályára mutató linkkel.",
 	"home_beach_match": "Strand meccskövető",
 	"home_beach_match_text": "21 pontos játszmák, térfélcsere 7 pontonként, nyitási sorrend és statisztika mindkét játékosra.",
-	"home_learn_title": "Tanulási útvonal"
+	"home_learn_title": "Tanulási útvonal",
+	"update_available": "Elérhető egy új verzió.",
+	"update_reload": "Újratöltés",
+	"update_later": "Később"
 }

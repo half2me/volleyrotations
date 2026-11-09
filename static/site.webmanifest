@@ -1,15 +1,35 @@
 {
+	"id": "/",
 	"name": "Volley Rotations",
 	"short_name": "Rotations",
+	"description": "Learn indoor volleyball rotations: where to stand in every rotation, the overlap rule, lineup sheets and a match tracker.",
+	"lang": "en",
+	"dir": "ltr",
 	"start_url": "/",
+	"scope": "/",
 	"display": "standalone",
 	"background_color": "#fbf6ee",
 	"theme_color": "#fbf6ee",
-	"description": "Learn indoor volleyball rotations: where to stand in every rotation, the overlap rule, lineup sheets and a match tracker.",
 	"icons": [
 		{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
 		{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
 		{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
 		{ "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+	],
+	"shortcuts": [
+		{
+			"name": "Match tracker",
+			"short_name": "Match",
+			"description": "Track rotations and the score courtside.",
+			"url": "/match",
+			"icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+		},
+		{
+			"name": "Position explorer",
+			"short_name": "Explorer",
+			"description": "See where every player stands in each rotation.",
+			"url": "/explorer",
+			"icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+		}
 	]
 }
