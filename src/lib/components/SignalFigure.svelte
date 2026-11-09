@@ -16,6 +16,12 @@
 	const UPPER = 46;
 	const FORE = 42;
 	const SKIN = '#e8b48e';
+	/** Outline of hands and fingers: dark enough to separate each finger on skin and on the shirt. */
+	const LINE = '#3b2214';
+	/** The usual referee kit: a white polo with dark trim. */
+	const SHIRT = '#ffffff';
+	const SHIRT_SHADE = '#dfe4ec';
+	const TRIM = '#1b2a4a';
 	const SKIN_SHADE = '#cf946c';
 	const HAIR = '#4a3324';
 	const YELLOW = '#f5c400';
@@ -106,25 +112,25 @@
 </script>
 
 <!-- One finger as a rounded capsule from the palm's top edge, in hand coordinates. -->
-{#snippet finger(x: number, length: number, tilt = 0, width = 5.4)}
-	<g transform="translate({x} 13) rotate({tilt})">
+{#snippet finger(x: number, length: number, tilt = 0, width = 5.6)}
+	<g transform="translate({x} 15) rotate({tilt})">
 		<rect
 			x={-width / 2}
-			y={-2}
+			y={-3}
 			{width}
-			height={length + 2}
+			height={length + 3}
 			rx={width / 2}
 			fill={SKIN}
-			class="stroke-ink"
-			stroke-width="1.1"
+			stroke={LINE}
+			stroke-width="1.5"
 		/>
 		<line
-			x1={-width / 2 + 1}
-			y1={length * 0.45}
-			x2={width / 2 - 1}
-			y2={length * 0.45}
+			x1={-width / 2 + 1.2}
+			y1={length * 0.5}
+			x2={width / 2 - 1.2}
+			y2={length * 0.5}
 			stroke={SKIN_SHADE}
-			stroke-width="0.8"
+			stroke-width="1"
 		/>
 	</g>
 {/snippet}
@@ -134,7 +140,7 @@
 	the origin and the fingers pointing towards +y; `thumb` is the side the thumb is on.
 -->
 {#snippet hand(at: Point, angle: number, kind: Hand, thumb: -1 | 1)}
-	<g transform="translate({at.x} {at.y}) rotate({angle}) scale(1.15)">
+	<g transform="translate({at.x} {at.y}) rotate({angle}) scale(1.5)">
 		{#if kind === 'flag'}
 			{@const pole = flagDown ? 1 : -1}
 			<g transform="rotate({-angle + (flagDown ? 30 * thumb : 0)})">
@@ -189,69 +195,76 @@
 		{/if}
 		<!-- Palm -->
 		<rect
-			x="-8"
+			x="-9"
 			y="-1"
-			width="16"
-			height="16"
+			width="18"
+			height="18"
 			rx="6"
 			fill={SKIN}
-			class="stroke-ink"
-			stroke-width="1.2"
+			stroke={LINE}
+			stroke-width="1.6"
 		/>
+		<!-- Fingers spread a little, so each one shows on its own. -->
 		{#if kind === 'open'}
-			{@render finger(-5.4, 12, -6)}
-			{@render finger(-1.8, 14, -2)}
-			{@render finger(1.8, 14, 2)}
-			{@render finger(5.4, 11, 6)}
+			{@render finger(-6.6, 11, -12)}
+			{@render finger(-2.2, 13, -4)}
+			{@render finger(2.2, 13, 4)}
+			{@render finger(6.6, 10, 12)}
 		{:else if kind === 'point'}
 			{@render finger(-3, 16, 0)}
-			<path d="M -2 13 q 4 4 8 0" fill="none" class="stroke-ink" stroke-width="1" />
+			<path d="M 0 15 q 3 4 6 0" fill={SKIN} stroke={LINE} stroke-width="1.4" />
 		{:else if kind === 'two'}
-			{@render finger(-3.2, 15, -14)}
-			{@render finger(2.4, 15, 14)}
+			{@render finger(-3.6, 15, -18)}
+			{@render finger(3.6, 15, 18)}
+			<path d="M -1 16 q 1 3 2 0" fill="none" stroke={LINE} stroke-width="1.2" />
 		{:else if kind === 'four'}
-			{@render finger(-6, 12, -18)}
-			{@render finger(-2, 14, -6)}
-			{@render finger(2, 14, 6)}
-			{@render finger(6, 11, 18)}
+			{@render finger(-7, 11, -24)}
+			{@render finger(-2.4, 13, -8)}
+			{@render finger(2.4, 13, 8)}
+			{@render finger(7, 10, 24)}
 		{:else}
-			<!-- Curled fingers: knuckles along the palm's top. -->
-			<path d="M -7 14 q 3.5 4 7 0 q 3.5 4 7 0" fill={SKIN} class="stroke-ink" stroke-width="1" />
+			<!-- Curled fingers: four knuckles along the top of the fist. -->
+			<path
+				d="M -8 15 q 2 4 4 0 q 2 4 4 0 q 2 4 4 0 q 2 4 4 0"
+				fill={SKIN}
+				stroke={LINE}
+				stroke-width="1.4"
+			/>
 		{/if}
 		<!-- Thumb: out to the side, or straight up for a thumbs-up whatever the hand's angle. -->
 		{#if kind === 'thumb'}
 			<!-- Thumbs up: from the top of the fist, pointing straight up whatever the forearm's angle. -->
 			<g transform="translate({thumb * 2} 14) rotate({-angle + 180})">
 				<rect
-					x="-3.2"
+					x="-3.4"
 					y="-2"
-					width="6.4"
+					width="6.8"
 					height="17"
-					rx="3.2"
+					rx="3.4"
 					fill={SKIN}
-					class="stroke-ink"
-					stroke-width="1.2"
+					stroke={LINE}
+					stroke-width="1.6"
 				/>
-				<path d="M -2 11 q 2 2 4 0" fill="none" stroke={SKIN_SHADE} stroke-width="0.9" />
+				<path d="M -2 11 q 2 2 4 0" fill="none" stroke={SKIN_SHADE} stroke-width="1" />
 			</g>
 		{:else if kind === 'four'}
 			<path
-				d="M {thumb * 7} 6 q {thumb * 3} 4 {thumb * 1} 8"
+				d="M {thumb * 8} 6 q {thumb * 3} 4 {thumb * 1} 9"
 				fill="none"
-				class="stroke-ink"
-				stroke-width="1.1"
+				stroke={LINE}
+				stroke-width="1.5"
 			/>
 		{:else}
-			<g transform="translate({thumb * 7.5} 4) rotate({thumb * -40})">
+			<g transform="translate({thumb * 8.5} 4) rotate({thumb * -48})">
 				<rect
-					x="-2.8"
+					x="-3.1"
 					y="-1"
-					width="5.6"
+					width="6.2"
 					height="12"
-					rx="2.8"
+					rx="3.1"
 					fill={SKIN}
-					class="stroke-ink"
-					stroke-width="1.1"
+					stroke={LINE}
+					stroke-width="1.5"
 				/>
 			</g>
 		{/if}
@@ -285,8 +298,18 @@
 			y1={shoulder.y}
 			x2={shoulder.x + (a.elbow.x - shoulder.x) * 0.5}
 			y2={shoulder.y + (a.elbow.y - shoulder.y) * 0.5}
-			class="stroke-team"
+			stroke={SHIRT}
 			stroke-width="19"
+		/>
+		<!-- Sleeve band -->
+		<line
+			x1={shoulder.x + (a.elbow.x - shoulder.x) * 0.44}
+			y1={shoulder.y + (a.elbow.y - shoulder.y) * 0.44}
+			x2={shoulder.x + (a.elbow.x - shoulder.x) * 0.5}
+			y2={shoulder.y + (a.elbow.y - shoulder.y) * 0.5}
+			stroke={TRIM}
+			stroke-width="19"
+			stroke-linecap="butt"
 		/>
 	</g>
 {/snippet}
@@ -334,9 +357,18 @@
 		<!-- Torso and shirt -->
 		<path
 			d="M 80 116 Q 120 104 160 116 Q 172 122 172 140 L 166 268 L 74 268 L 68 140 Q 68 122 80 116 Z"
-			class="fill-team stroke-ink"
+			fill={SHIRT}
+			class="stroke-ink"
 			stroke-width="2"
 		/>
+		<!-- Shading down the sides of the shirt, and the button placket. -->
+		<path
+			d="M 70 150 L 74 268 L 84 268 L 82 150 Z M 170 150 L 166 268 L 156 268 L 158 150 Z"
+			fill={SHIRT_SHADE}
+		/>
+		<line x1="120" y1="124" x2="120" y2="150" stroke={TRIM} stroke-width="1.5" />
+		<circle cx="120" cy="133" r="1.6" fill={TRIM} />
+		<circle cx="120" cy="143" r="1.6" fill={TRIM} />
 		<!-- Neck and collar -->
 		<rect
 			x="110"
@@ -348,26 +380,34 @@
 			class="stroke-ink"
 			stroke-width="1.5"
 		/>
-		<path d="M 104 108 L 120 124 L 136 108" class="fill-paper stroke-ink" stroke-width="1.8" />
+		<!-- Polo collar in the trim colour -->
+		<path
+			d="M 102 106 L 120 126 L 112 106 Z M 138 106 L 120 126 L 128 106 Z"
+			fill={TRIM}
+			class="stroke-ink"
+			stroke-width="1.4"
+		/>
 		<!-- Lanyard and whistle -->
 		<path
 			d="M 108 110 Q 112 150 122 158 Q 130 150 132 110"
 			fill="none"
-			class="stroke-accent"
+			stroke="#111"
 			stroke-width="2"
 		/>
+		<!-- Whistle -->
 		<g transform="translate(122 158)">
 			<rect
 				x="-5"
 				y="0"
-				width="18"
+				width="19"
 				height="10"
 				rx="4"
-				class="fill-ink-soft stroke-ink"
-				stroke-width="1.2"
+				fill="#c9ced6"
+				stroke="#111"
+				stroke-width="1.3"
 			/>
-			<circle cx="0" cy="5" r="6" class="fill-ink-soft stroke-ink" stroke-width="1.2" />
-			<circle cx="0" cy="5" r="2" class="fill-paper" />
+			<circle cx="0" cy="5" r="6.5" fill="#c9ced6" stroke="#111" stroke-width="1.3" />
+			<circle cx="0" cy="5" r="2.2" fill="#111" />
 		</g>
 		<!-- Head -->
 		<ellipse cx="96" cy="64" rx="5" ry="8" fill={SKIN} class="stroke-ink" stroke-width="1.4" />
