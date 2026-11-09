@@ -61,6 +61,7 @@
 		duration: () => (dragging !== undefined || prefersReducedMotion.current ? 0 : 450),
 		easing: cubicOut
 	});
+	/** The player ringed in accent: the focused one, so the ring leaves when focus moves on. */
 	let selected: Zone | undefined = $state();
 
 	const clamp = (p: Point): Point => ({
@@ -95,6 +96,14 @@
 	}
 </script>
 
+<!-- Tapping elsewhere does not always move focus (touch browsers keep it), so the ring is cleared
+     here too. -->
+<svelte:window
+	onpointerdown={(e) => {
+		if (!(e.target instanceof Element && e.target.closest('[data-token]'))) selected = undefined;
+	}}
+/>
+
 <Court
 	{label}
 	serviceZone={exempt.length > 0}
@@ -126,10 +135,14 @@
 			aria-label={m.overlap_player({ who: capitalize(who(p.zone)) })}
 			aria-describedby={keysId}
 			class="cursor-grab outline-none active:cursor-grabbing"
+			data-token
 			onpointerdown={(e) => {
 				e.preventDefault();
 				dragging = p.zone;
 				selected = p.zone;
+				// preventDefault keeps the page from scrolling or selecting text, but also stops the
+				// browser focusing the token, which the arrow keys and the blur below rely on.
+				(e.currentTarget as SVGGElement).focus({ preventScroll: true });
 				(e.currentTarget as Element).setPointerCapture?.(e.pointerId);
 			}}
 			onpointermove={(e) => {
@@ -137,6 +150,9 @@
 			}}
 			onpointerup={() => (dragging = undefined)}
 			onfocus={() => (selected = p.zone)}
+			onblur={() => {
+				if (selected === p.zone) selected = undefined;
+			}}
 			onkeydown={(e) => onkeydown(e, p.zone)}
 		>
 			{#if selected === p.zone}

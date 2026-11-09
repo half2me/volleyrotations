@@ -3,19 +3,22 @@
 	import LeagueSelect from '#lib/components/LeagueSelect.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import DragCourt from '#lib/components/court/DragCourt.svelte';
-	import { explorerPrefs } from '#lib/prefs.svelte.js';
-	import { LEAGUE_IDS, leagueOf } from '#lib/volley/leagues.js';
+	import { Persisted } from '#lib/persisted.svelte.js';
+	import { effectiveOptions, explorerPrefs } from '#lib/prefs.svelte.js';
+	import { numberOf, teams } from '#lib/teams.svelte.js';
+	import { leagueOf } from '#lib/volley/leagues.js';
 	import Seo from '#lib/components/Seo.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
 	import { m } from '#lib/paraglide/messages.js';
-	import { DEFAULT_OPTIONS, byZone, formation } from '#lib/volley/formations.js';
-	import { leagueName, rotationLabel, zoneRef, systemName, roleRef } from '#lib/volley/labels.js';
+	import { byZone, formation } from '#lib/volley/formations.js';
+	import { rotationLabel, zoneRef, systemName, roleRef } from '#lib/volley/labels.js';
 	import {
 		ROTATIONS,
 		SYSTEMS,
 		ZONES,
 		lineupOnCourt,
+		rolesOf,
 		type Point,
 		type RotationNo,
 		type SystemId,
@@ -26,35 +29,59 @@
 	import IconRotate from '~icons/lucide/rotate-ccw';
 	import IconShuffle from '~icons/lucide/shuffle';
 	import IconX from '~icons/lucide/circle-x';
+	import { untrack } from 'svelte';
 
 	const RULE_URL =
 		'https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27';
 
-	$effect(() => explorerPrefs.load());
+	/** The system and rotation last practised here; until then, the explorer's. */
+	const saved = new Persisted<{ system?: SystemId; rotation?: RotationNo }>('vr:overlap', {});
 
-	let system: SystemId = $state('5-1');
-	let rotation: RotationNo = $state(1);
+	$effect(() => {
+		explorerPrefs.load();
+		teams.load();
+		saved.load();
+		untrack(reset);
+	});
+
+	const team = $derived(teams.current.list.find((t) => t.id === explorerPrefs.current.team));
+	/** The reader's setup, or the chosen team's playbook, as the explorer and quiz follow it. */
+	const base = $derived({
+		...explorerPrefs.current,
+		...effectiveOptions(explorerPrefs.current, team)
+	});
+	const system = $derived(saved.current.system ?? base.system);
+	const rotation = $derived(saved.current.rotation ?? base.rotation);
+	/** A team's per-rotation layouts belong to its own system, so another system leaves them out. */
+	const options = $derived({
+		...base,
+		system,
+		rotation,
+		...(system === base.system ? {} : { formationBy: undefined, custom: undefined })
+	});
+	const choose = (patch: { system?: SystemId; rotation?: RotationNo }) => {
+		saved.set({ system, rotation, ...patch });
+		reset();
+	};
+	const names = $derived.by(() => {
+		if (!team || system !== team.system) return undefined;
+		const roles = rolesOf(system, options.libero);
+		return Object.fromEntries(roles.map((r) => [r, numberOf(team, r)]).filter(([, n]) => n));
+	});
 	/** Whether the reader checks their team at its own serve, where their league asks for it. */
 	let serving = $state(false);
 
-	const league = $derived(explorerPrefs.current.league);
+	const league = $derived(team?.league ?? explorerPrefs.current.league);
 	const servingChecked = $derived(leagueOf(league).servingOverlap);
 	const atServe = $derived(serving && servingChecked);
 	/** The server stands behind the end line and is never compared (rule 7.4.1). */
 	const exempt: Zone[] = $derived(atServe ? [1] : []);
 
-	const court = $derived(lineupOnCourt({ system, rotation, serving: atServe, libero: true }));
+	const court = $derived(lineupOnCourt({ ...options, serving: atServe }));
 	const legal = () =>
 		byZone(
 			formation(
-				{
-					...DEFAULT_OPTIONS,
-					system,
-					rotation,
-					serving: atServe,
-					servingOverlap: true,
-					formation: system === '6-6' ? 5 : 3
-				},
+				{ ...options, serving: atServe, servingOverlap: true },
 				atServe ? 'serve' : 'receive'
 			)
 		);
@@ -72,11 +99,11 @@
 	 * the wrong spot, for the reader to fix.
 	 */
 	function scramble() {
-		const base = legal();
+		const start = legal();
 		const zones = ZONES.filter((z) => !exempt.includes(z));
 		do {
 			const [a, b] = [...zones].sort(() => Math.random() - 0.5);
-			positions = { ...base, [a]: base[b], [b]: base[a] };
+			positions = { ...start, [a]: start[b], [b]: start[a] };
 		} while (overlapFaults(positions, exempt).length === 0);
 		challenge = true;
 	}
@@ -101,15 +128,22 @@
 
 <div class="mt-8 grid gap-4 sm:grid-cols-2" data-pagefind-ignore>
 	<div>
-		<LeagueSelect
-			bind:value={
-				() => league,
-				(l) => {
-					explorerPrefs.set({ ...explorerPrefs.current, league: l });
-					reset();
+		{#if team}
+			<p class="text-sm text-ink-soft">
+				{m.team_using({ team: team.name })}
+				<a class="text-accent underline" href={href('/lineup')}>{m.edit_playbook()}</a>
+			</p>
+		{:else}
+			<LeagueSelect
+				bind:value={
+					() => league,
+					(l) => {
+						explorerPrefs.set({ ...explorerPrefs.current, league: l });
+						reset();
+					}
 				}
-			}
-		/>
+			/>
+		{/if}
 	</div>
 	<div>
 		<ChipGroup
@@ -135,24 +169,12 @@
 	<ChipGroup
 		legend={m.label_system()}
 		options={SYSTEMS.map((s) => ({ value: s, label: systemName(s) }))}
-		bind:value={
-			() => system,
-			(s) => {
-				system = s;
-				reset();
-			}
-		}
+		bind:value={() => system, (s) => choose({ system: s })}
 	/>
 	<ChipGroup
 		legend={m.label_rotation()}
 		options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
-		bind:value={
-			() => rotation,
-			(r) => {
-				rotation = r;
-				reset();
-			}
-		}
+		bind:value={() => rotation, (r) => choose({ rotation: r })}
 	/>
 </div>
 
@@ -163,6 +185,7 @@
 			bind:positions
 			{faults}
 			{exempt}
+			{names}
 			keysId="overlap-keys"
 			label={m.overlap_court_label({ rotation: rotationLabel(rotation, system) })}
 		/>

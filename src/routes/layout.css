@@ -136,6 +136,11 @@
 		}
 	}
 
+	/* A key on the keyboard, named in a shortcut hint. */
+	.kbd {
+		@apply mx-0.5 inline-block min-w-6 rounded border border-line bg-surface px-1 text-center font-sans text-xs text-ink;
+	}
+
 	.btn-primary {
 		@apply inline-flex min-h-11 items-center gap-2 rounded-full bg-accent px-5 font-medium text-accent-ink transition-opacity hover:opacity-90;
 	}
