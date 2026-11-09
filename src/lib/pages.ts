@@ -47,6 +47,7 @@ export const pages = [
 	{ path: '/lineup', inNav: true },
 	{ path: '/match', inNav: true },
 	{ path: '/rules', inNav: true },
+	{ path: '/drills', inNav: false },
 	{ path: '/rules/situations', inNav: false },
 	{ path: '/rules/signals', inNav: false },
 	{ path: '/guides', inNav: true },

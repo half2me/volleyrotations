@@ -38,6 +38,7 @@ export const pageLabel: Record<PagePath, () => string> = {
 	'/lineup': m.nav_lineup,
 	'/match': m.nav_match,
 	'/rules': m.nav_rules,
+	'/drills': m.drills_title,
 	'/rules/situations': m.situations_title,
 	'/rules/signals': m.signals_title,
 	'/guides': m.nav_guides,

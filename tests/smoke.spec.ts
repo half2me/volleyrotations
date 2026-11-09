@@ -238,3 +238,31 @@ test('the question of the day keeps the answer and the streak', async ({ page })
 	await expect(day.getByText('1-day streak')).toBeVisible();
 	await expect(day.getByText('A new question comes tomorrow.')).toBeVisible();
 });
+
+test('detailed match stats are optional and quick to enter', async ({ page }) => {
+	await page.goto('/match');
+	await page.locator('label').getByText('They serve', { exact: true }).click();
+	await page.locator('label').getByText('On', { exact: true }).click();
+	await expect(page.getByRole('radio', { name: 'On', exact: true })).toBeChecked();
+	await page.getByRole('button', { name: 'Start match' }).click();
+	// A pass rating before the point, then how the point ended and who scored it.
+	await page.getByRole('button', { name: 'L', exact: true }).first().click();
+	await page.getByRole('button', { name: '3 perfect' }).click();
+	await page.getByRole('button', { name: 'Point Us' }).click();
+	await page.getByRole('button', { name: 'Kill', exact: true }).click();
+	await page.getByRole('button', { name: 'OH1', exact: true }).click();
+	await expect(page.getByText(/Saved: Kill · Outside 1/)).toBeVisible();
+	// Skipping is always possible: the next point simply moves on.
+	await page.getByRole('button', { name: 'Point Them' }).click();
+	await page.getByRole('button', { name: 'Point Us' }).click();
+	await expect(page.getByRole('heading', { name: 'Player statistics' })).toBeVisible();
+	const players = page
+		.getByRole('table')
+		.filter({ has: page.getByRole('columnheader', { name: 'K', exact: true }) });
+	await expect(players.getByRole('row', { name: /Outside 1/ })).toContainText('1');
+	page.once('dialog', (d) => d.accept());
+	await page.getByRole('button', { name: 'End match' }).click();
+	await expect(page.getByRole('heading', { name: 'Past matches' })).toBeVisible();
+	await page.getByRole('button', { name: 'Show report' }).click();
+	await expect(page.getByRole('heading', { name: 'Player statistics' })).toBeVisible();
+});

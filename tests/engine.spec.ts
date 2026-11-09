@@ -11,9 +11,11 @@ import {
 	type Phase
 } from '../src/lib/volley/formations.ts';
 import {
+	annotateLast,
 	logCsv,
 	longestRuns,
 	newMatch,
+	playerStats,
 	rally,
 	rotationStats,
 	setOver,
@@ -367,4 +369,21 @@ test('the question of the day is the same for everyone on a day', () => {
 	expect(ask('2026-11-09')).toBe(ask('2026-11-09'));
 	const week = ['10', '11', '12', '13', '14', '15', '16'].map((d) => ask(`2026-11-${d}`));
 	expect(new Set(week).size).toBeGreaterThan(4);
+});
+
+test('detailed stats count each player’s points, errors and passes', () => {
+	let s = newMatch({ system: '5-1', libero: true, rotation: 1, serving: false });
+	s = rally(s, 'us', { pass: { by: 'L', rating: 3 } });
+	s = annotateLast(s, { how: 'kill', by: 'OH1' });
+	s = rally(s, 'us');
+	s = annotateLast(s, { how: 'ace', by: 'OH1' });
+	s = rally(s, 'them');
+	s = annotateLast(s, { how: 'serve-error', by: 'OH1' });
+	s = rally(s, 'them', { pass: { by: 'L', rating: 1 } });
+	const stats = playerStats(s.log);
+	expect(stats.get('OH1')).toMatchObject({ kills: 1, aces: 1, serveErrors: 1 });
+	expect(stats.get('L')).toMatchObject({ passes: 2, passTotal: 4 });
+	// A rally without detail stays plain, and the CSV keeps a column for each detail.
+	expect(s.log[1].detail).toEqual({ how: 'ace', by: 'OH1' });
+	expect(logCsv(s.log).split('\n')[1]).toBe('1,1,1,0,1,1,0,kill,OH1,L,3');
 });

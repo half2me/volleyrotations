@@ -60,17 +60,32 @@
 				{ id: 'defense', guide: 'defense', text: m.learn_defense },
 				{ id: 'coverage', guide: 'coverage', text: m.learn_coverage },
 				{ id: 'libero', guide: 'libero', text: m.learn_libero },
-				{ id: 'quiz', tool: '/quiz', toolLabel: m.nav_quiz, text: m.learn_quiz }
+				{ id: 'quiz', tool: '/quiz', toolLabel: m.nav_quiz, text: m.learn_quiz },
+				{
+					id: 'situations',
+					tool: '/rules/situations',
+					toolLabel: m.situations_title,
+					text: m.learn_situations
+				},
+				{
+					id: 'signals',
+					tool: '/rules/signals',
+					toolLabel: m.signals_title,
+					text: m.learn_signals
+				}
 			]
 		},
 		{
 			title: m.learn_stage_4,
 			lead: m.learn_stage_4_lead,
 			steps: [
+				{ id: 'rules', tool: '/rules', toolLabel: m.rules_title, text: m.learn_rules },
 				{ id: 'leagues', guide: 'leagues', text: m.learn_leagues },
 				{ id: 'substitutions', guide: 'substitutions', text: m.learn_substitutions },
 				{ id: 'lineup', tool: '/lineup', toolLabel: m.nav_lineup, text: m.learn_lineup },
-				{ id: 'match', tool: '/match', toolLabel: m.nav_match, text: m.learn_match }
+				{ id: 'match', tool: '/match', toolLabel: m.nav_match, text: m.learn_match },
+				{ id: 'drills', tool: '/drills', toolLabel: m.drills_title, text: m.learn_drills },
+				{ id: 'scoring', guide: 'scoring', text: m.learn_scoring }
 			]
 		}
 	];

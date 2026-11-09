@@ -37,7 +37,63 @@ export type MatchState = {
 };
 
 /** One rally: the set it was in, our rotation, whether we served, and whether we won it. */
-export type RallyRecord = { set: number; rotation: RotationNo; serving: boolean; won: boolean };
+export type RallyRecord = {
+	set: number;
+	rotation: RotationNo;
+	serving: boolean;
+	won: boolean;
+	/** Optional detail a coach adds in the detailed mode. */
+	detail?: RallyDetail;
+};
+
+/**
+ * How a rally ended, from our side. Points we won: a kill, an ace, a block, or an opponent error.
+ * Points we lost: our attack, serve or other error, our attack blocked, or their winner.
+ */
+export type Outcome =
+	| 'kill'
+	| 'ace'
+	| 'block'
+	| 'opp-error'
+	| 'attack-error'
+	| 'serve-error'
+	| 'blocked'
+	| 'error'
+	| 'opp-point';
+
+export const WIN_OUTCOMES: readonly Outcome[] = ['kill', 'ace', 'block', 'opp-error'];
+export const LOSS_OUTCOMES: readonly Outcome[] = [
+	'attack-error',
+	'serve-error',
+	'blocked',
+	'error',
+	'opp-point'
+];
+/** Outcomes that name one of our players. */
+export const PLAYER_OUTCOMES: readonly Outcome[] = [
+	'kill',
+	'ace',
+	'block',
+	'attack-error',
+	'serve-error',
+	'blocked',
+	'error'
+];
+
+/** A serve-receive pass graded 0–3: 3 lets the setter run every option, 0 is an ace or a shank. */
+export type PassRating = 0 | 1 | 2 | 3;
+
+/**
+ * A player, as the tracker knows them: a starting position (`OH1`, `L`…) or a bench player by
+ * index (`b2`), so a substitute keeps their own stats.
+ */
+export type PlayerKey = string;
+
+export type RallyDetail = {
+	how?: Outcome;
+	by?: PlayerKey;
+	pass?: { by: PlayerKey; rating: PassRating };
+};
 
 export const SETS_TO_WIN = 3;
 
@@ -92,7 +148,7 @@ export const setOver = (state: MatchState) =>
  * Scores one rally. Winning the opponent's serve (a sideout) rotates us one place clockwise
  * before we serve (rule 7.6.2).
  */
-export function rally(state: MatchState, winner: 'us' | 'them'): MatchState {
+export function rally(state: MatchState, winner: 'us' | 'them', detail?: RallyDetail): MatchState {
 	if (state.finished || setOver(state)) return state;
 	const sets = state.sets.map((s, i) =>
 		i === state.sets.length - 1 ? { ...s, [winner]: s[winner] + 1 } : s
@@ -102,7 +158,8 @@ export function rally(state: MatchState, winner: 'us' | 'them'): MatchState {
 		set: state.sets.length,
 		rotation: state.rotation,
 		serving: state.serving,
-		won: winner === 'us'
+		won: winner === 'us',
+		...(detail && Object.keys(detail).length ? { detail } : {})
 	};
 	const next = {
 		...state,
@@ -220,8 +277,81 @@ export function longestRuns(log: readonly RallyRecord[]): { us: number; them: nu
 }
 
 /** The rally log as CSV, one rally per row with the running score. */
-export function logCsv(log: readonly RallyRecord[]): string {
-	const rows = ['set,rally,rotation,serving,won,us,them'];
+/** Adds to the detail of the last rally, for the "how did it end?" taps after a point. */
+export function annotateLast(state: MatchState, patch: RallyDetail): MatchState {
+	const log = state.log ?? [];
+	if (!log.length) return state;
+	const last = log[log.length - 1];
+	const detail = { ...last.detail, ...patch };
+	return { ...state, log: [...log.slice(0, -1), { ...last, detail }] };
+}
+
+export type PlayerStats = {
+	kills: number;
+	aces: number;
+	blocks: number;
+	attackErrors: number;
+	serveErrors: number;
+	blocked: number;
+	errors: number;
+	passes: number;
+	passTotal: number;
+};
+
+const emptyStats = (): PlayerStats => ({
+	kills: 0,
+	aces: 0,
+	blocks: 0,
+	attackErrors: 0,
+	serveErrors: 0,
+	blocked: 0,
+	errors: 0,
+	passes: 0,
+	passTotal: 0
+});
+
+/** Points won and lost by each player, and their pass ratings, from the rallies with detail. */
+export function playerStats(log: readonly RallyRecord[]): Map<PlayerKey, PlayerStats> {
+	const out = new Map<PlayerKey, PlayerStats>();
+	const of = (key: PlayerKey) => {
+		if (!out.has(key)) out.set(key, emptyStats());
+		return out.get(key)!;
+	};
+	const FIELD: Partial<Record<Outcome, keyof PlayerStats>> = {
+		kill: 'kills',
+		ace: 'aces',
+		block: 'blocks',
+		'attack-error': 'attackErrors',
+		'serve-error': 'serveErrors',
+		blocked: 'blocked',
+		error: 'errors'
+	};
+	for (const r of log) {
+		const d = r.detail;
+		if (!d) continue;
+		const field = d.how && FIELD[d.how];
+		if (field && d.by) of(d.by)[field]++;
+		if (d.pass) {
+			const p = of(d.pass.by);
+			p.passes++;
+			p.passTotal += d.pass.rating;
+		}
+	}
+	return out;
+}
+
+/** Team totals by outcome, counting only rallies where the outcome was recorded. */
+export function outcomeCounts(log: readonly RallyRecord[]): Partial<Record<Outcome, number>> {
+	const out: Partial<Record<Outcome, number>> = {};
+	for (const r of log) if (r.detail?.how) out[r.detail.how] = (out[r.detail.how] ?? 0) + 1;
+	return out;
+}
+
+export function logCsv(
+	log: readonly RallyRecord[],
+	playerName: (key: PlayerKey) => string = (k) => k
+): string {
+	const rows = ['set,rally,rotation,serving,won,us,them,how,player,passer,pass'];
 	let score = { us: 0, them: 0 };
 	let set = 0;
 	let n = 0;
@@ -233,8 +363,22 @@ export function logCsv(log: readonly RallyRecord[]): string {
 		}
 		n++;
 		score[r.won ? 'us' : 'them']++;
+		const d = r.detail;
+		const cell = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
 		rows.push(
-			[r.set, n, r.rotation, r.serving ? 1 : 0, r.won ? 1 : 0, score.us, score.them].join(',')
+			[
+				r.set,
+				n,
+				r.rotation,
+				r.serving ? 1 : 0,
+				r.won ? 1 : 0,
+				score.us,
+				score.them,
+				d?.how ?? '',
+				d?.by ? cell(playerName(d.by)) : '',
+				d?.pass ? cell(playerName(d.pass.by)) : '',
+				d?.pass?.rating ?? ''
+			].join(',')
 		);
 	}
 	return rows.join('\n') + '\n';

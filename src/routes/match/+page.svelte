@@ -27,10 +27,11 @@
 		systemName
 	} from '#lib/volley/labels.js';
 	import {
+		LOSS_OUTCOMES,
+		PLAYER_OUTCOMES,
+		WIN_OUTCOMES,
+		annotateLast,
 		courtRoles,
-		logCsv,
-		longestRuns,
-		rotationStats,
 		subsPerSet,
 		timeoutsPerSet,
 		newMatch,
@@ -44,9 +45,21 @@
 		subOptions,
 		substitute,
 		type MatchState,
+		type Outcome,
+		type PassRating,
+		type PlayerKey,
+		type RallyRecord,
+		type SetScore,
 		type SubOption
 	} from '#lib/volley/match.js';
-	import { ROTATIONS, SYSTEMS, type RoleId, type RotationNo } from '#lib/volley/model.js';
+	import {
+		ROTATIONS,
+		SYSTEMS,
+		type RoleId,
+		type RotationNo,
+		type SystemId
+	} from '#lib/volley/model.js';
+	import MatchReport from '#lib/components/MatchReport.svelte';
 	import { Dialog } from 'bits-ui';
 	import IconArrowLeftRight from '~icons/lucide/arrow-left-right';
 	import IconFlag from '~icons/lucide/flag';
@@ -60,12 +73,28 @@
 		history: MatchState[];
 		teamId?: string;
 		opponent: string;
+		/** Whether the coach records how each rally ended; off unless chosen. */
+		detailed?: boolean;
 	};
 	const saved = new Persisted<Saved>('vr:match', { history: [], opponent: '' });
+
+	/** A finished match kept for review: the rallies, and the names its players had. */
+	type ArchivedMatch = {
+		id: string;
+		date: string;
+		us: string;
+		them: string;
+		system: SystemId;
+		sets: SetScore[];
+		log: RallyRecord[];
+		names: Record<PlayerKey, string>;
+	};
+	const archive = new Persisted<{ list: ArchivedMatch[] }>('vr:matches', { list: [] });
 
 	$effect(() => {
 		teams.load();
 		saved.load();
+		archive.load();
 		explorerPrefs.load();
 	});
 
@@ -92,6 +121,7 @@
 	function begin() {
 		const t = setupTeam;
 		saved.set({
+			detailed: saved.current.detailed,
 			teamId: t?.id,
 			opponent: opponent.trim(),
 			history: [],
@@ -120,10 +150,112 @@
 		saved.set({ ...saved.current, match: history.at(-1), history: history.slice(0, -1) });
 	}
 
-	function endMatch() {
-		if (confirm(m.match_end_confirm()))
-			saved.set({ ...saved.current, match: undefined, history: [] });
+	/** Keeps a played match for review, then clears the tracker for the next one. */
+	function closeMatch() {
+		if (match?.log?.length) {
+			const keys = new Set<PlayerKey>();
+			for (const r of match.log) {
+				if (r.detail?.by) keys.add(r.detail.by);
+				if (r.detail?.pass) keys.add(r.detail.pass.by);
+			}
+			const entry: ArchivedMatch = {
+				id: Math.random().toString(36).slice(2, 10),
+				date: new Date().toISOString(),
+				us: team.name,
+				them: saved.current.opponent || m.match_them(),
+				system: match.system,
+				sets: match.sets,
+				log: match.log,
+				names: Object.fromEntries([...keys].map((k) => [k, playerName(k)]))
+			};
+			archive.set({ list: [entry, ...archive.current.list].slice(0, 50) });
+		}
+		saved.set({ ...saved.current, match: undefined, history: [] });
 	}
+
+	function endMatch() {
+		if (confirm(m.match_end_confirm())) closeMatch();
+	}
+
+	// Detailed stats: a pass rating picked before the point, and the "how did it end?" question
+	// about the rally just scored. Both are optional and never hold up the next point.
+	let passBy: PlayerKey | undefined = $state();
+	let passRating: PassRating | undefined = $state();
+	let asking:
+		{ won: boolean; server?: PlayerKey; court: { key: PlayerKey; label: string }[] } | undefined =
+		$state();
+	let askingHow: Outcome | undefined = $state();
+	let savedNote = $state('');
+
+	/** The key the stats use for whoever plays in a starting position now. */
+	function occupantKey(role: RoleId): PlayerKey {
+		const sub = match?.subs[role]?.sub;
+		return sub !== undefined ? `b${sub}` : role;
+	}
+
+	function playerName(key: PlayerKey): string {
+		const bench = key.match(/^b(\d+)$/);
+		if (bench) {
+			const i = Number(bench[1]);
+			return memberLabel(team.bench[i], m.match_bench_n({ n: i + 1 }));
+		}
+		return memberLabel(team.players[key as RoleId], roleName(key as RoleId));
+	}
+
+	function point(winner: 'us' | 'them') {
+		if (!match) return;
+		const detail =
+			passBy !== undefined && passRating !== undefined
+				? { pass: { by: passBy, rating: passRating } }
+				: undefined;
+		const serverKey = match.serving && server ? occupantKey(server.role) : undefined;
+		const court = courtPlayers;
+		apply(rally(match, winner, saved.current.detailed ? detail : undefined));
+		passBy = undefined;
+		passRating = undefined;
+		askingHow = undefined;
+		savedNote = '';
+		asking = saved.current.detailed
+			? { won: winner === 'us', server: serverKey, court }
+			: undefined;
+	}
+
+	/** Records how the last rally ended, without adding a step to undo. */
+	function annotate(how: Outcome, by?: PlayerKey) {
+		if (!match) return;
+		saved.set({ ...saved.current, match: annotateLast(match, { how, by }) });
+		savedNote = m.how_saved({ how: outcomeName(how), who: by ? ` · ${playerName(by)}` : '' });
+		asking = undefined;
+		askingHow = undefined;
+	}
+
+	function chooseHow(how: Outcome) {
+		if (!asking) return;
+		if (!PLAYER_OUTCOMES.includes(how)) return annotate(how);
+		if ((how === 'ace' || how === 'serve-error') && asking.server)
+			return annotate(how, asking.server);
+		askingHow = how;
+	}
+
+	const outcomeName = (o: Outcome) =>
+		({
+			kill: m.how_kill,
+			ace: m.how_ace,
+			block: m.how_block,
+			'opp-error': m.how_opp_error,
+			'attack-error': m.how_attack_error,
+			'serve-error': m.how_serve_error,
+			blocked: m.how_blocked,
+			error: m.how_error,
+			'opp-point': m.how_opp_point
+		})[o]();
+	const PASS_LABEL: Record<PassRating, () => string> = {
+		3: m.pass_3,
+		2: m.pass_2,
+		1: m.pass_1,
+		0: m.pass_0
+	};
+	let openReport: string | undefined = $state();
 
 	/** The player in a starting position right now, after any substitution. */
 	function occupant(role: RoleId): Member | undefined {
@@ -139,19 +271,6 @@
 		libero: match?.libero ?? true
 	});
 
-	const stats = $derived(match ? rotationStats(match.log ?? []) : []);
-	const runs = $derived(longestRuns(match?.log ?? []));
-	const pct = (n: number, of: number) => (of ? `${Math.round((100 * n) / of)}%` : '–');
-
-	function downloadCsv() {
-		if (!match) return;
-		const blob = new Blob([logCsv(match.log ?? [])], { type: 'text/csv' });
-		const a = document.createElement('a');
-		a.href = URL.createObjectURL(blob);
-		a.download = `${team.name} - ${saved.current.opponent || m.match_them()}.csv`;
-		a.click();
-		URL.revokeObjectURL(a.href);
-	}
 	const phase = $derived(match?.serving ? 'serve' : 'receive');
 	const placed = $derived(match ? formation({ ...options, rotation: match.rotation }, phase) : []);
 	const server = $derived(placed.find((p) => p.zone === 1));
@@ -159,6 +278,10 @@
 		Object.fromEntries(
 			placed.map((p) => [p.role, occupant(p.role)?.number.trim() || roleShort(p.role)])
 		) as Partial<Record<RoleId, string>>
+	);
+
+	const courtPlayers = $derived(
+		placed.map((p) => ({ key: occupantKey(p.role), label: tokens[p.role] ?? roleShort(p.role) }))
 	);
 
 	const current = $derived(match?.sets.at(-1) ?? { us: 0, them: 0 });
@@ -249,10 +372,78 @@
 			options={ROTATIONS.map((r) => ({ value: r, label: String(r) }))}
 			bind:value={startRotation}
 		/>
+		<div>
+			<ChipGroup
+				legend={m.detailed_label()}
+				options={[
+					{ value: false, label: m.detailed_off() },
+					{ value: true, label: m.detailed_on() }
+				]}
+				bind:value={
+					() => saved.current.detailed ?? false,
+					(detailed) => saved.set({ ...saved.current, detailed })
+				}
+			/>
+			<p class="mt-2 text-sm text-ink-soft">{m.detailed_help()}</p>
+		</div>
 		<button type="submit" class="btn-primary">
 			<IconVolleyball class="size-4" aria-hidden="true" />{m.match_start()}
 		</button>
 	</form>
+
+	<section class="mt-12 max-w-3xl" aria-labelledby="past-heading" data-pagefind-ignore>
+		<h2 id="past-heading" class="text-xl font-bold">{m.past_title()}</h2>
+		<p class="mt-1 text-sm text-ink-soft">{m.past_lead()}</p>
+		{#if archive.current.list.length === 0}
+			<p class="mt-3 text-sm">{m.past_none()}</p>
+		{:else}
+			<ul class="mt-3 space-y-3">
+				{#each archive.current.list as a (a.id)}
+					{@const won = a.sets.filter((s, i) => setWinner(s, i) === 'us').length}
+					{@const lost = a.sets.filter((s, i) => setWinner(s, i) === 'them').length}
+					<li class="card">
+						<div class="flex flex-wrap items-center justify-between gap-2">
+							<p>
+								<span class="font-semibold">{m.past_vs({ us: a.us, them: a.them })}</span>
+								<span class="tabular-nums">{won}–{lost}</span>
+								<span class="text-sm text-ink-soft"
+									>· {new Date(a.date).toLocaleDateString(m.number_locale())}</span
+								>
+							</p>
+							<div class="flex gap-2">
+								<button
+									type="button"
+									class="btn-secondary"
+									aria-expanded={openReport === a.id}
+									onclick={() => (openReport = openReport === a.id ? undefined : a.id)}
+									>{openReport === a.id ? m.past_hide() : m.past_open()}</button
+								>
+								<button
+									type="button"
+									class="btn-ghost"
+									onclick={() => {
+										if (confirm(m.past_delete_confirm()))
+											archive.set({ list: archive.current.list.filter((x) => x.id !== a.id) });
+									}}>{m.past_delete()}</button
+								>
+							</div>
+						</div>
+						{#if openReport === a.id}
+							<div class="mt-4">
+								<MatchReport
+									log={a.log}
+									system={a.system}
+									playerName={(k) => a.names[k] ?? k}
+									filename="{a.us} - {a.them}.csv"
+									headingLevel={3}
+								/>
+							</div>
+						{/if}
+					</li>
+				{/each}
+			</ul>
+		{/if}
+	</section>
 {:else}
 	{@const us = team.name}
 	{@const them = saved.current.opponent || m.match_them()}
@@ -301,11 +492,7 @@
 					<button type="button" class="btn-secondary" onclick={undo}>
 						<IconUndo class="size-4" aria-hidden="true" />{m.match_undo()}
 					</button>
-					<button
-						type="button"
-						class="btn-primary"
-						onclick={() => saved.set({ ...saved.current, match: undefined, history: [] })}
-					>
+					<button type="button" class="btn-primary" onclick={closeMatch}>
 						{m.match_new()}
 					</button>
 				</div>
@@ -349,13 +536,79 @@
 					<button
 						type="button"
 						class="min-h-24 rounded-2xl bg-accent text-xl font-bold text-accent-ink transition-opacity hover:opacity-90"
-						onclick={() => apply(rally(match, 'us'))}>{m.match_point({ team: us })}</button
+						onclick={() => point('us')}>{m.match_point({ team: us })}</button
 					>
 					<button
 						type="button"
 						class="min-h-24 rounded-2xl border-2 border-ink text-xl font-bold transition-colors hover:bg-line/50"
-						onclick={() => apply(rally(match, 'them'))}>{m.match_point({ team: them })}</button
+						onclick={() => point('them')}>{m.match_point({ team: them })}</button
 					>
+				</div>
+				{#if saved.current.detailed && !match.serving}
+					<div class="mt-3" aria-live="polite">
+						<p class="text-sm font-medium">{m.pass_prompt()}</p>
+						<div class="mt-1 flex flex-wrap gap-1.5">
+							{#each courtPlayers as p (p.key)}
+								<button
+									type="button"
+									class="chip min-w-11"
+									aria-pressed={passBy === p.key}
+									onclick={() => (passBy = passBy === p.key ? undefined : p.key)}>{p.label}</button
+								>
+							{/each}
+						</div>
+						{#if passBy !== undefined}
+							<p class="mt-2 text-sm font-medium">{m.pass_rating()}</p>
+							<div class="mt-1 flex flex-wrap gap-1.5">
+								{#each [3, 2, 1, 0] as const as r (r)}
+									<button
+										type="button"
+										class="chip"
+										aria-pressed={passRating === r}
+										onclick={() => (passRating = r)}>{PASS_LABEL[r]()}</button
+									>
+								{/each}
+							</div>
+						{/if}
+					</div>
+				{/if}
+				<div aria-live="polite">
+					{#if asking}
+						<div class="card mt-3">
+							<div class="flex items-center justify-between gap-2">
+								<p class="text-sm font-medium">
+									{askingHow ? `${outcomeName(askingHow)}: ${m.how_who()}` : m.how_prompt()}
+								</p>
+								<button
+									type="button"
+									class="btn-ghost text-sm"
+									onclick={() => {
+										asking = undefined;
+										askingHow = undefined;
+									}}>{m.how_skip()}</button
+								>
+							</div>
+							<div class="mt-2 flex flex-wrap gap-1.5">
+								{#if askingHow}
+									{#each asking.court as p (p.key)}
+										<button
+											type="button"
+											class="chip min-w-11"
+											onclick={() => annotate(askingHow!, p.key)}>{p.label}</button
+										>
+									{/each}
+								{:else}
+									{#each asking.won ? WIN_OUTCOMES : LOSS_OUTCOMES as o (o)}
+										<button type="button" class="chip" onclick={() => chooseHow(o)}
+											>{outcomeName(o)}</button
+										>
+									{/each}
+								{/if}
+							</div>
+						</div>
+					{:else if savedNote}
+						<p class="mt-2 text-sm text-ink-soft">{savedNote}</p>
+					{/if}
 				</div>
 				<div class="mt-3 flex flex-wrap gap-2">
 					<button
@@ -426,49 +679,25 @@
 		</section>
 	</div>
 
-	<section class="mt-10" aria-labelledby="stats-heading" data-pagefind-ignore>
-		<h2 id="stats-heading" class="text-xl font-bold">{m.stats_title()}</h2>
-		<p class="mt-1 text-sm text-ink-soft">{m.stats_help()}</p>
-		<div class="mt-3 overflow-x-auto">
-			<table class="w-full max-w-xl table-fixed border-collapse text-sm">
-				<thead>
-					<tr class="text-left text-ink-soft">
-						<th scope="col" class="py-1 pr-2 font-medium">{m.label_rotation()}</th>
-						<th scope="col" class="py-1 pr-2 font-medium">{m.stats_sideout()}</th>
-						<th scope="col" class="py-1 font-medium">{m.stats_on_serve()}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#each stats as r (r.rotation)}
-						<tr class="border-t border-line">
-							<th scope="row" class="py-1.5 pr-2 text-left font-medium"
-								>{rotationLabel(r.rotation, match.system)}</th
-							>
-							<td class="py-1.5 pr-2 tabular-nums">
-								{pct(r.sidedOut, r.received)}
-								<span class="text-ink-soft">({r.sidedOut}/{r.received})</span>
-							</td>
-							<td class="py-1.5 tabular-nums">
-								{pct(r.scored, r.served)}
-								<span class="text-ink-soft">({r.scored}/{r.served})</span>
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-		</div>
-		<p class="mt-3 text-sm">
-			{m.stats_runs({ us: runs.us, them: runs.them })}
-		</p>
-		<button
-			type="button"
-			class="btn-secondary mt-3"
-			disabled={!match.log?.length}
-			onclick={downloadCsv}
-		>
-			<IconDownload class="size-4" aria-hidden="true" />{m.stats_csv()}
-		</button>
-	</section>
+	<div class="mt-10">
+		<MatchReport
+			log={match.log ?? []}
+			system={match.system}
+			{playerName}
+			filename="{team.name} - {saved.current.opponent || m.match_them()}.csv"
+		/>
+		{#if match.log?.length}
+			<label class="mt-4 flex min-h-11 items-center gap-2 text-sm">
+				<input
+					type="checkbox"
+					class="size-4"
+					checked={saved.current.detailed ?? false}
+					onchange={(e) => saved.set({ ...saved.current, detailed: e.currentTarget.checked })}
+				/>
+				{m.detailed_label()}
+			</label>
+		{/if}
+	</div>
 
 	<Dialog.Root bind:open={subOpen}>
 		<Dialog.Portal>
