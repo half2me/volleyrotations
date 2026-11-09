@@ -70,6 +70,8 @@ The numbers follow the order of play: after Rotation 1 the team rotates into Rot
 
 In a [5-1 system](/guides/systems), Rotation 1 typically looks like this: setter in 1, outside hitter in 2, middle blocker in 3, opposite in 4, the other outside hitter in 5, the other middle in 6.
 
+Every rotation of every system has [its own page](/rotations), with court diagrams for serve receive, the serve, base, defense and attack, and a note on what each player does: for example [5-1 Rotation 1](/rotations/5-1/1).
+
 ## Switching after the serve
 
 Rotation only governs the moment the serve is hit. As soon as the server's hand touches the ball, every player may go anywhere on their own court ([rule 7.4.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27)). Teams use this to put players where they are strongest:
@@ -97,6 +99,6 @@ Switching does not change who is front row. At the serve, zones 4, 3 and 2 are f
 
 ## Practise it
 
-- Step through all six rotations for your role in the [position explorer](/explorer).
+- Step through all six rotations for your role in the [position explorer](/explorer), or read them one by one on the [rotation pages](/rotations).
 - Test yourself with the [rotation quiz](/quiz).
 - Build your own line-up and print a rotation sheet with the [lineup builder](/lineup).

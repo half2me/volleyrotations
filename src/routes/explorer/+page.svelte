@@ -6,6 +6,7 @@
 	import Seo from '#lib/components/Seo.svelte';
 	import { site } from '#lib/config.js';
 	import { href } from '#lib/i18n.js';
+	import { rotationPath } from '#lib/pages.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import {
 		effectiveOptions,
@@ -514,7 +515,12 @@
 					})}`
 				]}
 			/>
-			<p class="mt-4 text-sm text-ink-soft">
+			<p class="mt-4 text-sm" data-pagefind-ignore>
+				<a class="text-accent underline" href={href(rotationPath(o.system, o.rotation))}
+					>{m.explorer_rotation_page()}</a
+				>
+			</p>
+			<p class="mt-2 text-sm text-ink-soft">
 				{m.learn_more()}
 				<a class="text-accent underline" href={href('/guides/rotations')}
 					>{m.guide_rotations_link()}</a
