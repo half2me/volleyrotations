@@ -23,22 +23,49 @@
 	const dayOf = (d: Date) =>
 		`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-	// The day comes from the reader's clock, so the question is only made in the browser.
+	/** The calendar day before a YYYY-MM-DD day. */
+	const dayBefore = (day: string) => {
+		const [y, mo, d] = day.split('-').map(Number);
+		return dayOf(new Date(y, mo - 1, d - 1));
+	};
+
+	// The day comes from the reader's clock, so the question is only made in the browser. A tab
+	// left open past midnight moves to the new day at midnight, or when it is shown again if the
+	// timer was held back while the tab was hidden or the device asleep.
 	let today: string | undefined = $state();
 	let question: Question | undefined = $state();
 	$effect(() => {
 		daily.load();
-		today = dayOf(new Date());
-		question = makeQuestion(DEFAULT_OPTIONS, undefined, undefined, seeded(daySeed(today)));
+		let timer: ReturnType<typeof setTimeout>;
+		// A plain copy of `today`, so the effect does not depend on the state it sets.
+		let shown: string | undefined;
+		const refresh = () => {
+			const now = new Date();
+			const day = dayOf(now);
+			if (day !== shown) {
+				shown = today = day;
+				question = makeQuestion(DEFAULT_OPTIONS, undefined, undefined, seeded(daySeed(day)));
+			}
+			const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+			clearTimeout(timer);
+			timer = setTimeout(refresh, midnight.getTime() - now.getTime() + 1000);
+		};
+		const onVisible = () => {
+			if (document.visibilityState === 'visible') refresh();
+		};
+		refresh();
+		document.addEventListener('visibilitychange', onVisible);
+		return () => {
+			clearTimeout(timer);
+			document.removeEventListener('visibilitychange', onVisible);
+		};
 	});
 
 	const chosen = $derived(daily.current.day === today ? daily.current.choice : undefined);
 	/** A streak counts while the last answer was today or yesterday. */
 	const streak = $derived.by(() => {
 		if (!today || !daily.current.day) return 0;
-		const yesterday = new Date();
-		yesterday.setDate(yesterday.getDate() - 1);
-		return daily.current.day === today || daily.current.day === dayOf(yesterday)
+		return daily.current.day === today || daily.current.day === dayBefore(today)
 			? daily.current.streak
 			: 0;
 	});
