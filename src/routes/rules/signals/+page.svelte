@@ -59,7 +59,7 @@
 
 {#snippet card(s: Signal, n: number)}
 	<li class="card flex flex-col gap-4 sm:flex-row">
-		<div class="mx-auto w-full max-w-60 shrink-0 sm:mx-0 sm:w-48">
+		<div class="mx-auto w-full max-w-64 shrink-0 sm:mx-0 sm:w-56">
 			<SignalFigure signal={s} />
 		</div>
 		<div class="min-w-0">

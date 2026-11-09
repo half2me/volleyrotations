@@ -1,64 +1,111 @@
 <script lang="ts">
-	import type { Arm, Hand, Signal } from '#lib/signals.js';
-	import { cubicInOut } from 'svelte/easing';
+	import Hand, { SKIN, LINE, SKIN_SHADE } from '#lib/components/figure/Hand.svelte';
+	import type { Pose, Signal } from '#lib/signals.js';
+	import { cubicInOut, cubicOut, linear } from 'svelte/easing';
 	import { prefersReducedMotion, Tween } from 'svelte/motion';
 
 	/**
-	 * A referee's upper body, facing the reader, acting out a signal: arms with sleeves, hands with
-	 * fingers, and the whistle on its lanyard. The referee's right arm is on the reader's left.
-	 * Poses come from `signals.ts`; the written gesture there is the authority.
+	 * A referee's upper body, facing the reader, acting out a signal. The referee's right arm is
+	 * on the reader's left. Poses come from `signals.ts`; the written gesture there is the
+	 * authority.
 	 *
-	 * Skin, hair, cards and flags keep their real colours in both themes; the shirt and outlines use
-	 * theme tokens so the figure reads on light and dark backgrounds.
+	 * Each arm is a shoulder, an elbow and a wrist. A pose gives either the joint angles or the
+	 * point the wrist should reach, which is solved for the elbow. Arms carry a depth, so a forearm
+	 * can pass behind the body or over the other arm, and the hands are drawn by `Hand`.
+	 *
+	 * Skin, hair, cards and flags keep their real colours in both themes; the shirt and outlines
+	 * use theme tokens so the figure reads on light and dark backgrounds.
 	 */
 	let { signal }: { signal: Signal } = $props();
 
-	const UPPER = 46;
-	const FORE = 42;
-	const SKIN = '#e8b48e';
-	/** Outline of hands and fingers: dark enough to separate each finger on skin and on the shirt. */
-	const LINE = '#3b2214';
+	const UPPER = 58;
+	const FORE = 52;
+	const HAND_SCALE = 1.5;
 	/** The usual referee kit: a white polo with dark trim. */
 	const SHIRT = '#ffffff';
-	const SHIRT_SHADE = '#dfe4ec';
+	const SHIRT_SHADE = '#dde2ea';
 	const TRIM = '#1b2a4a';
-	const SKIN_SHADE = '#cf946c';
 	const HAIR = '#4a3324';
-	const YELLOW = '#f5c400';
-	const RED = '#d7263d';
 	const rad = (deg: number) => (deg * Math.PI) / 180;
+	const deg = (r: number) => (r * 180) / Math.PI;
 
 	type Point = { x: number; y: number };
+	type Limb = { elbow: Point; wrist: Point; angle: number };
+	type SideName = 'left' | 'right';
 
-	/** Elbow and wrist from a shoulder; `side` is -1 for the reader's left arm, 1 for the right. */
-	function arm(shoulder: Point, a: Arm, side: -1 | 1) {
+	/** The referee's right shoulder is on the reader's left. */
+	const SHOULDER: Record<SideName, Point> = { right: { x: 80, y: 130 }, left: { x: 160, y: 130 } };
+	/** -1 for the arm on the reader's left (the referee's right), 1 for the other. */
+	const SIDE: Record<SideName, -1 | 1> = { right: -1, left: 1 };
+	const REST: Pose = { upper: 6, fore: 4 };
+
+	const isAngles = (p: Pose): p is { upper: number; fore: number } => 'upper' in p;
+
+	/** Forward kinematics: elbow and wrist from joint angles. */
+	function fromAngles(side: SideName, a: { upper: number; fore: number }): Limb {
+		const s = SHOULDER[side];
+		const k = SIDE[side];
 		const elbow = {
-			x: shoulder.x + side * UPPER * Math.sin(rad(a.upper)),
-			y: shoulder.y + UPPER * Math.cos(rad(a.upper))
+			x: s.x + k * UPPER * Math.sin(rad(a.upper)),
+			y: s.y + UPPER * Math.cos(rad(a.upper))
 		};
 		const wrist = {
-			x: elbow.x + side * FORE * Math.sin(rad(a.fore)),
+			x: elbow.x + k * FORE * Math.sin(rad(a.fore)),
 			y: elbow.y + FORE * Math.cos(rad(a.fore))
 		};
-		// The hand's own axis: its fingers carry on along the forearm.
-		const angle = (Math.atan2(wrist.y - elbow.y, wrist.x - elbow.x) * 180) / Math.PI - 90;
-		return { elbow, wrist, angle };
+		return { elbow, wrist, angle: handAngle(elbow, wrist) };
 	}
 
-	const REST: Arm = { upper: 6, fore: 4 };
-	const mix = (a: Arm, b: Arm, t: number): Arm => ({
-		upper: a.upper + (b.upper - a.upper) * t,
-		fore: a.fore + (b.fore - a.fore) * t
+	/** Where the fingers point when the hand carries on from the forearm, in screen degrees (0 is down). */
+	const handAngle = (elbow: Point, wrist: Point) =>
+		deg(Math.atan2(wrist.y - elbow.y, wrist.x - elbow.x)) - 90;
+
+	/**
+	 * Inverse kinematics: the elbow for a wrist at `target`, clamped to what the arm can reach.
+	 * Of the two solutions the lower elbow is taken, which is how an arm naturally hangs, bends
+	 * across the chest or folds up with the hand raised.
+	 */
+	function toPoint(side: SideName, target: Point): Limb {
+		const s = SHOULDER[side];
+		const dx = target.x - s.x;
+		const dy = target.y - s.y;
+		const d = Math.min(
+			UPPER + FORE - 0.5,
+			Math.max(Math.abs(UPPER - FORE) + 1, Math.hypot(dx, dy))
+		);
+		const base = Math.atan2(dy, dx);
+		const bend = Math.acos((UPPER * UPPER + d * d - FORE * FORE) / (2 * UPPER * d));
+		const elbow = [base + bend, base - bend]
+			.map((th) => ({ x: s.x + UPPER * Math.cos(th), y: s.y + UPPER * Math.sin(th) }))
+			.sort((p, q) => q.y - p.y)[0];
+		const wrist = { x: s.x + Math.cos(base) * d, y: s.y + Math.sin(base) * d };
+		return { elbow, wrist, angle: handAngle(elbow, wrist) };
+	}
+
+	const limbOf = (side: SideName, p: Pose): Limb =>
+		isAngles(p) ? fromAngles(side, p) : toPoint(side, p);
+	const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+	const lerpPoint = (a: Point, b: Point, t: number): Point => ({
+		x: lerp(a.x, b.x, t),
+		y: lerp(a.y, b.y, t)
 	});
+	/** Between two angles the short way round. */
+	const lerpAngle = (a: number, b: number, t: number) => {
+		const d = ((((b - a) % 360) + 540) % 360) - 180;
+		return a + d * t;
+	};
 
 	/**
 	 * How far through the movement the figure is: 0 is the starting pose, 1 the signal. The referee
 	 * raises the arms into the signal, holds it and lowers them; a repeated movement swings back and
-	 * forth. Still for readers who prefer less motion, and while off screen.
+	 * forth. `phase` turns continuously for signals that circle. Still for readers who prefer less
+	 * motion, and while off screen.
 	 */
 	const t = new Tween(1, { easing: cubicInOut });
+	const phase = new Tween(0, { easing: linear });
 	let figure: SVGSVGElement | undefined = $state();
 	let visible = $state(false);
+	const circles = $derived(!!signal.orbit || !!signal.spin);
 
 	$effect(() => {
 		if (!figure) return;
@@ -70,23 +117,33 @@
 	$effect(() => {
 		if (!visible || prefersReducedMotion.current) {
 			t.set(1, { duration: 0 });
+			phase.set(signal.spin ? 0.2 : 0, { duration: 0 });
 			return;
 		}
 		let stopped = false;
 		const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+		const rise = signal.slow ? 1500 : 650;
 		(async () => {
 			await t.set(0, { duration: 0 });
+			await phase.set(0, { duration: 0 });
+			await wait(300);
 			while (!stopped) {
-				if (signal.repeat) {
+				if (circles) {
+					await t.set(1, { duration: rise, easing: cubicOut });
+					while (!stopped) {
+						await phase.set(0, { duration: 0 });
+						await phase.set(1, { duration: signal.spin ? 2600 : 1500 });
+					}
+				} else if (signal.repeat) {
 					await t.set(1, { duration: 700 });
 					if (stopped) break;
 					await t.set(0, { duration: 700 });
 				} else {
-					await t.set(1, { duration: 750 });
-					await wait(1800);
+					await t.set(1, { duration: rise, easing: cubicOut });
+					await wait(1900);
 					if (stopped) break;
-					await t.set(0, { duration: 550 });
-					await wait(500);
+					await t.set(0, { duration: 600 });
+					await wait(700);
 				}
 			}
 		})();
@@ -95,273 +152,168 @@
 		};
 	});
 
-	/**
-	 * An arm whose hand moves in a straight line between the two poses: the wrist is placed on the
-	 * line and the elbow found from it, bending the way the joint-angle pose at that moment does.
-	 */
-	function armOnLine(shoulder: Point, from: Arm, to: Arm, at: number, side: -1 | 1) {
-		const a = arm(shoulder, from, side).wrist;
-		const b = arm(shoulder, to, side).wrist;
-		const target = { x: a.x + (b.x - a.x) * at, y: a.y + (b.y - a.y) * at };
-		const dx = target.x - shoulder.x;
-		const dy = target.y - shoulder.y;
-		const d = Math.min(
-			UPPER + FORE - 0.5,
-			Math.max(Math.abs(UPPER - FORE) + 1, Math.hypot(dx, dy))
-		);
-		const base = Math.atan2(dy, dx);
-		const bend = Math.acos((UPPER * UPPER + d * d - FORE * FORE) / (2 * UPPER * d));
-		const guide = arm(shoulder, mix(from, to, at), side).elbow;
-		const elbow = [base + bend, base - bend]
-			.map((th) => ({ x: shoulder.x + UPPER * Math.cos(th), y: shoulder.y + UPPER * Math.sin(th) }))
-			.sort(
-				(p, q) =>
-					Math.hypot(p.x - guide.x, p.y - guide.y) - Math.hypot(q.x - guide.x, q.y - guide.y)
-			)[0];
-		const ux = (dx / Math.hypot(dx, dy)) * d;
-		const uy = (dy / Math.hypot(dx, dy)) * d;
-		const wrist = { x: shoulder.x + ux, y: shoulder.y + uy };
-		const angle = (Math.atan2(wrist.y - elbow.y, wrist.x - elbow.x) * 180) / Math.PI - 90;
-		return { elbow, wrist, angle };
+	/** Where the thumb sits, as `Hand` wants it: palm to the reader puts it away from the body. */
+	const thumbSide = (side: SideName, view: 'palm' | 'back' | 'edge' | undefined) =>
+		view === 'edge' ? 0 : (view === 'back' ? -1 : 1) * -SIDE[side];
+
+	/** One arm at the current moment: its joints, depth and how its hand is drawn. */
+	function pose(side: SideName) {
+		const to = signal[side];
+		const from = signal.from?.[side] ?? REST;
+		const at = t.current;
+		let limb: Limb;
+		if (isAngles(from) && isAngles(to) && signal.path !== 'line') {
+			limb = fromAngles(side, {
+				upper: lerp(from.upper, to.upper, at),
+				fore: lerp(from.fore, to.fore, at)
+			});
+		} else {
+			limb = toPoint(side, lerpPoint(limbOf(side, from).wrist, limbOf(side, to).wrist, at));
+		}
+		let depth = side === 'right' ? 0.1 : 0;
+		const turn = phase.current * 2 * Math.PI;
+		const orbit = signal.orbit;
+		if (orbit && orbit[side] !== undefined) {
+			const th = turn + orbit[side]! * 2 * Math.PI;
+			const centre = orbit.common
+				? lerpPoint(limbOf('right', signal.right).wrist, limbOf('left', signal.left).wrist, 0.5)
+				: limbOf(side, to).wrist;
+			const target = {
+				x: centre.x + orbit.rx * Math.sin(th),
+				y: centre.y - orbit.ry * Math.cos(th)
+			};
+			limb = toPoint(side, lerpPoint(limb.wrist, target, at));
+			depth = Math.sin(th);
+		}
+		const spin = signal.spin;
+		if (spin) {
+			const th = turn + (side === 'left' ? Math.PI : 0);
+			const rest = limbOf(side, to).wrist;
+			const target = { x: rest.x + spin.amplitude * Math.sin(th), y: rest.y };
+			limb = toPoint(side, lerpPoint(limb.wrist, target, at));
+			depth = Math.cos(th) * at;
+		}
+		const tilt = signal.tilt?.[side];
+		const angle = tilt === undefined ? limb.angle : lerpAngle(limb.angle, tilt, at);
+		const viewTo = signal.views?.[side] ?? 'palm';
+		const viewFrom = signal.viewsFrom?.[side] ?? viewTo;
+		const thumb = lerp(thumbSide(side, viewFrom), thumbSide(side, viewTo), at);
+		const kind = signal.hands?.[side] ?? 'open';
+		const counted = kind === 'two' || kind === 'four' || kind === 'five' || kind === 'point';
+		// The flag's cloth flies away from the body, whichever way the pole points.
+		const outward = -SIDE[side];
+		const localX = Math.cos(rad(angle));
+		const flagSide = Math.abs(localX) < 0.2 ? 1 : Math.sign(localX) * outward;
+		return {
+			side,
+			...limb,
+			depth,
+			angle,
+			kind,
+			view: at < 0.5 ? viewFrom : viewTo,
+			thumb,
+			extend: counted ? at : 1,
+			flagSide
+		};
 	}
 
-	const SR = { x: 90, y: 122 };
-	const SL = { x: 150, y: 122 };
-	const pose = (shoulder: Point, from: Arm | undefined, to: Arm, side: -1 | 1) =>
-		signal.path === 'line'
-			? armOnLine(shoulder, from ?? REST, to, t.current, side)
-			: arm(shoulder, mix(from ?? REST, to, t.current), side);
-	const right = $derived(pose(SR, signal.from?.right, signal.right, -1));
-	const left = $derived(pose(SL, signal.from?.left, signal.left, 1));
+	const right = $derived(pose('right'));
+	const left = $derived(pose('left'));
+	/** Arms from the farthest to the nearest; those behind the body are drawn before it. */
+	const arms = $derived([right, left].sort((a, b) => a.depth - b.depth));
+	const behind = $derived(arms.filter((a) => a.depth < -0.05));
+	const front = $derived(arms.filter((a) => a.depth >= -0.05));
 	const extras = $derived(signal.props ?? []);
-	const handRight: Hand = $derived(signal.hands?.right ?? 'open');
-	const handLeft: Hand = $derived(signal.hands?.left ?? 'open');
-	const flagDown = $derived(extras.includes('flag-down'));
 	/** The net, drawn at the height of the hand that points to it. */
-	const netY = $derived(right.wrist.y + 4);
+	const netY = $derived(right.wrist.y + (signal.id === 'reach-over' ? 14 : 4));
 	const id = $props.id();
-	/** The thumb's side, rolling from the starting pose's to the signal's as the forearm turns. */
-	const thumbSide = (from: number | undefined, to: number | undefined, rest: number) =>
-		(from ?? rest) + ((to ?? rest) - (from ?? rest)) * t.current;
-	const thumbRight = $derived(thumbSide(signal.thumbsFrom?.right, signal.thumbs?.right, -1));
-	const thumbLeft = $derived(thumbSide(signal.thumbsFrom?.left, signal.thumbs?.left, 1));
-	/** A hand turns from in line with the forearm to its own angle as the signal forms. */
-	const handAngle = (forearm: number, tilt: number | undefined) =>
-		tilt === undefined ? forearm : forearm + (tilt - forearm) * t.current;
+
+	/**
+	 * The picture's width, from how far the arms reach in any of the signal's poses; its height is
+	 * fixed so every figure is drawn at the same scale and figures with their arms out are only
+	 * scaled down to fit.
+	 */
+	const TOP = -92;
+	const BOTTOM = 276;
+	const box = $derived.by(() => {
+		const xs: number[] = [60, 180];
+		for (const side of ['right', 'left'] as const) {
+			for (const p of [signal[side], signal.from?.[side], REST]) {
+				if (!p) continue;
+				const w = limbOf(side, p).wrist;
+				const reach = 70 + (signal.spin?.amplitude ?? 0) + (signal.orbit?.rx ?? 0);
+				xs.push(w.x - reach, w.x + reach);
+			}
+		}
+		if (extras.includes('net')) xs.push(-60);
+		const min = Math.min(...xs);
+		const max = Math.max(...xs);
+		const width = Math.max(300, max - min);
+		const x = Math.min(min, 120 - width / 2);
+		return { x, width: Math.max(width, 240 - x) };
+	});
 </script>
 
-<!-- One finger as a rounded capsule from the palm's top edge, in hand coordinates. -->
-{#snippet finger(x: number, length: number, tilt = 0, width = 5.6)}
-	<g transform="translate({x} 15) rotate({tilt})">
-		<rect
-			x={-width / 2}
-			y={-3}
-			{width}
-			height={length + 3}
-			rx={width / 2}
-			fill={SKIN}
-			stroke={LINE}
-			stroke-width="1.5"
-		/>
-		<line
-			x1={-width / 2 + 1.2}
-			y1={length * 0.5}
-			x2={width / 2 - 1.2}
-			y2={length * 0.5}
-			stroke={SKIN_SHADE}
-			stroke-width="1"
-		/>
-	</g>
-{/snippet}
-
-<!--
-	A hand at a wrist, its fingers carrying on along the forearm. Local coordinates: the wrist at
-	the origin and the fingers pointing towards +y; `thumb` is the side the thumb is on.
--->
-{#snippet hand(at: Point, angle: number, kind: Hand, thumb: number)}
-	<g transform="translate({at.x} {at.y}) rotate({angle}) scale(1.5)">
-		{#if kind === 'flag'}
-			{@const pole = flagDown ? 1 : -1}
-			<g transform="rotate({-angle + (flagDown ? 30 * thumb : 0)})">
-				<line
-					x1="0"
-					y1="0"
-					x2="0"
-					y2={pole * 46}
-					class="stroke-ink"
-					stroke-width="2.6"
-					stroke-linecap="round"
-				/>
-				<!-- The cloth flies on the outer side of the pole, clear of the other hand. -->
-				<rect
-					x="-18"
-					y={flagDown ? 30 : -46}
-					width="18"
-					height="14"
-					fill={RED}
-					class="stroke-ink"
-					stroke-width="1"
-				/>
-				<rect x="-18" y={flagDown ? 30 : -46} width="9" height="7" fill={YELLOW} />
-				<rect x="-9" y={flagDown ? 37 : -39} width="9" height="7" fill={YELLOW} />
-			</g>
-		{/if}
-		{#if kind === 'yellow' || kind === 'red' || kind === 'both-cards'}
-			<g transform="rotate({-angle})">
-				{#if kind === 'both-cards'}
-					<rect
-						x="-4"
-						y="-34"
-						width="18"
-						height="25"
-						rx="2"
-						fill={RED}
-						class="stroke-ink"
-						stroke-width="1.1"
-						transform="rotate(12)"
-					/>
-				{/if}
-				<rect
-					x="-11"
-					y="-34"
-					width="18"
-					height="25"
-					rx="2"
-					fill={kind === 'red' ? RED : YELLOW}
-					class="stroke-ink"
-					stroke-width="1.1"
-				/>
-			</g>
-		{/if}
-		<!-- Palm -->
-		<rect
-			x="-9"
-			y="-1"
-			width="18"
-			height="18"
-			rx="6"
-			fill={SKIN}
-			stroke={LINE}
-			stroke-width="1.6"
-		/>
-		<!-- Fingers spread a little, so each one shows on its own. -->
-		{#if kind === 'open'}
-			{@render finger(-6.6, 11, -12)}
-			{@render finger(-2.2, 13, -4)}
-			{@render finger(2.2, 13, 4)}
-			{@render finger(6.6, 10, 12)}
-		{:else if kind === 'point'}
-			{@render finger(-3, 16, 0)}
-			<path d="M 0 15 q 3 4 6 0" fill={SKIN} stroke={LINE} stroke-width="1.4" />
-		{:else if kind === 'two'}
-			{@render finger(-3.6, 15, -18)}
-			{@render finger(3.6, 15, 18)}
-			<path d="M -1 16 q 1 3 2 0" fill="none" stroke={LINE} stroke-width="1.2" />
-		{:else if kind === 'five'}
-			{@render finger(-7.5, 12, 34)}
-			{@render finger(-2.6, 14, 11)}
-			{@render finger(2.6, 14, -11)}
-			{@render finger(7.5, 11, -34)}
-		{:else if kind === 'four'}
-			{@render finger(-7, 11, 24)}
-			{@render finger(-2.4, 13, 8)}
-			{@render finger(2.4, 13, -8)}
-			{@render finger(7, 10, -24)}
-		{:else}
-			<!-- Curled fingers: four knuckles along the top of the fist. -->
-			<path
-				d="M -8 15 q 2 4 4 0 q 2 4 4 0 q 2 4 4 0 q 2 4 4 0"
-				fill={SKIN}
-				stroke={LINE}
-				stroke-width="1.4"
-			/>
-		{/if}
-		<!-- Thumb: out to the side, or straight up for a thumbs-up whatever the hand's angle. -->
-		{#if kind === 'thumb'}
-			<!-- Thumbs up: from the top of the fist, pointing straight up whatever the forearm's angle. -->
-			<g transform="translate({thumb * 2} 14) rotate({-angle + 180})">
-				<rect
-					x="-3.4"
-					y="-2"
-					width="6.8"
-					height="17"
-					rx="3.4"
-					fill={SKIN}
-					stroke={LINE}
-					stroke-width="1.6"
-				/>
-				<path d="M -2 11 q 2 2 4 0" fill="none" stroke={SKIN_SHADE} stroke-width="1" />
-			</g>
-		{:else if kind === 'four'}
-			<path
-				d="M {thumb * 8} 6 q {thumb * 3} 4 {thumb * 1} 9"
-				fill="none"
-				stroke={LINE}
-				stroke-width="1.5"
-			/>
-		{:else}
-			<g transform="translate({thumb * 8.5} 4) rotate({thumb * (kind === 'five' ? -80 : -48)})">
-				<rect
-					x="-3.1"
-					y="-1"
-					width="6.2"
-					height="12"
-					rx="3.1"
-					fill={SKIN}
-					stroke={LINE}
-					stroke-width="1.5"
-				/>
-			</g>
-		{/if}
-	</g>
-{/snippet}
-
-<!-- An arm: a short sleeve at the shoulder, then skin to the wrist, with a darker outline. -->
-{#snippet limb(shoulder: Point, a: { elbow: Point; wrist: Point })}
+<!-- An arm: a short sleeve at the shoulder, then skin to the wrist, tapering towards the hand. -->
+{#snippet limb(a: { side: SideName; elbow: Point; wrist: Point })}
+	{@const s = SHOULDER[a.side]}
+	{@const mid = { x: lerp(s.x, a.elbow.x, 0.5), y: lerp(s.y, a.elbow.y, 0.5) }}
+	{@const band = { x: lerp(s.x, a.elbow.x, 0.42), y: lerp(s.y, a.elbow.y, 0.42) }}
 	<g stroke-linecap="round" stroke-linejoin="round" fill="none">
 		<polyline
-			points="{shoulder.x},{shoulder.y} {a.elbow.x},{a.elbow.y} {a.wrist.x},{a.wrist.y}"
-			class="stroke-ink"
-			stroke-width="17"
+			points="{s.x},{s.y} {a.elbow.x},{a.elbow.y} {a.wrist.x},{a.wrist.y}"
+			stroke={LINE}
+			stroke-width="19.5"
 		/>
-		<polyline
-			points="{shoulder.x},{shoulder.y} {a.elbow.x},{a.elbow.y} {a.wrist.x},{a.wrist.y}"
+		<line x1={s.x} y1={s.y} x2={a.elbow.x} y2={a.elbow.y} stroke={SKIN} stroke-width="16.5" />
+		<line
+			x1={a.elbow.x}
+			y1={a.elbow.y}
+			x2={a.wrist.x}
+			y2={a.wrist.y}
+			stroke={SKIN}
+			stroke-width="16.5"
+		/>
+		<!-- Elbow crease and the wrist's narrowing. -->
+		<circle cx={a.elbow.x} cy={a.elbow.y} r="3" fill={SKIN_SHADE} stroke="none" opacity="0.45" />
+		<line
+			x1={lerp(a.elbow.x, a.wrist.x, 0.55)}
+			y1={lerp(a.elbow.y, a.wrist.y, 0.55)}
+			x2={a.wrist.x}
+			y2={a.wrist.y}
 			stroke={SKIN}
 			stroke-width="14"
 		/>
-		<!-- Sleeve: the first part of the upper arm. -->
+		<line x1={s.x} y1={s.y} x2={mid.x} y2={mid.y} class="stroke-ink" stroke-width="24" />
+		<line x1={s.x} y1={s.y} x2={mid.x} y2={mid.y} stroke={SHIRT} stroke-width="21" />
 		<line
-			x1={shoulder.x}
-			y1={shoulder.y}
-			x2={shoulder.x + (a.elbow.x - shoulder.x) * 0.5}
-			y2={shoulder.y + (a.elbow.y - shoulder.y) * 0.5}
-			class="stroke-ink"
-			stroke-width="22"
-		/>
-		<line
-			x1={shoulder.x}
-			y1={shoulder.y}
-			x2={shoulder.x + (a.elbow.x - shoulder.x) * 0.5}
-			y2={shoulder.y + (a.elbow.y - shoulder.y) * 0.5}
-			stroke={SHIRT}
-			stroke-width="19"
-		/>
-		<!-- Sleeve band -->
-		<line
-			x1={shoulder.x + (a.elbow.x - shoulder.x) * 0.44}
-			y1={shoulder.y + (a.elbow.y - shoulder.y) * 0.44}
-			x2={shoulder.x + (a.elbow.x - shoulder.x) * 0.5}
-			y2={shoulder.y + (a.elbow.y - shoulder.y) * 0.5}
+			x1={band.x}
+			y1={band.y}
+			x2={mid.x}
+			y2={mid.y}
 			stroke={TRIM}
-			stroke-width="19"
+			stroke-width="21"
 			stroke-linecap="butt"
 		/>
 	</g>
 {/snippet}
 
-<svg bind:this={figure} viewBox="-30 -44 300 312" class="h-auto w-full" aria-hidden="true">
+{#snippet arm(a: ReturnType<typeof pose>)}
+	{@render limb(a)}
+	<g transform="translate({a.wrist.x} {a.wrist.y}) rotate({a.angle}) scale({HAND_SCALE})">
+		<Hand kind={a.kind} view={a.view} thumb={a.thumb} extend={a.extend} flagSide={a.flagSide} />
+	</g>
+{/snippet}
+
+<svg
+	bind:this={figure}
+	viewBox="{box.x} {TOP} {box.width} {BOTTOM - TOP}"
+	preserveAspectRatio="xMidYMid meet"
+	class="h-auto w-full"
+	style:aspect-ratio="300 / {BOTTOM - TOP}"
+	aria-hidden="true"
+>
 	<defs>
-		<clipPath id="{id}-frame"><rect x="-30" y="-44" width="300" height="312" /></clipPath>
 		<marker
 			id="{id}-arrow"
 			viewBox="0 0 6 6"
@@ -373,168 +325,175 @@
 		>
 			<path d="M0,0 L6,3 L0,6 z" class="fill-accent" />
 		</marker>
+		<pattern id="{id}-mesh" width="8" height="8" patternUnits="userSpaceOnUse">
+			<path d="M 8 0 L 0 0 0 8" class="fill-none stroke-ink-soft" stroke-width="0.6" />
+		</pattern>
 	</defs>
-	<g clip-path="url(#{id}-frame)">
-		{#if extras.includes('net')}
-			<!-- The net, its tape at the height of the hand. -->
-			<rect
-				x="-4"
-				y={netY}
-				width="122"
-				height="40"
-				class="fill-none stroke-ink-soft"
-				stroke-width="1"
-			/>
-			<pattern id="{id}-mesh" width="8" height="8" patternUnits="userSpaceOnUse">
-				<path d="M 8 0 L 0 0 0 8" class="fill-none stroke-ink-soft" stroke-width="0.6" />
-			</pattern>
-			<rect x="-4" y={netY} width="122" height="40" fill="url(#{id}-mesh)" />
-			<rect
-				x="-4"
-				y={netY - 3}
-				width="122"
-				height="6"
-				class="fill-paper stroke-ink"
-				stroke-width="1"
-			/>
-		{/if}
 
-		<!-- Torso and shirt -->
-		<path
-			d="M 80 116 Q 120 104 160 116 Q 172 122 172 140 L 166 268 L 74 268 L 68 140 Q 68 122 80 116 Z"
-			fill={SHIRT}
-			class="stroke-ink"
-			stroke-width="2"
-		/>
-		<!-- Shading down the sides of the shirt, and the button placket. -->
-		<path
-			d="M 70 150 L 74 268 L 84 268 L 82 150 Z M 170 150 L 166 268 L 156 268 L 158 150 Z"
-			fill={SHIRT_SHADE}
-		/>
-		<line x1="120" y1="124" x2="120" y2="150" stroke={TRIM} stroke-width="1.5" />
-		<circle cx="120" cy="133" r="1.6" fill={TRIM} />
-		<circle cx="120" cy="143" r="1.6" fill={TRIM} />
-		<!-- Neck and collar -->
+	{#if extras.includes('net')}
+		<!-- The net, its tape at the height of the hand. -->
 		<rect
-			x="110"
-			y="86"
-			width="20"
-			height="26"
-			rx="6"
-			fill={SKIN}
-			class="stroke-ink"
-			stroke-width="1.5"
+			x={box.x}
+			y={netY}
+			width={120 - box.x}
+			height="44"
+			class="fill-none stroke-ink-soft"
+			stroke-width="1"
 		/>
-		<!-- Polo collar in the trim colour -->
-		<path
-			d="M 102 106 L 120 126 L 112 106 Z M 138 106 L 120 126 L 128 106 Z"
-			fill={TRIM}
-			class="stroke-ink"
-			stroke-width="1.4"
+		<rect x={box.x} y={netY} width={120 - box.x} height="44" fill="url(#{id}-mesh)" />
+		<rect
+			x={box.x}
+			y={netY - 3}
+			width={120 - box.x}
+			height="6"
+			class="fill-paper stroke-ink"
+			stroke-width="1"
 		/>
-		<!-- Lanyard and whistle -->
-		<path
-			d="M 108 110 Q 112 150 122 158 Q 130 150 132 110"
-			fill="none"
+		<!-- Antenna -->
+		<line x1="116" y1={netY - 40} x2="116" y2={netY + 44} class="stroke-bad" stroke-width="2.5" />
+		<line
+			x1="116"
+			y1={netY - 40}
+			x2="116"
+			y2={netY - 20}
+			class="stroke-paper"
+			stroke-width="2.5"
+			stroke-dasharray="5 5"
+		/>
+	{/if}
+
+	{#each behind as a (a.side)}{@render arm(a)}{/each}
+
+	<!-- Torso and shirt -->
+	<path
+		d="M 68 124 Q 94 112 120 112 Q 146 112 172 124 Q 184 130 182 146 L 170 276 L 70 276 L 58 146 Q 56 130 68 124 Z"
+		fill={SHIRT}
+		class="stroke-ink"
+		stroke-width="2"
+	/>
+	<path
+		d="M 60 156 L 70 276 L 82 276 L 74 156 Z M 180 156 L 170 276 L 158 276 L 166 156 Z"
+		fill={SHIRT_SHADE}
+	/>
+	<line x1="120" y1="132" x2="120" y2="162" stroke={TRIM} stroke-width="1.5" />
+	<circle cx="120" cy="142" r="1.7" fill={TRIM} />
+	<circle cx="120" cy="153" r="1.7" fill={TRIM} />
+	<!-- Neck and collar -->
+	<path
+		d="M 109 82 L 131 82 L 133 116 Q 120 124 107 116 Z"
+		fill={SKIN}
+		stroke={LINE}
+		stroke-width="1.5"
+		stroke-linejoin="round"
+	/>
+	<path d="M 109 96 Q 120 102 131 96" fill="none" stroke={SKIN_SHADE} stroke-width="1.2" />
+	<path
+		d="M 100 114 L 120 136 L 110 112 Z M 140 114 L 120 136 L 130 112 Z"
+		fill={TRIM}
+		class="stroke-ink"
+		stroke-width="1.4"
+		stroke-linejoin="round"
+	/>
+	<!-- Lanyard and whistle -->
+	<path
+		d="M 108 118 Q 112 160 122 170 Q 130 160 132 118"
+		class="fill-none stroke-ink"
+		stroke-width="2"
+	/>
+	<g transform="translate(122 170)">
+		<rect
+			x="-5"
+			y="0"
+			width="19"
+			height="10"
+			rx="4"
+			fill="#c9ced6"
 			stroke="#111"
-			stroke-width="2"
+			stroke-width="1.3"
 		/>
-		<!-- Whistle -->
-		<g transform="translate(122 158)">
-			<rect
-				x="-5"
-				y="0"
-				width="19"
-				height="10"
-				rx="4"
-				fill="#c9ced6"
-				stroke="#111"
-				stroke-width="1.3"
-			/>
-			<circle cx="0" cy="5" r="6.5" fill="#c9ced6" stroke="#111" stroke-width="1.3" />
-			<circle cx="0" cy="5" r="2.2" fill="#111" />
-		</g>
-		<!-- Head -->
-		<ellipse cx="96" cy="64" rx="5" ry="8" fill={SKIN} class="stroke-ink" stroke-width="1.4" />
-		<ellipse cx="144" cy="64" rx="5" ry="8" fill={SKIN} class="stroke-ink" stroke-width="1.4" />
-		<ellipse cx="120" cy="60" rx="24" ry="29" fill={SKIN} class="stroke-ink" stroke-width="2" />
-		<path d="M 96 56 Q 96 28 120 28 Q 146 28 144 56 Q 138 40 120 40 Q 104 40 96 56 Z" fill={HAIR} />
-		<path
-			d="M 106 54 q 5 -3 10 0 M 124 54 q 5 -3 10 0"
-			class="fill-none stroke-ink"
-			stroke-width="1.6"
-			stroke-linecap="round"
-		/>
-		<circle cx="111" cy="61" r="2.4" class="fill-ink" />
-		<circle cx="129" cy="61" r="2.4" class="fill-ink" />
-		<path
-			d="M 120 63 q -2 7 1 9"
-			fill="none"
-			stroke={SKIN_SHADE}
-			stroke-width="1.6"
-			stroke-linecap="round"
-		/>
-		<path
-			d="M 112 77 q 8 4 16 0"
-			fill="none"
-			class="stroke-ink"
-			stroke-width="1.6"
-			stroke-linecap="round"
-		/>
-
-		<!-- Arms, then hands on top -->
-		{@render limb(SR, right)}
-		{@render limb(SL, left)}
-		{@render hand(right.wrist, handAngle(right.angle, signal.tilt?.right), handRight, thumbRight)}
-		{@render hand(left.wrist, handAngle(left.angle, signal.tilt?.left), handLeft, thumbLeft)}
-
-		{#if signal.fingers && prefersReducedMotion.current}
-			<text
-				x="120"
-				y="-30"
-				text-anchor="middle"
-				font-size="16"
-				font-weight="700"
-				class="fill-accent">{signal.fingers}</text
-			>
-		{/if}
-		{#if extras.includes('line')}
-			<line
-				x1={right.wrist.x - 34}
-				y1="240"
-				x2={right.wrist.x + 34}
-				y2="240"
-				class="stroke-accent"
-				stroke-width="4"
-			/>
-		{/if}
-		{#if signal.motion && prefersReducedMotion.current}
-			<!-- Without animation, an arrow shows the movement. -->
-			<g class="fill-none stroke-accent" stroke-width="3" stroke-linecap="round">
-				{#if signal.motion === 'spin' || signal.motion === 'circle'}
-					<ellipse cx="120" cy="170" rx="44" ry="12" stroke-dasharray="6 4" />
-				{:else if signal.motion === 'sweep'}
-					<path
-						d="M {SL.x - 10} {right.wrist.y - 18} L {right.wrist.x + 22} {right.wrist.y - 18}"
-						marker-end="url(#{id}-arrow)"
-					/>
-				{:else if signal.motion === 'up'}
-					<path
-						d="M {right.wrist.x - 20} {right.wrist.y + 30} L {right.wrist.x - 20} {right.wrist.y}"
-						marker-end="url(#{id}-arrow)"
-					/>
-				{:else if signal.motion === 'down'}
-					<path
-						d="M {right.wrist.x - 20} {right.wrist.y - 30} L {right.wrist.x - 20} {right.wrist.y}"
-						marker-end="url(#{id}-arrow)"
-					/>
-				{:else if signal.motion === 'brush'}
-					<path
-						d="M {left.wrist.x + 18} {left.wrist.y - 6} L {left.wrist.x - 6} {left.wrist.y - 16}"
-						marker-end="url(#{id}-arrow)"
-					/>
-				{/if}
-			</g>
-		{/if}
+		<circle cx="0" cy="5" r="6.5" fill="#c9ced6" stroke="#111" stroke-width="1.3" />
+		<circle cx="0" cy="5" r="2.2" fill="#111" />
 	</g>
+	<!-- Head -->
+	<ellipse cx="95" cy="64" rx="5" ry="8" fill={SKIN} stroke={LINE} stroke-width="1.4" />
+	<ellipse cx="145" cy="64" rx="5" ry="8" fill={SKIN} stroke={LINE} stroke-width="1.4" />
+	<ellipse cx="120" cy="60" rx="25" ry="30" fill={SKIN} stroke={LINE} stroke-width="2" />
+	<path d="M 95 56 Q 95 27 120 27 Q 146 27 145 56 Q 139 40 120 40 Q 103 40 95 56 Z" fill={HAIR} />
+	<path
+		d="M 106 53 q 5 -3 10 0 M 124 53 q 5 -3 10 0"
+		class="fill-none stroke-ink"
+		stroke-width="1.6"
+		stroke-linecap="round"
+	/>
+	<circle cx="111" cy="61" r="2.4" class="fill-ink" />
+	<circle cx="129" cy="61" r="2.4" class="fill-ink" />
+	<path
+		d="M 120 63 q -2 7 1 9"
+		fill="none"
+		stroke={SKIN_SHADE}
+		stroke-width="1.6"
+		stroke-linecap="round"
+	/>
+	<path
+		d="M 112 78 q 8 4 16 0"
+		fill="none"
+		class="stroke-ink"
+		stroke-width="1.6"
+		stroke-linecap="round"
+	/>
+
+	{#each front as a (a.side)}{@render arm(a)}{/each}
+
+	{#if extras.includes('line')}
+		<line
+			x1={right.wrist.x - 40}
+			y1="258"
+			x2={right.wrist.x + 40}
+			y2="258"
+			class="stroke-accent"
+			stroke-width="4"
+			stroke-linecap="round"
+		/>
+	{/if}
+	{#if signal.fingers && prefersReducedMotion.current}
+		<text x="120" y="-70" text-anchor="middle" font-size="18" font-weight="700" class="fill-accent"
+			>{signal.fingers}</text
+		>
+	{/if}
+	{#if signal.motion && prefersReducedMotion.current}
+		<!-- Without animation, an arrow shows the movement. -->
+		<g class="fill-none stroke-accent" stroke-width="3" stroke-linecap="round">
+			{#if signal.motion === 'spin' || signal.motion === 'circle'}
+				<ellipse
+					cx={lerp(right.wrist.x, left.wrist.x, 0.5)}
+					cy={right.wrist.y}
+					rx={(signal.spin?.amplitude ?? signal.orbit?.rx ?? 20) + 10}
+					ry="12"
+					stroke-dasharray="6 4"
+				/>
+			{:else if signal.motion === 'sweep'}
+				<path
+					d="M {SHOULDER.left.x - 10} {right.wrist.y - 22} L {right.wrist.x + 26} {right.wrist.y -
+						22}"
+					marker-end="url(#{id}-arrow)"
+				/>
+			{:else if signal.motion === 'up'}
+				<path
+					d="M {right.wrist.x - 24} {right.wrist.y + 34} L {right.wrist.x - 24} {right.wrist.y + 2}"
+					marker-end="url(#{id}-arrow)"
+				/>
+			{:else if signal.motion === 'down'}
+				<path
+					d="M {right.wrist.x - 24} {right.wrist.y - 34} L {right.wrist.x - 24} {right.wrist.y - 2}"
+					marker-end="url(#{id}-arrow)"
+				/>
+			{:else if signal.motion === 'brush'}
+				<path
+					d="M {right.wrist.x - 10} {right.wrist.y - 20} L {right.wrist.x + 30} {right.wrist.y -
+						20}"
+					marker-end="url(#{id}-arrow)"
+				/>
+			{/if}
+		</g>
+	{/if}
 </svg>
