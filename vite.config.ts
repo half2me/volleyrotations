@@ -30,7 +30,14 @@ export default defineConfig({
 			paths: { relative: false },
 			// '*' crawls every linked page, which reaches the /hu pages through the language
 			// switcher. The sitemap and llms.txt are listed because nothing links to them.
-			prerender: { entries: ['*', '/sitemap.xml', '/llms.txt'] }
+			prerender: {
+				entries: ['*', '/sitemap.xml', '/llms.txt'],
+				// Explorer links carry a view in the fragment (#system=5-1&rotation=…), which is
+				// read by the page, not an element id.
+				handleMissingId: ({ id, message }) => {
+					if (!id.includes('=')) throw new Error(message);
+				}
+			}
 		}),
 		paraglideVitePlugin({
 			project: './project.inlang',

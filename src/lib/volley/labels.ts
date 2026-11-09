@@ -9,7 +9,7 @@ import type {
 	SetTo,
 	Task
 } from './formations.js';
-import { leagueOf, type LeagueId } from './leagues.js';
+import { leagueOf, type LeagueId, type RegionId } from './leagues.js';
 import {
 	COLUMN_PAIRS,
 	ROLE_KIND,
@@ -118,10 +118,30 @@ export const systemDescription = (s: SystemId) =>
 export const leagueName = (l: LeagueId) =>
 	({
 		fivb: m.league_fivb,
+		england: m.league_england,
+		scotland: m.league_scotland,
+		'northern-ireland': m.league_northern_ireland,
+		hungary: m.league_hungary,
 		ncaa: m.league_ncaa,
 		nfhs: m.league_nfhs,
 		usav: m.league_usav
 	})[l]();
+
+/** A rule set's short name for tight spaces, such as the header. */
+export const leagueShort = (l: LeagueId) =>
+	({
+		fivb: 'FIVB',
+		england: 'ENG',
+		scotland: 'SCO',
+		'northern-ireland': 'NI',
+		hungary: 'HUN',
+		ncaa: 'NCAA',
+		nfhs: 'NFHS',
+		usav: 'USAV'
+	})[l];
+
+export const regionName = (r: RegionId) =>
+	({ world: m.region_world, uk: m.region_uk, hungary: m.region_hungary, us: m.region_us })[r]();
 
 export const phaseName = (p: Phase) =>
 	({

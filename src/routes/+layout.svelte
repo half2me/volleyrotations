@@ -5,6 +5,7 @@
 	import { href } from '#lib/i18n.js';
 	import SiteNav from '#lib/components/SiteNav.svelte';
 	import ReportLink from '#lib/components/ReportLink.svelte';
+	import RulesPicker from '#lib/components/RulesPicker.svelte';
 	import { m } from '#lib/paraglide/messages.js';
 	import IconSearch from '~icons/lucide/search';
 	import type { LayoutProps } from './$types';
@@ -39,6 +40,7 @@
 			</a>
 			<div class="flex items-center gap-1">
 				<SiteNav />
+				<RulesPicker />
 				<a href={href('/search')} class="btn-ghost" aria-label={m.nav_search()}>
 					<IconSearch class="size-5" aria-hidden="true" />
 				</a>

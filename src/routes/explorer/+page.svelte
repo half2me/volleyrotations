@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeagueSelect from '#lib/components/LeagueSelect.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
 	import Seo from '#lib/components/Seo.svelte';
@@ -253,11 +254,7 @@
 			</summary>
 			<div class="mt-4 grid gap-5 sm:grid-cols-2">
 				<div class="sm:col-span-2">
-					<ChipGroup
-						legend={m.label_league()}
-						options={LEAGUE_IDS.map((l) => ({ value: l, label: leagueName(l) }))}
-						bind:value={() => prefs.current.league, (league) => update({ league })}
-					/>
+					<LeagueSelect bind:value={() => prefs.current.league, (league) => update({ league })} />
 					<p class="mt-2 text-sm text-ink-soft">{m.league_help()}</p>
 				</div>
 				{#if formations.length > 1}

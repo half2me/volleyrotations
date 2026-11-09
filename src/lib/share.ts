@@ -1,4 +1,5 @@
 import type { Team } from '#lib/teams.svelte.js';
+import { LEAGUE_IDS } from '#lib/volley/leagues.js';
 
 /**
  * Teams travel in the URL fragment (`#team=…`), which never reaches the server: the static site
@@ -38,7 +39,7 @@ export function teamFromFragment(hash: string): Team | undefined {
 			formation: one(data.formation, [3, 4, 5] as const, 3),
 			defense: one(data.defense, ['perimeter', 'rotational', 'middle-up'] as const, 'perimeter'),
 			start: one(data.start, [1, 2, 3, 4, 5, 6] as const, 1),
-			league: one(data.league, ['fivb', 'ncaa', 'nfhs', 'usav'] as const, 'fivb'),
+			league: one(data.league, LEAGUE_IDS, 'fivb'),
 			order: one(data.order, ['oh-first', 'mb-first'] as const, 'oh-first'),
 			liberoZone: one(data.liberoZone, [5, 6] as const, 5),
 			custom: cleanCustom(data.custom),

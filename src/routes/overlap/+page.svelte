@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeagueSelect from '#lib/components/LeagueSelect.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import DragCourt from '#lib/components/court/DragCourt.svelte';
 	import { explorerPrefs } from '#lib/prefs.svelte.js';
@@ -97,17 +98,17 @@
 <p class="mt-3 max-w-2xl text-lg text-ink-soft">{m.overlap_lead()}</p>
 
 <div class="mt-8 grid gap-4 sm:grid-cols-2" data-pagefind-ignore>
-	<ChipGroup
-		legend={m.label_league()}
-		options={LEAGUE_IDS.map((l) => ({ value: l, label: leagueName(l) }))}
-		bind:value={
-			() => league,
-			(l) => {
-				explorerPrefs.set({ ...explorerPrefs.current, league: l });
-				reset();
+	<div>
+		<LeagueSelect
+			bind:value={
+				() => league,
+				(l) => {
+					explorerPrefs.set({ ...explorerPrefs.current, league: l });
+					reset();
+				}
 			}
-		}
-	/>
+		/>
+	</div>
 	<div>
 		<ChipGroup
 			legend={m.label_situation()}

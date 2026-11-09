@@ -9,7 +9,7 @@ description: Miben térnek el a fő teremröplabda-szabályrendszerek a nyitó c
 
 # Szabályok bajnokságonként
 
-A teremröplabda szinte mindenhol ugyanaz: hat játékos, állásrend, három érintés, minden labdamenet pontot ér. Néhány szabály, amely a forgások ábráit is befolyásolja, szabályrendszerenként eltér. Válaszd ki a bajnokságodat a [felfedezőben](/hu/explorer), az [állásrend-gyakorlóban](/hu/overlap), a [felállás oldalon](/hu/lineup) vagy a [meccskövetőben](/hu/match), és az eszközök ahhoz igazodnak.
+A teremröplabda szinte mindenhol ugyanaz: hat játékos, állásrend, három érintés, minden labdamenet pontot ér. Néhány szabály, amely a forgások ábráit is befolyásolja, szabályrendszerenként eltér. Válaszd ki a bajnokságodat a [Posztkeresőben](/hu/explorer), az [állásrend-gyakorlóban](/hu/overlap), a [felállás oldalon](/hu/lineup) vagy a [meccskövetőben](/hu/match), és az eszközök ahhoz igazodnak.
 
 <Callout>
 

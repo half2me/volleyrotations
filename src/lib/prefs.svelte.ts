@@ -9,6 +9,8 @@ export type ExplorerPrefs = Options & {
 	league: LeagueId;
 	/** The saved team whose playbook the explorer and quiz follow, if any. */
 	team?: string;
+	/** Whether the reader has picked where they play, so the site stops asking. */
+	rulesChosen?: boolean;
 };
 
 /** The explorer's choices, shared with the quiz so both start from the reader's own setup. */

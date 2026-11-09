@@ -47,7 +47,7 @@ A down ball is hit by an opponent who is standing, or without a full jump and sw
 
 If the setter plays the first ball, someone else must set. Most teams name a backup:
 
-- **The libero, if on court.** Under FIVB rules, if the libero sets with fingers from in front of the 3 m line, the hitter may not attack that ball while it is entirely above the top of the net ([rule 19.3.1.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=44)). So the libero sets from behind the line, or with a forearm pass.
+- **The libero, if on court.** Under FIVB rules, if the libero sets with fingers from in front of the 3 m line, the hitter may not attack that ball while it is entirely above the top of the net ([rule 19.3.1.4](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=45)). So the libero sets from behind the line, or with a forearm pass.
 - **Otherwise the right-front player**, or another front-row player, who then does not attack.
 
 A front-row setter who only touched the ball on the block may still set it: a block touch is not one of the team's three contacts ([FIVB rule 14.4.1](https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf)).

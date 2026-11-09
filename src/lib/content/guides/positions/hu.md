@@ -83,6 +83,8 @@ Az, hogy első vagy hátsó sorköteles vagy, a nyitás pillanatában elfoglalt 
 
 ## Merre tovább?
 
+- Olvasd el a posztod oldalát: [feladó](/hu/positions/setter), [nyitásfogadó ütő](/hu/positions/outside-hitter), [center](/hu/positions/middle-blocker), [feladó átló](/hu/positions/opposite) vagy [liberó](/hu/positions/libero).
+
 - Lépkedj végig a saját posztod minden forgásán a [Posztkeresőben](/hu/explorer).
 - Olvasd el, [hogyan működik a forgás](/hu/guides/rotations), és mi az [állásrendi hiba](/hu/guides/overlap).
 - Hasonlítsd össze a [támadási rendszereket](/hu/guides/systems), például az 5:1-et és a 6:2-t.

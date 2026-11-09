@@ -85,6 +85,8 @@ Whether you are front or back row depends on your zone at the moment of the serv
 
 ## Where to go next
 
+- Read the page for your position: [setter](/positions/setter), [outside hitter](/positions/outside-hitter), [middle blocker](/positions/middle-blocker), [opposite](/positions/opposite) or [libero](/positions/libero).
+
 - Step through every rotation for your role in the [position explorer](/explorer).
 - Learn [how rotation works](/guides/rotations) and the [overlap rule](/guides/overlap).
 - Compare [offensive systems](/guides/systems) such as 5-1 and 6-2.

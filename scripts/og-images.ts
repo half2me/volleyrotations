@@ -26,6 +26,9 @@ const messages: Record<string, Record<string, string>> = Object.fromEntries(
 const KEYS: Record<string, [string, string]> = {
 	'/': ['home_heading', 'home_description'],
 	'/learn': ['learn_title', 'learn_description'],
+	'/rules': ['rules_title', 'rules_description'],
+	'/rules/situations': ['situations_title', 'situations_description'],
+	'/rules/signals': ['signals_title', 'signals_description'],
 	'/explorer': ['explorer_title', 'explorer_description'],
 	'/overlap': ['overlap_title', 'overlap_description'],
 	'/quiz': ['quiz_title', 'quiz_description'],
@@ -40,8 +43,8 @@ const EYEBROW: Record<string, { guide: string; tool: string }> = {
 	hu: { guide: 'Útmutató', tool: 'Interaktív eszköz' }
 };
 
-function frontmatter(slug: string, locale: string) {
-	const md = readFileSync(join(root, `src/lib/content/guides/${slug}/${locale}.md`), 'utf8');
+function frontmatter(slug: string, locale: string, folder = 'guides') {
+	const md = readFileSync(join(root, `src/lib/content/${folder}/${slug}/${locale}.md`), 'utf8');
 	// YAML values may be quoted when they contain a colon.
 	const field = (name: string) =>
 		(md.match(new RegExp(`^${name}: (.*)$`, 'm'))?.[1].trim() ?? '').replace(
@@ -52,13 +55,16 @@ function frontmatter(slug: string, locale: string) {
 }
 
 function textFor(path: string, locale: string) {
+	const position = path.match(/^\/positions\/(.+)$/)?.[1];
+	if (position)
+		return { ...frontmatter(position, locale, 'positions'), eyebrow: EYEBROW[locale].guide };
 	const guide = path.match(/^\/guides\/(.+)$/)?.[1];
 	if (guide) return { ...frontmatter(guide, locale), eyebrow: EYEBROW[locale].guide };
 	const [t, d] = KEYS[path];
 	const eyebrow =
 		path === '/' || path === '/guides' || path === '/search'
 			? ''
-			: path === '/learn'
+			: path === '/learn' || path.startsWith('/rules')
 				? EYEBROW[locale].guide
 				: EYEBROW[locale].tool;
 	return { title: messages[locale][t], description: messages[locale][d], eyebrow };

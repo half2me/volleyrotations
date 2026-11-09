@@ -18,6 +18,8 @@
 		libero: m.guide_libero_summary,
 		substitutions: m.guide_substitutions_summary,
 		leagues: m.guide_leagues_summary,
+		scoring: m.guide_scoring_summary,
+		sitting: m.guide_sitting_summary,
 		'beach-to-indoor': m.guide_beach_to_indoor_summary,
 		glossary: m.guide_glossary_summary
 	};

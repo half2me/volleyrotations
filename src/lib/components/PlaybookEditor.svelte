@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeagueSelect from '#lib/components/LeagueSelect.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import DragCourt from '#lib/components/court/DragCourt.svelte';
 	import { m } from '#lib/paraglide/messages.js';
@@ -89,11 +90,7 @@
 		<p class="mt-1 text-sm text-ink-soft">{m.playbook_help()}</p>
 	</div>
 	<div>
-		<ChipGroup
-			legend={m.label_league()}
-			options={LEAGUE_IDS.map((l) => ({ value: l, label: leagueName(l) }))}
-			bind:value={() => team.league ?? 'fivb', (l) => save({ league: l })}
-		/>
+		<LeagueSelect bind:value={() => team.league ?? 'fivb', (l) => save({ league: l })} />
 		<p class="mt-2 text-sm text-ink-soft">{m.league_help()}</p>
 	</div>
 	{#if team.system !== '6-6'}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeagueSelect from '#lib/components/LeagueSelect.svelte';
 	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import FormationCourt from '#lib/components/court/FormationCourt.svelte';
 	import Seo from '#lib/components/Seo.svelte';
@@ -223,11 +224,7 @@
 				<a class="text-accent underline" href={href('/lineup')}>{m.lineup_title()}</a>
 			</p>
 		{/if}
-		<ChipGroup
-			legend={m.label_league()}
-			options={LEAGUE_IDS.map((l) => ({ value: l, label: leagueName(l) }))}
-			bind:value={setupLeague}
-		/>
+		<div><LeagueSelect bind:value={setupLeague} /></div>
 		<p class="text-sm text-ink-soft">
 			{m.match_league_limits({
 				subs: leagueOf(setupLeague).subsPerSet,
