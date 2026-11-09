@@ -18,7 +18,9 @@ import {
 	longestRuns,
 	newMatch,
 	playerStats,
+	pushUndo,
 	rally,
+	restoreUndo,
 	rotationStats,
 	serverStats,
 	setOver,
@@ -29,7 +31,9 @@ import {
 	subsPerSet,
 	substitute,
 	technicalTimeoutDue,
-	timeoutsPerSet
+	timeoutsPerSet,
+	undoEntry,
+	type UndoEntry
 } from '../src/lib/volley/match.ts';
 import { ROLE_KIND, ROTATIONS, setterOf, SYSTEM, SYSTEMS, ZONES } from '../src/lib/volley/model.ts';
 import { overlapFaults } from '../src/lib/volley/overlap.ts';
@@ -175,6 +179,34 @@ test('a set needs 25 points and a two-point lead, the fifth set 15', () => {
 	expect(setOver(s)).toBe(true);
 	expect(setWinner({ us: 15, them: 13 }, 4)).toBe('us');
 	expect(setWinner({ us: 15, them: 13 }, 3)).toBeUndefined();
+});
+
+test('undo steps restore the match without copying the rally log, within a size budget', () => {
+	let s = newMatch({ system: '5-1', libero: true, rotation: 1, serving: false });
+	const history: UndoEntry[] = [];
+	const states: ReturnType<typeof newMatch>[] = [];
+	const timeout = (state: typeof s) => ({
+		...state,
+		timeouts: { ...state.timeouts, us: state.timeouts.us + 1 }
+	});
+	for (let i = 0; i < 30; i++) {
+		states.push(s);
+		history.push(undoEntry(s));
+		s = i % 7 === 3 || i === 29 ? timeout(s) : rally(s, i % 3 ? 'us' : 'them');
+	}
+	expect(history.every((h) => !('log' in h))).toBe(true);
+	// Detail added to the last rally after a step survives undoing the later time-out.
+	const annotated = annotateLast(s, { how: 'kill', by: 'OH1' });
+	expect(restoreUndo(history[29], annotated.log)).toEqual({ ...states[29], log: annotated.log });
+	for (let i = 29; i >= 0; i--) s = restoreUndo(history[i], s.log);
+	expect(s).toEqual(states[0]);
+
+	let capped: UndoEntry[] = [];
+	for (let i = 0; i < 400; i++) capped = pushUndo(capped, undoEntry(rally(s, 'us')), 20_000);
+	expect(capped.length).toBeLessThan(400);
+	expect(capped.length).toBeGreaterThan(10);
+	expect(JSON.stringify(capped).length).toBeLessThanOrEqual(20_000);
+	expect(pushUndo([], undoEntry(s), 10)).toHaveLength(1);
 });
 
 test('beach sets go to 21, the third to 15, and two sets win the match', () => {
