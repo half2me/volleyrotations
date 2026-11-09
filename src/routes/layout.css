@@ -173,6 +173,11 @@
 	.btn-ghost {
 		@apply inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full px-3 text-ink-soft transition-colors hover:bg-line/50 hover:text-ink;
 	}
+
+	/* A key in a keyboard-shortcut hint. */
+	.key {
+		@apply inline-block rounded-md border border-line bg-surface px-1.5 font-mono text-[0.7rem] text-ink;
+	}
 }
 
 @media print {

@@ -233,6 +233,45 @@ export function rally(state: MatchState, winner: 'us' | 'them', detail?: RallyDe
 }
 
 /**
+ * One step of the tracker's undo history. The rally log only ever grows between steps (the
+ * detail added to the last rally afterwards is not a step), so a step keeps everything but the
+ * log, plus how many rallies the log held: restoring cuts the log back to that length. A full copy
+ * per step would grow with the square of the rally count and overflow the browser's storage in a
+ * long match.
+ */
+export type UndoEntry = Omit<MatchState, 'log'> & { rallies: number };
+
+export function undoEntry(state: MatchState): UndoEntry {
+	const { log, ...rest } = state;
+	return { ...rest, rallies: log?.length ?? 0 };
+}
+
+/** The match as it was at `entry`, given the log as it is now. */
+export function restoreUndo(entry: UndoEntry, log: readonly RallyRecord[]): MatchState {
+	const { rallies, ...rest } = entry;
+	return { ...rest, log: log.slice(0, rallies) };
+}
+
+/** Undo history saved by an earlier version of the tracker, as full copies of the match. */
+export const isFullCopy = (entry: UndoEntry | MatchState): entry is MatchState =>
+	Array.isArray((entry as MatchState).log);
+
+/** How many bytes of undo history the tracker keeps, as JSON. */
+export const UNDO_BUDGET = 64 * 1024;
+
+/** Appends a step and drops the oldest ones until the history fits the budget. */
+export function pushUndo(
+	history: readonly UndoEntry[],
+	entry: UndoEntry,
+	budget = UNDO_BUDGET
+): UndoEntry[] {
+	const next = [...history, entry];
+	let size = JSON.stringify(next).length;
+	while (next.length > 1 && size > budget) size -= JSON.stringify(next.shift()).length + 1;
+	return next;
+}
+
+/**
  * Starts the next set, from the coach's chosen rotation (or, on the beach, first server: the
  * service order may change between sets). Substitutions and time-outs reset.
  */
